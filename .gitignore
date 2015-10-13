@@ -64,3 +64,6 @@ target/
 # svn
 .svn/
 *.svn*
+
+# others
+.shell_history
