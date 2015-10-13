@@ -1,0 +1,10 @@
+#!/bin/bash
+PACKAGE_DIR=schedulecreator-nightly
+if [ -d "$PACKAGE_DIR" ] 
+then
+    rm -rf $PACKAGE_DIR
+fi
+mkdir $PACKAGE_DIR
+cp -r setup.py src scripts Makefile README.txt LICENSE doc/epydoc.conf $PACKAGE_DIR
+tar czvf $PACKAGE_DIR.tar.gz --exclude=*.pyc --exclude=*.svn* $PACKAGE_DIR 
+scp $PACKAGE_DIR.tar.gz bartolini@gaia.ira.inaf.it:~bartolini/public_html/schedulecreator/

@@ -1,0 +1,37 @@
+#coding=utf-8
+
+import unittest
+
+from schedulecreator import target_parser
+from schedulecreator import frame
+from schedulecreator.valid_angles import VAngle
+
+LINE = "3C386 otfmap1 EQ 10.0d 1:00:00.0h repetitions=3 tsys=4 offset_lon=0.0d offset_lat=0.3d offset_frame=eq"
+TARGETS_PATH = "src/user_templates/targets.txt"
+
+class TestTarget(unittest.TestCase):
+    def test_parse_line(self):
+        _scantype, _target = target_parser._parse_target_line(LINE)
+        self.assertEqual(_scantype, "otfmap1")
+        self.assertEqual(_target.label, "3C386")
+        #self.assertEqual(_target.coord, frame.Coord(frame.EQ, 10.0, 15.0))
+        self.assertEqual(_target.repetitions, 3)
+        self.assertEqual(_target.tsys, 4)
+        self.assertEqual(_target.offset_coord, frame.Coord(frame.EQ, 0.0, 0.3))
+    
+    def test_parse_file(self):
+        targets = target_parser.parse_file(TARGETS_PATH)
+        self.assertNotEqual(targets, [])
+        t_zero, scan_zero, _ = targets[0]
+        self.assertEqual(t_zero.label, "Alpha")
+        self.assertEqual(scan_zero, "EqCross1_3")
+        self.assertEqual(t_zero.coord.lon.fmt(), "12:00:00.000h")
+        t_gamma, _, _ = targets[4]
+        self.assertEqual(t_gamma.tsys, 2)
+        self.assertEqual(t_gamma.repetitions, 4)
+        t_offset, _, _ = targets[5]
+        self.assertEqual(t_offset.offset_coord.lon, VAngle(-0.5))
+
+if __name__ == "__main__":
+    unittest.main()
+

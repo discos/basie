@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.scan.maps &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../../index.html" />
+    <link rel="up" title="schedulecreator.scan" href="../scan.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" accesskey="U">schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.scan.maps</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="kn">from</span> <span class="nn">schedulecreator</span> <span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">frame</span>
+<span class="kn">from</span> <span class="nn">schedulecreator.valid_angles</span> <span class="kn">import</span> <span class="n">VAngle</span>
+
+<span class="kn">from</span> <span class="nn">scanmode</span> <span class="kn">import</span> <span class="n">ScanMode</span>
+<span class="kn">import</span> <span class="nn">subscan</span>
+
+<div class="viewcode-block" id="MapScan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.maps.MapScan">[docs]</a><span class="k">class</span> <span class="nc">MapScan</span><span class="p">(</span><span class="n">ScanMode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MapScan superclass used for OTF and RASTER maps</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span>
+              <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        @param frame: scan frame</span>
+<span class="sd">        @type frame: frame.Frame</span>
+<span class="sd">        @param start_point: one of TL, TR, BL, BR</span>
+<span class="sd">        @param scan_axis: one of LON LAT RA DEC AZ EL BOTH, the constant axis of</span>
+<span class="sd">        each subscan</span>
+<span class="sd">        @param length_x: map width in degrees</span>
+<span class="sd">        @type length_x: VAngle</span>
+<span class="sd">        @param length_y: map height in degrees</span>
+<span class="sd">        @type length_y: VAngle</span>
+<span class="sd">        @param spacing: offset between each subscan in degrees</span>
+<span class="sd">        @type spacing: VAngle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ScanMode</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">=</span> <span class="n">start_point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">=</span> <span class="n">scan_axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_x</span> <span class="o">=</span> <span class="n">length_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_y</span> <span class="o">=</span> <span class="n">length_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="n">spacing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">ceil_to_odd</span><span class="p">(</span><span class="n">length_x</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="n">spacing</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimension_y</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">ceil_to_odd</span><span class="p">(</span><span class="n">length_y</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="n">spacing</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%d</span><span class="s"> dim_x </span><span class="si">%d</span><span class="s"> dim_y </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">VAngle</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">spacing</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span> 
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> 
+                                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">VAngle</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">spacing</span><span class="o">.</span><span class="n">degrees</span><span class="p">)</span> 
+                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimension_y</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span> 
+                                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dimension_y</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+</div>
+<div class="viewcode-block" id="OTFMapScan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.maps.OTFMapScan">[docs]</a><span class="k">class</span> <span class="nc">OTFMapScan</span><span class="p">(</span><span class="n">MapScan</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span> 
+                 <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+        <span class="n">MapScan</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span>
+                         <span class="n">scan_axis</span><span class="p">,</span> <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_x</span> <span class="o">=</span> <span class="n">length_x</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="n">speed</span> <span class="o">*</span> <span class="mi">60</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration_y</span> <span class="o">=</span> <span class="n">length_y</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="n">speed</span> <span class="o">*</span> <span class="mi">60</span>
+        <span class="k">if</span> <span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LON&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit_subscans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension_y</span>
+        <span class="k">elif</span> <span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LAT&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unit_subscans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimension_x</span>
+    
+    <span class="k">def</span> <span class="nf">_do_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">_receiver</span><span class="p">,</span> <span class="n">_frequency</span><span class="p">):</span>
+        <span class="n">beamsize</span> <span class="o">=</span> <span class="n">_receiver</span><span class="o">.</span><span class="n">get_beamsize</span><span class="p">(</span><span class="n">_frequency</span><span class="p">)</span> 
+        <span class="n">_subscans</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;scan axis: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span><span class="p">,))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">lon_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LON&quot;</span><span class="p">:</span>
+            <span class="n">_const_axis</span> <span class="o">=</span> <span class="s">&#39;LAT&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TL&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TR&quot;</span><span class="p">:</span>
+                <span class="n">_offsets</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TL&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;BL&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span> <span class="c">#RA and GAL-LON are reversed!!</span>
+                    <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;DEC&quot;</span><span class="p">,</span> <span class="s">&quot;INC&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;INC&quot;</span><span class="p">,</span> <span class="s">&quot;DEC&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span>
+                    <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;INC&quot;</span><span class="p">,</span> <span class="s">&quot;DEC&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;DEC&quot;</span><span class="p">,</span> <span class="s">&quot;INC&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_offset</span><span class="p">,</span> <span class="n">_direction</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="n">_offsets</span><span class="p">,</span>
+                                                      <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">_directions</span><span class="p">)):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;OTF: </span><span class="si">%d</span><span class="s"> offset </span><span class="si">%s</span><span class="s"> direction </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+                                                                 <span class="n">_offset</span><span class="p">,</span>
+                                                                 <span class="n">_direction</span><span class="p">))</span>
+                <span class="n">_subscans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscan</span><span class="o">.</span><span class="n">get_cen_otf_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">duration_x</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">length_x</span><span class="p">,</span>
+                                                          <span class="n">_offset</span><span class="p">,</span>
+                                                          <span class="n">_const_axis</span><span class="p">,</span>
+                                                          <span class="n">_direction</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+                                                          <span class="n">beamsize</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">lat_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LAT&quot;</span><span class="p">:</span>
+            <span class="n">_const_axis</span> <span class="o">=</span> <span class="s">&#39;LON&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TR&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;BR&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span>
+                    <span class="n">_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_offsets</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span>
+                    <span class="n">_offsets</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;BL&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;BR&quot;</span><span class="p">:</span>
+                <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;INC&quot;</span><span class="p">,</span> <span class="s">&quot;DEC&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_directions</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;DEC&quot;</span><span class="p">,</span> <span class="s">&quot;INC&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_offset</span><span class="p">,</span> <span class="n">_direction</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">izip</span><span class="p">(</span><span class="n">_offsets</span><span class="p">,</span>
+                                                      <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">_directions</span><span class="p">)):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;OTF: </span><span class="si">%d</span><span class="s"> offset </span><span class="si">%s</span><span class="s"> direction </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+                                                                 <span class="n">_offset</span><span class="p">,</span>
+                                                                 <span class="n">_direction</span><span class="p">))</span>
+                <span class="n">_subscans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscan</span><span class="o">.</span><span class="n">get_cen_otf_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">duration_y</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">length_y</span><span class="p">,</span>
+                                                          <span class="n">_offset</span><span class="p">,</span>
+                                                          <span class="n">_const_axis</span><span class="p">,</span>
+                                                          <span class="n">_direction</span><span class="p">,</span>
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+                                                          <span class="n">beamsize</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">_subscans</span>
+</div>
+<div class="viewcode-block" id="RasterMapScan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.maps.RasterMapScan">[docs]</a><span class="k">class</span> <span class="nc">RasterMapScan</span><span class="p">(</span><span class="n">MapScan</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span> 
+                 <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">duration</span><span class="p">):</span>
+        <span class="n">MapScan</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span>
+                  <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extremes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span>
+                                               <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">degrees</span><span class="p">],</span>
+                                               <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">degrees</span><span class="p">]</span>
+                                              <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_offsets</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_offsets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get ordered offsets for each point of the raster scan</span>
+<span class="sd">        @return: [(X0, Y0), (X1, Y1) .... (Xdim, Ydim)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#resulting offsets</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TL&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;BL&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span>
+                <span class="n">xoffsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xoffsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">GAL</span><span class="p">:</span>
+                <span class="n">xoffsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">xoffsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_x</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TL&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_point</span> <span class="o">==</span> <span class="s">&quot;TR&quot;</span><span class="p">:</span>
+            <span class="n">yoffsets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yoffsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset_y</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LON&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">lon_name</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">yoffsets</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">_xoffsets</span> <span class="o">=</span> <span class="n">xoffsets</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_xoffsets</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_x</span> <span class="ow">in</span> <span class="n">_xoffsets</span><span class="p">:</span>
+                    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;LAT&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_axis</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">lat_name</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xoffsets</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">_yoffsets</span> <span class="o">=</span> <span class="n">yoffsets</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_yoffsets</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">yoffsets</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_y</span> <span class="ow">in</span> <span class="n">_yoffsets</span><span class="p">:</span>
+                    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">_x</span><span class="p">,</span> <span class="n">_y</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">offset</span><span class="se">\t</span><span class="s"> </span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> <span class="n">_y</span><span class="o">.</span><span class="n">degrees</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">_do_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">_receiver</span><span class="p">,</span> <span class="n">_frequency</span><span class="p">):</span>
+        <span class="n">beamsize</span> <span class="o">=</span> <span class="n">_receiver</span><span class="o">.</span><span class="n">get_beamsize</span><span class="p">(</span><span class="n">_frequency</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_x</span><span class="p">,</span> <span class="n">_y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">offset</span><span class="se">\t</span><span class="s"> </span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> <span class="n">_y</span><span class="o">.</span><span class="n">degrees</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;OFFSETS: </span><span class="si">%f</span><span class="s"> </span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">offset_lon</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> <span class="n">offset_lat</span><span class="o">.</span><span class="n">degrees</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscan</span><span class="o">.</span><span class="n">get_sid_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> 
+                                                      <span class="n">offset_lon</span><span class="p">,</span>
+                                                      <span class="n">offset_lat</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">extremes</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+                                                      <span class="n">beamsize</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" >schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

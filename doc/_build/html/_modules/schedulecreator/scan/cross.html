@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.scan.cross &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../../index.html" />
+    <link rel="up" title="schedulecreator.scan" href="../scan.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" accesskey="U">schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.scan.cross</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">scanmode</span> <span class="kn">import</span> <span class="n">ScanMode</span>
+<span class="kn">import</span> <span class="nn">subscan</span>
+<span class="kn">from</span> <span class="nn">schedulecreator.valid_angles</span> <span class="kn">import</span> <span class="n">VAngle</span>
+
+<div class="viewcode-block" id="CrossScan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.cross.CrossScan">[docs]</a><span class="k">class</span> <span class="nc">CrossScan</span><span class="p">(</span><span class="n">ScanMode</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">frame</span><span class="p">,</span> 
+                 <span class="n">length</span><span class="p">,</span> 
+                 <span class="n">speed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @param frame: The scan L{frame}</span>
+<span class="sd">        @type frame: L{frame.Frame}</span>
+<span class="sd">        @param length: length of each otf subscan in decimal degrees</span>
+<span class="sd">        @type length: angles.Angle</span>
+<span class="sd">        @param speed: speed of each otf subscan in degrees per minute</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ScanMode</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>
+        <span class="c">#duration is expressed in seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="mi">60</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;scan </span><span class="si">%d</span><span class="s"> duration: </span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">))</span>
+        <span class="c">#The minimum observation is composed of 4 subscans</span>
+        <span class="c"># to form a cross over the source in both directions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_subscans</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;CROSS SCAN&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_do_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">_receiver</span><span class="p">,</span> <span class="n">_frequency</span><span class="p">):</span>
+        <span class="n">beamsize</span> <span class="o">=</span> <span class="n">_receiver</span><span class="o">.</span><span class="n">get_beamsize</span><span class="p">(</span><span class="n">_frequency</span><span class="p">)</span>
+        <span class="n">_subscans</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c">#Fill informations for each OTF subscan in the 4 directions</span>
+        <span class="c">#This is a default implementation, maybe one day we could parametrize</span>
+        <span class="c">#this if needed</span>
+        <span class="k">for</span> <span class="n">_const_axis</span><span class="p">,</span> <span class="n">_direction</span> <span class="ow">in</span> <span class="p">[(</span><span class="s">&#39;LON&#39;</span><span class="p">,</span> <span class="s">&#39;INC&#39;</span><span class="p">),</span> 
+                                        <span class="p">(</span><span class="s">&#39;LON&#39;</span><span class="p">,</span> <span class="s">&#39;DEC&#39;</span><span class="p">),</span> 
+                                        <span class="p">(</span><span class="s">&#39;LAT&#39;</span><span class="p">,</span> <span class="s">&#39;INC&#39;</span><span class="p">),</span> 
+                                        <span class="p">(</span><span class="s">&#39;LAT&#39;</span><span class="p">,</span> <span class="s">&#39;DEC&#39;</span><span class="p">)]:</span>
+            <span class="n">_subscans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscan</span><span class="o">.</span><span class="n">get_couple_subscan</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                                                        <span class="n">VAngle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span>
+                                                        <span class="n">_const_axis</span><span class="p">,</span>
+                                                        <span class="n">_direction</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+                                                        <span class="n">beamsize</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">_subscans</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" >schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

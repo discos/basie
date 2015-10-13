@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.target_parser &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.target_parser</h1><div class="highlight"><pre>
+<span class="c">#coding=utf-8</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">valid_angles</span>
+<span class="kn">import</span> <span class="nn">rich_validator</span>
+<span class="kn">from</span> <span class="nn">target</span> <span class="kn">import</span> <span class="n">Target</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">string pattern identifying an option.</span>
+<span class="sd">Matches everything separated by a \&#39;=\&#39; sign excluding whitespaces</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">OPTION_RE</span> <span class="o">=</span> <span class="s">&quot;(?P&lt;opt&gt;\S+)\s*=\s*(?P&lt;val&gt;\S+)\s*&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">string pattern identifying a target line.</span>
+<span class="sd">The line must be composed of \&#39;label\&#39; \&#39;scantype\&#39; \&#39;frame\&#39; \&#39;longitude\&#39;</span>
+<span class="sd">\&#39;latitude\&#39; and multiple \&#39;key = value\&#39; optional parameters.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">TARGET_RE</span> <span class="o">=</span> <span class="s">&quot;^(?P&lt;label&gt;\S+)\s+&quot;</span> <span class="o">+</span> \
+            <span class="s">&quot;(?P&lt;scantype&gt;\S+)\s+&quot;</span> <span class="o">+</span> \
+            <span class="s">&quot;(?P&lt;frame&gt;eq|hor|gal)\s+&quot;</span> <span class="o">+</span>\
+            <span class="s">&quot;(?P&lt;longitude&gt;\S+)\s+&quot;</span> <span class="o">+</span>\
+            <span class="s">&quot;(?P&lt;latitude&gt;\S+)\s*&quot;</span> <span class="o">+</span>\
+            <span class="s">&quot;(?P&lt;optionals&gt;.*)$&quot;</span>
+
+<span class="n">TARGET_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">TARGET_RE</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+<span class="n">OPTION_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">OPTION_RE</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_parse_options</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parse optional parameters from target line. </span>
+<span class="sd">    Options are specified as key-value pairs, key can be one of: </span>
+<span class="sd">    repetitions, tsys, offset_frame, offset_lon, offset_lat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">OPTION_PATTERN</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;offset_lon&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;offset_lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valid_angles</span><span class="o">.</span><span class="n">check_dec_angle</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;offset_lat&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;offset_lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valid_angles</span><span class="o">.</span><span class="n">check_dec_angle</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;tsys&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;tsys&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;repetitions&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;repetitions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;offset_frame&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;offset_frame&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rich_validator</span><span class="o">.</span><span class="n">check_frame</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;vframe&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;vframe&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rich_validator</span><span class="o">.</span><span class="n">check_vframe</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;vdef&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;vdef&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rich_validator</span><span class="o">.</span><span class="n">check_vdef</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&#39;svel&#39;</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s">&#39;svel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">options</span>
+
+<span class="k">def</span> <span class="nf">_parse_target_line</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate and parse a line of a txt file specifying a target</span>
+<span class="sd">    of the schedule</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">TARGET_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;invalid target line: &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parsing target line: &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">matches</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+        <span class="n">option_string</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&#39;optionals&#39;</span><span class="p">)</span>
+        <span class="n">target</span><span class="p">[</span><span class="s">&#39;frame&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rich_validator</span><span class="o">.</span><span class="n">check_frame</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s">&#39;frame&#39;</span><span class="p">])</span>
+        <span class="n">target</span><span class="p">[</span><span class="s">&#39;longitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valid_angles</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s">&#39;longitude&#39;</span><span class="p">])</span>
+        <span class="n">target</span><span class="p">[</span><span class="s">&#39;latitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">valid_angles</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s">&#39;latitude&#39;</span><span class="p">])</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_parse_options</span><span class="p">(</span><span class="n">option_string</span><span class="p">))</span>
+        <span class="n">scantype</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;scantype&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">scantype</span><span class="p">,</span> <span class="n">Target</span><span class="p">(</span><span class="o">**</span><span class="n">target</span><span class="p">))</span>
+
+<div class="viewcode-block" id="parse_file"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.target_parser.parse_file">[docs]</a><span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">check_values</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a target txt file into a list of Target objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">_file</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">_file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="c">#escapes whitespaces and special chars</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+    <span class="c">#remove commented and empty lines</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;#&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">l</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">))]</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span> <span class="c">#targets is a list so that it mantains the same ordering as in the file lines</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">scantype</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">_parse_target_line</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">target</span><span class="p">:</span> <span class="c"># not None</span>
+            <span class="k">if</span> <span class="n">check_values</span><span class="p">:</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">check_consistency</span><span class="p">()</span>
+            <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">target</span><span class="p">,</span> <span class="n">scantype</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">targets</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

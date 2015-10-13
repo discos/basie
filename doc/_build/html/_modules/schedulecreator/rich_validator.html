@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.rich_validator &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.rich_validator</h1><div class="highlight"><pre>
+<span class="c">#coding=utf-8</span>
+
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2013  INAF -IRA Italian institute of radioastronomy, bartolini@ira.inaf.it</span>
+<span class="c">#</span>
+<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module extends the validate options used to parse schedule creator</span>
+<span class="sd">arguments from configuration file.</span>
+<span class="sd">In particular it adds new possible instances to be used in the .ini schemas</span>
+<span class="sd">files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">configobj</span>
+<span class="kn">import</span> <span class="nn">validate</span> <span class="kn">as</span> <span class="nn">v</span>
+
+<span class="kn">import</span> <span class="nn">angle_parser</span>
+<span class="kn">import</span> <span class="nn">frame</span>
+<span class="kn">import</span> <span class="nn">scan</span>
+<span class="kn">import</span> <span class="nn">utils</span>
+
+<span class="n">valid_list_element</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;\[.+\]|[^\s,]+&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">regular expression matching list items separated by whitespace characters or</span>
+<span class="sd">\&#39;,\&#39; items enclosed in square brackets are kept intact.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">valid_onoff_element</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(\d*)(on|off)(_cal)?&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">regular expression matching valid onoff geometries</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">valid_nodding_element</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(\d*)(a|b)(_cal)?&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">regular expression matching valid position switch geometries</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="string2list"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.string2list">[docs]</a><span class="k">def</span> <span class="nf">string2list</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    @param value: a list of items separated by \&#39;,\&#39; or whitespaces</span>
+<span class="sd">    @type value: string</span>
+<span class="sd">    @return: [first, second, third ... ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value_list</span> <span class="o">=</span> <span class="n">valid_list_element</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value_list</span>
+</div>
+<div class="viewcode-block" id="check_frame"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_frame">[docs]</a><span class="k">def</span> <span class="nf">check_frame</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a string to a frame.Frame instance.</span>
+<span class="sd">    Used as a validating function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected frame value, found list&quot;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> is not a valid frame&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">frame</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="check_cross_scan"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_cross_scan">[docs]</a><span class="k">def</span> <span class="nf">check_cross_scan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected list, found  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="n">_frame</span> <span class="o">=</span> <span class="n">check_frame</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">scan</span><span class="o">.</span><span class="n">CrossScan</span><span class="p">(</span><span class="n">_frame</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">speed</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="check_otf_map"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_otf_map">[docs]</a><span class="k">def</span> <span class="nf">check_otf_map</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected list, found  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="n">_frame</span> <span class="o">=</span> <span class="n">check_frame</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
+    <span class="n">scan_axis</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scan_axis</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid axis: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scan_axis</span><span class="p">,))</span>
+    <span class="n">start_point</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">start_point</span> <span class="ow">in</span> <span class="n">scan</span><span class="o">.</span><span class="n">START_POINTS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid start point: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start_point</span><span class="p">,))</span>
+    <span class="n">length_x</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">length_y</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">scan_axis</span> <span class="o">==</span> <span class="s">&quot;BOTH&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">OTFMapScan</span><span class="p">(</span><span class="n">_frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">_frame</span><span class="o">.</span><span class="n">lon_name</span><span class="p">,</span> <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span>
+                           <span class="n">spacing</span><span class="p">,</span> <span class="n">speed</span><span class="p">),</span>
+                <span class="n">scan</span><span class="o">.</span><span class="n">OTFMapScan</span><span class="p">(</span><span class="n">_frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">_frame</span><span class="o">.</span><span class="n">lat_name</span><span class="p">,</span> <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span>
+                           <span class="n">spacing</span><span class="p">,</span> <span class="n">speed</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scan</span><span class="o">.</span><span class="n">OTFMapScan</span><span class="p">(</span><span class="n">_frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span> <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span>
+                           <span class="n">spacing</span><span class="p">,</span> <span class="n">speed</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="check_raster_map"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_raster_map">[docs]</a><span class="k">def</span> <span class="nf">check_raster_map</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected list, found  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="n">_frame</span> <span class="o">=</span> <span class="n">check_frame</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
+    <span class="n">scan_axis</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">scan_axis</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid axis: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scan_axis</span><span class="p">,))</span>
+    <span class="n">start_point</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">start_point</span> <span class="ow">in</span> <span class="n">scan</span><span class="o">.</span><span class="n">START_POINTS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid start point: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start_point</span><span class="p">,))</span>
+    <span class="n">length_x</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">length_y</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">scan</span><span class="o">.</span><span class="n">RasterMapScan</span><span class="p">(</span><span class="n">_frame</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">scan_axis</span><span class="p">,</span> <span class="n">length_x</span><span class="p">,</span> <span class="n">length_y</span><span class="p">,</span>
+                       <span class="n">spacing</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="check_onoff_sequence"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_onoff_sequence">[docs]</a><span class="k">def</span> <span class="nf">check_onoff_sequence</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">string2list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">onoff_elements</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">valid_onoff_element</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid onoff element: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">))</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">subscan_type</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">is_cal</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_cal</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">onoff_elements</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">repetitions</span><span class="p">,</span> <span class="n">subscan_type</span><span class="p">,</span> <span class="n">is_cal</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">onoff_elements</span>
+</div>
+<div class="viewcode-block" id="check_onoff"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_onoff">[docs]</a><span class="k">def</span> <span class="nf">check_onoff</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected list, found  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">offset_lon</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">offset_lat</span> <span class="o">=</span> <span class="n">angle_parser</span><span class="o">.</span><span class="n">check_angle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">offset_frame</span> <span class="o">=</span> <span class="n">check_frame</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> 
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">check_onoff_sequence</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c">#strip [ and ]</span>
+    <span class="k">return</span> <span class="n">scan</span><span class="o">.</span><span class="n">OnOffScan</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span><span class="p">,</span> <span class="n">offset_frame</span><span class="p">,</span>
+            <span class="n">sequence</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="check_nodding_sequence"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_nodding_sequence">[docs]</a><span class="k">def</span> <span class="nf">check_nodding_sequence</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">string2list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">nodding_elements</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">valid_nodding_element</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid position switch element </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">))</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">repetitions</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">on_feed</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="n">is_cal</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_cal</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">nodding_elements</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">repetitions</span><span class="p">,</span> <span class="n">on_feed</span><span class="p">,</span> <span class="n">is_cal</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">nodding_elements</span>
+</div>
+<div class="viewcode-block" id="check_nodding"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_nodding">[docs]</a><span class="k">def</span> <span class="nf">check_nodding</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected list, found  </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="n">feed_a</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">feed_b</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">is_float</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">check_nodding_sequence</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c">#strip [ and ]</span>
+    <span class="k">return</span> <span class="n">scan</span><span class="o">.</span><span class="n">NoddingScan</span><span class="p">((</span><span class="n">feed_a</span><span class="p">,</span> <span class="n">feed_b</span><span class="p">),</span> <span class="n">duration</span><span class="p">,</span> <span class="n">sequence</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="check_scan"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_scan">[docs]</a><span class="k">def</span> <span class="nf">check_scan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parsing scan line: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">string2list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">scantype</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">scantype</span> <span class="o">==</span> <span class="s">&quot;CROSS&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_cross_scan</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">scantype</span> <span class="o">==</span> <span class="s">&quot;OTFMAP&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_otf_map</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">scantype</span> <span class="o">==</span> <span class="s">&quot;RASTERMAP&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_raster_map</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">scantype</span> <span class="o">==</span> <span class="s">&quot;ONOFF&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_onoff</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">elif</span> <span class="n">scantype</span> <span class="o">==</span> <span class="s">&quot;NODDING&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">check_nodding</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;unknow scan type </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scantype</span><span class="p">,))</span>
+</div>
+<div class="viewcode-block" id="check_file"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_file">[docs]</a><span class="k">def</span> <span class="nf">check_file</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected value filename, found list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> is not a valid file&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">value</span>
+</div>
+<span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;^[&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&quot;_a-zA-Z0-9.-]+$&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="check_filename"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_filename">[docs]</a><span class="k">def</span> <span class="nf">check_filename</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected value filename, found list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">filename_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid filename: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">value</span>
+</div>
+<span class="n">date_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;^\d{2}-\d{2}-\d{4}&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="check_date"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_date">[docs]</a><span class="k">def</span> <span class="nf">check_date</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;expected date value, found list&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">date_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid date format: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%d</span><span class="s">-%m-%Y&quot;</span><span class="p">)</span>
+        <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;not a valid date: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">date</span>
+</div>
+<div class="viewcode-block" id="check_future_date"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.check_future_date">[docs]</a><span class="k">def</span> <span class="nf">check_future_date</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">check_date</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">date</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;date </span><span class="si">%s</span><span class="s"> is in the past&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">date</span>
+</div>
+<span class="n">valid_types</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;frame&#39;</span> <span class="p">:</span> <span class="n">check_frame</span><span class="p">,</span>
+    <span class="s">&#39;scan&#39;</span> <span class="p">:</span> <span class="n">check_scan</span><span class="p">,</span>
+    <span class="s">&#39;file&#39;</span> <span class="p">:</span> <span class="n">check_file</span><span class="p">,</span>
+    <span class="s">&#39;filename&#39;</span> <span class="p">:</span> <span class="n">check_filename</span><span class="p">,</span>
+    <span class="s">&#39;date&#39;</span> <span class="p">:</span> <span class="n">check_date</span><span class="p">,</span>
+    <span class="s">&#39;future_date&#39;</span> <span class="p">:</span> <span class="n">check_future_date</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">valid_types</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">angle_parser</span><span class="o">.</span><span class="n">validate_options</span><span class="p">)</span>
+<span class="n">rich_validator</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">Validator</span><span class="p">(</span><span class="n">valid_types</span><span class="p">)</span>
+
+<div class="viewcode-block" id="validate"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.validate">[docs]</a><span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">specfilename</span><span class="p">):</span><span class="c">#, error_stream=sys.stderr):</span>
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">configobj</span><span class="o">.</span><span class="n">ConfigObj</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">configspec</span><span class="o">=</span><span class="n">specfilename</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">rich_validator</span><span class="p">,</span> <span class="n">preserve_errors</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="n">flat_errs</span> <span class="o">=</span> <span class="n">configobj</span><span class="o">.</span><span class="n">flatten_errors</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">flat_errs</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="n">v</span><span class="o">.</span><span class="n">ValidateError</span><span class="p">(</span><span class="s">&quot;Could not validate </span><span class="si">%s</span><span class="s"> vs </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">specfilename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">conf</span>
+</div>
+<div class="viewcode-block" id="validate_configuration"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.rich_validator.validate_configuration">[docs]</a><span class="k">def</span> <span class="nf">validate_configuration</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">validate</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">SCHEMA_DIR</span><span class="p">,</span> <span class="s">&quot;schedule.ini&quot;</span><span class="p">))</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

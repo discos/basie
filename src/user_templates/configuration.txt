@@ -1,0 +1,56 @@
+projectID = ProjectName
+observer = YourName
+scheduleLabel = TestSched
+# SRT, MED or NOTO 
+radiotelescope = SRT
+receiver = C
+# fits or mbfits
+outputFormat = fits
+# default repetitions value for each scan
+repetitions = 1
+# default tsys value for each scan
+tsys = 0
+#optional restFrequency in Mhz, can be a list 
+restFrequency = 22000
+
+# File name of the target specs in this same directory
+targetsFile = targets.txt
+
+# Here we configure which backend we are using in this schedule.
+[totalpower]
+    # integration period in ms
+    integration = 10
+    # sampling interval in ms
+    samplingInterval = 10.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 300
+
+#[xarcos]
+#    # one of XK77 XK03 XK06 XK00 XC00
+#    configuration = XK77
+
+[scans]
+
+    #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
+     EqCross1_3 = CROSS EQ 1.0d 3.0
+     EqCross1_5 = CROSS EQ 1.0d 5.0    
+     HorCross1_3 = CROSS HOR 1.0d 3.0
+
+    #OTFSCANNAME = OTFMAP FRAME AXIS START LENGTH_X LENGTH_Y SPEED SCANS_PER_BEAM
+     ELMAP1x1TL = OTFMAP HOR EL TL 1.0d 1.0d 5.0 3
+     AZMAP1x1TR = OTFMAP HOR AZ TR 1.0d 1.0d 5.0 3
+     RAMAP1x1BL = OTFMAP EQ RA BL 1.0d 1.0d 5.0 3
+     DECMAP1x1BR = OTFMAP EQ DEC BR 1.0d 1.0d 5.0 3
+     GLONMAP2x2TL = OTFMAP GAL LON TL 2.0d 2.0d 10.0 3
+     GLATMAP2x2TL = OTFMAP GAL LAT TL 2.0d 2.0d 10.0 3
+     EQMap1x1 = OTFMAP EQ BOTH TL 1.0d 1.0d 5.0 3
+
+    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION POINTS_PRE_BEAM
+     HorRasterTL = RASTERMAP HOR LON TL 1.0d 1.0d 10.0 3
+     HorRasterTR = RASTERMAP HOR LAT TR 1.0d 1.0d 5.0 3
+
+    #ONOFFNAME = ONOFF DURATION OFF_FRAME LON_OFF LAT_OFF [4on,4off,2on_cal,2off_cal .. ]
+     OOSCAN = ONOFF 4.0 EQ 1.0d 1.0d [4on,4off,2off_cal]
+     ONSCAN = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
+

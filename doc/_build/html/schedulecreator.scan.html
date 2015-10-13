@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>scan Package &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">SchduleCreator 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="scan-package">
+<h1>scan Package<a class="headerlink" href="#scan-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">scan</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-schedulecreator.scan"></span><dl class="class">
+<dt id="schedulecreator.scan.ScanMode">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">ScanMode</tt><a class="headerlink" href="#schedulecreator.scan.ScanMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for all Scan types. Gives a unique ID to the scan and implements
+L{iter_subscans&lt;self.iter_subscans&gt;} method valid for all subclasses.</p>
+<dl class="attribute">
+<dt id="schedulecreator.scan.ScanMode.ID">
+<tt class="descname">ID</tt><em class="property"> = 0</em><a class="headerlink" href="#schedulecreator.scan.ScanMode.ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.scan.ScanMode.do_scan">
+<tt class="descname">do_scan</tt><big>(</big><em>_target</em>, <em>_receiver</em>, <em>_frequency</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.ScanMode.do_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current taraget and calls the L{_do_scan} implementation of the
+specific subclass
+&#64;param _target: the current target
+&#64;type _target: L{target.Target}
+&#64;param _receiver: the selected receiver
+&#64;param _frequency: the selected frequency
+&#64;raise ScanError: if frequency is not within receiver range</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.CrossScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">CrossScan</tt><big>(</big><em>frame</em>, <em>length</em>, <em>speed</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.CrossScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.OTFMapScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">OTFMapScan</tt><big>(</big><em>frame</em>, <em>start_point</em>, <em>scan_axis</em>, <em>length_x</em>, <em>length_y</em>, <em>spacing</em>, <em>speed</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.OTFMapScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.maps.MapScan" title="schedulecreator.scan.maps.MapScan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.maps.MapScan</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.RasterMapScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">RasterMapScan</tt><big>(</big><em>frame</em>, <em>start_point</em>, <em>scan_axis</em>, <em>length_x</em>, <em>length_y</em>, <em>spacing</em>, <em>duration</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.RasterMapScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.maps.MapScan" title="schedulecreator.scan.maps.MapScan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.maps.MapScan</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.NoddingScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">NoddingScan</tt><big>(</big><em>feeds</em>, <em>duration</em>, <em>sequence</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.NoddingScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.OnOffScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">OnOffScan</tt><big>(</big><em>duration</em>, <em>offset_lon</em>, <em>offset_lat</em>, <em>offset_frame</em>, <em>sequence</em><big>)</big><a class="headerlink" href="#schedulecreator.scan.OnOffScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.scan.START_POINTS">
+<tt class="descclassname">schedulecreator.scan.</tt><tt class="descname">START_POINTS</tt><em class="property"> = ('TL', 'TR', 'BL', 'BR')</em><a class="headerlink" href="#schedulecreator.scan.START_POINTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Valid starting points for Maps geometries
+TL = Top Left
+TR = Top Roght
+BL = Bottom Left
+BR = Bottom Right</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.cross">
+<span id="cross-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cross</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.cross" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.scan.cross.CrossScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.cross.</tt><tt class="descname">CrossScan</tt><big>(</big><em>frame</em>, <em>length</em>, <em>speed</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/cross.html#CrossScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.cross.CrossScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.maps">
+<span id="maps-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">maps</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.maps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.scan.maps.MapScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.maps.</tt><tt class="descname">MapScan</tt><big>(</big><em>frame</em>, <em>start_point</em>, <em>scan_axis</em>, <em>length_x</em>, <em>length_y</em>, <em>spacing</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/maps.html#MapScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.maps.MapScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+<p>MapScan superclass used for OTF and RASTER maps</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.maps.OTFMapScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.maps.</tt><tt class="descname">OTFMapScan</tt><big>(</big><em>frame</em>, <em>start_point</em>, <em>scan_axis</em>, <em>length_x</em>, <em>length_y</em>, <em>spacing</em>, <em>speed</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/maps.html#OTFMapScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.maps.OTFMapScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.maps.MapScan" title="schedulecreator.scan.maps.MapScan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.maps.MapScan</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.maps.RasterMapScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.maps.</tt><tt class="descname">RasterMapScan</tt><big>(</big><em>frame</em>, <em>start_point</em>, <em>scan_axis</em>, <em>length_x</em>, <em>length_y</em>, <em>spacing</em>, <em>duration</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/maps.html#RasterMapScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.maps.RasterMapScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.maps.MapScan" title="schedulecreator.scan.maps.MapScan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.maps.MapScan</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.nodding">
+<span id="nodding-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">nodding</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.nodding" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.scan.nodding.NoddingScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.nodding.</tt><tt class="descname">NoddingScan</tt><big>(</big><em>feeds</em>, <em>duration</em>, <em>sequence</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/nodding.html#NoddingScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.nodding.NoddingScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.onoff">
+<span id="onoff-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">onoff</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.onoff" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.scan.onoff.OnOffScan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.onoff.</tt><tt class="descname">OnOffScan</tt><big>(</big><em>duration</em>, <em>offset_lon</em>, <em>offset_lat</em>, <em>offset_frame</em>, <em>sequence</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/onoff.html#OnOffScan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.onoff.OnOffScan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.scanmode.ScanMode" title="schedulecreator.scan.scanmode.ScanMode"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.scanmode.ScanMode</span></tt></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.scanmode">
+<span id="scanmode-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">scanmode</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.scanmode" title="Permalink to this headline">¶</a></h2>
+<p>Module implementing scan geometries and their methods to get subscans for
+specific targets</p>
+<dl class="class">
+<dt id="schedulecreator.scan.scanmode.ScanMode">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.scanmode.</tt><tt class="descname">ScanMode</tt><a class="reference internal" href="_modules/schedulecreator/scan/scanmode.html#ScanMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.scanmode.ScanMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for all Scan types. Gives a unique ID to the scan and implements
+L{iter_subscans&lt;self.iter_subscans&gt;} method valid for all subclasses.</p>
+<dl class="attribute">
+<dt id="schedulecreator.scan.scanmode.ScanMode.ID">
+<tt class="descname">ID</tt><em class="property"> = 0</em><a class="headerlink" href="#schedulecreator.scan.scanmode.ScanMode.ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.scan.scanmode.ScanMode.do_scan">
+<tt class="descname">do_scan</tt><big>(</big><em>_target</em>, <em>_receiver</em>, <em>_frequency</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/scanmode.html#ScanMode.do_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.scanmode.ScanMode.do_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current taraget and calls the L{_do_scan} implementation of the
+specific subclass
+&#64;param _target: the current target
+&#64;type _target: L{target.Target}
+&#64;param _receiver: the selected receiver
+&#64;param _frequency: the selected frequency
+&#64;raise ScanError: if frequency is not within receiver range</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.scan.subscan">
+<span id="subscan-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">subscan</span></tt> Module<a class="headerlink" href="#module-schedulecreator.scan.subscan" title="Permalink to this headline">¶</a></h2>
+<p>Subscan related classes and funcions:
+B{Classes}</p>
+<blockquote>
+<div><ul>
+<li><p class="first">SubscanError</p>
+</li>
+<li><dl class="first docutils">
+<dt>Subscan: a generic subscan </dt>
+<dd><ul class="first last simple">
+<li>OTFSubscan: a generic on the fly subscan</li>
+<li>SiderealSubscan: a generic sidereal subscan</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>B{Functions}
+Used to get subscan classes instances. Subscans are often returned in couples
+together with their associated Tsys sidereal subscan.</p>
+<blockquote>
+<div><ul class="simple">
+<li>get_cen_otf_subscan</li>
+<li>get_ss_otf_subscan (not implemented)</li>
+<li>get_sidereal_subscan</li>
+<li>get_tsys_subscan</li>
+<li>get_couple_subscan</li>
+<li>get_sid_couple_subscan</li>
+</ul>
+</div></blockquote>
+<dl class="class">
+<dt id="schedulecreator.scan.subscan.OTFSubscan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">OTFSubscan</tt><big>(</big><em>_target</em>, <em>lon2</em>, <em>lat2</em>, <em>descr</em>, <em>scan_frame</em>, <em>geom</em>, <em>direction</em>, <em>duration</em>, <em>is_tsys=False</em>, <em>is_cal=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#OTFSubscan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.OTFSubscan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.subscan.Subscan" title="schedulecreator.scan.subscan.Subscan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.subscan.Subscan</span></tt></a></p>
+<p>On the flight sunbscan class</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.subscan.SiderealSubscan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">SiderealSubscan</tt><big>(</big><em>_target</em>, <em>duration=0.0</em>, <em>is_tsys=False</em>, <em>is_cal=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#SiderealSubscan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.SiderealSubscan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.scan.subscan.Subscan" title="schedulecreator.scan.subscan.Subscan"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.scan.subscan.Subscan</span></tt></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.scan.subscan.Subscan">
+<em class="property">class </em><tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">Subscan</tt><big>(</big><em>_target</em>, <em>duration=0.0</em>, <em>is_tsys=False</em>, <em>is_cal=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#Subscan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.Subscan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Generic subscan. Contains common subscan attributes and is meant to be
+override by specific subscan classes</p>
+<dl class="attribute">
+<dt id="schedulecreator.scan.subscan.Subscan.ID">
+<tt class="descname">ID</tt><em class="property"> = 1</em><a class="headerlink" href="#schedulecreator.scan.subscan.Subscan.ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.scan.subscan.Subscan.add_post_procedure">
+<tt class="descname">add_post_procedure</tt><big>(</big><em>proc</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#Subscan.add_post_procedure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.Subscan.add_post_procedure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.scan.subscan.Subscan.add_pre_procedure">
+<tt class="descname">add_pre_procedure</tt><big>(</big><em>proc</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#Subscan.add_pre_procedure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.Subscan.add_pre_procedure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.scan.subscan.TSYS_SIGMA">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">TSYS_SIGMA</tt><em class="property"> = 5</em><a class="headerlink" href="#schedulecreator.scan.subscan.TSYS_SIGMA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for calculating TSYS subscans coordinate offsets as TSYS_SIGMA * beamsize</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_cen_otf">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_cen_otf</tt><big>(</big><em>_target</em>, <em>duration</em>, <em>length</em>, <em>offset</em>, <em>const_axis</em>, <em>direction</em>, <em>scan_frame</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_cen_otf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_cen_otf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an I{OTF} subscan with description I{CEN}.
+&#64;return: an L{OTFSubscan} instance</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_cen_otf_tsys">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_cen_otf_tsys</tt><big>(</big><em>_target</em>, <em>duration</em>, <em>length</em>, <em>offset</em>, <em>const_axis</em>, <em>direction</em>, <em>scan_frame</em>, <em>beamsize</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_cen_otf_tsys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_cen_otf_tsys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a couple composed of a CEN_OTF subscan and its relative SIDEREAL TSYS
+subscan.
+&#64;return: (otf_subscan, tsys_subscan)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_sid_tsys">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_sid_tsys</tt><big>(</big><em>_target</em>, <em>offset_lon</em>, <em>offset_lat</em>, <em>extremes</em>, <em>duration</em>, <em>beamsize</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_sid_tsys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_sid_tsys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a couple of sidereal subscans, where the first is an actual subscan and the
+second is a tsys subscan obtained pointing the antenna out of a rectangular
+polygon containing the source.
+&#64;param _target: the source to be observed
+&#64;type _target: L{target.Target}
+&#64;param offset_lon: longitude offset of the subscan
+&#64;param offset_lat: latitude offset of the subscan
+&#64;param extremes: An array containing the offsets of the extremes of the rectangular polygon
+containing the source (i.e. the borders of a raster map) 
+&#64;type extremes: [(x0,y0), (x1,y1), (x2,y2), (x3,y3)]
+&#64;param duration: subscan duration (Sec. ) 
+&#64;type duration: float
+&#64;param beamsize: beam size used to calculated tsys subscan offsets</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_sidereal">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_sidereal</tt><big>(</big><em>_target</em>, <em>offset_lon</em>, <em>offset_lat</em>, <em>duration=0.0</em>, <em>is_tsys=False</em>, <em>is_cal=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_sidereal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_sidereal" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;param _target: the subscan target
+&#64;type _target: target.Target
+&#64;param offset_lon: additionale longitude offset
+&#64;type offset_lon: angles.Angle
+&#64;param offset_lat: additional latitude offset
+&#64;type offset_lat: angles.Angle</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_ss_otf">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_ss_otf</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_ss_otf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_ss_otf" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;raise NotImplementedError: we still have no useful case for implemting this
+function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.scan.subscan.get_tsys">
+<tt class="descclassname">schedulecreator.scan.subscan.</tt><tt class="descname">get_tsys</tt><big>(</big><em>_target</em>, <em>offset_lon</em>, <em>offset_lat</em>, <em>duration=0.0</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/scan/subscan.html#get_tsys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.scan.subscan.get_tsys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a Tsys subscan.
+This basically returns a SIDEREAL subscan where source name is I{Tsys} and
+duration is I{0.0}</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">scan Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">scan</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.cross"><tt class="docutils literal"><span class="pre">cross</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.maps"><tt class="docutils literal"><span class="pre">maps</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.nodding"><tt class="docutils literal"><span class="pre">nodding</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.onoff"><tt class="docutils literal"><span class="pre">onoff</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.scanmode"><tt class="docutils literal"><span class="pre">scanmode</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.scan.subscan"><tt class="docutils literal"><span class="pre">subscan</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/schedulecreator.scan.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">SchduleCreator 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

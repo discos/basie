@@ -1,0 +1,101 @@
+#coding=utf-8
+
+#
+#
+#    Copyright (C) 2013  INAF -IRA Italian institute of radioastronomy, bartolini@ira.inaf.it
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+This module implements logics related to angle representations and calculation
+inside the schedule creator.
+It enriches the Angle class defined in astropy.coordinates.Angle adding validating
+options to the validate module and conversions from and to string.
+"""
+
+from astropy import units as u
+from astropy.coordinates import Angle
+
+
+ANGLE_DECIMALS = 3
+"""
+CONSTANT. Decimal angles digits used in string fomratting
+"""
+
+SEXA_SEPARATOR = ':'
+"""
+CONSTANT. separator used in angle hour and sexagesimal representation
+"""
+
+class VAngle(Angle):
+    def __new__(cls, angle, unit=u.deg, wrap_angle=360 * u.deg, **kwargs):
+        self = super(VAngle, cls).__new__(cls, angle, unit=unit, **kwargs)
+    #def __init__(self, angle, unit=u.deg, bounds=(-360, 360)):
+        #Angle.__init__(self, angle, unit, bounds)
+        self._original_unit = unit
+        #will the default representation be sexagesimal?
+        if unit == u.hour or isinstance(angle, tuple):
+            self._sexa = True
+        else:
+            self._sexa = False
+        return self
+
+    def __copy__(self):
+        res = VAngle(self.deg)
+        res._original_unit = self._original_unit
+        res._sexa = self._sexa
+        return res
+
+    def __deepcopy__(self, *args):
+        return self.__copy__()
+
+    def fmt_dec(self):
+        """
+        Return the decimal string representation of the angle
+        """
+        _a_str = self.to_string(unit=u.deg, decimal=True, precision=ANGLE_DECIMALS)
+        return _a_str + "d"
+
+    def fmt_hms(self):
+        """
+        Return the sexagesimal string representation of the angle in hours
+        """
+        _a_str = self.to_string(unit=u.hour, sep=SEXA_SEPARATOR, pad=True, 
+                              precision=ANGLE_DECIMALS)
+        return _a_str + "h"
+
+    def fmt_dms(self):
+        """
+        Return the sexagesimal string representation of the angle
+        """
+        _a_str = self.to_string(unit=u.deg, sep=SEXA_SEPARATOR, precision=ANGLE_DECIMALS)
+        return _a_str
+
+    def fmt(self):
+        """
+        Return the string representation of the angle according to its original
+        format
+        """
+        if self._original_unit == u.hour:
+            return self.fmt_hms()
+        elif self._sexa:
+            return self.fmt_dms()
+        else:
+            return self.fmt_dec()
+
+ZERO_ANGLE = VAngle(0.0, unit=u.deg)
+"""
+CONSTANT, used in schedule creator to represent the zero angle.
+"""

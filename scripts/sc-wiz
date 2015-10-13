@@ -1,0 +1,50 @@
+#!/bin/bash
+TITLE="ScheduleCreatorWizard"
+OPTIONS="--title=$TITLE"
+CURDIR=$(pwd)
+INTRO="<big>Welcome to the <b>Schedule Creator</b> Wizard</big>\n"
+INTRO+="\nThe dialogs will guide you to the creation of a new schedule\n"
+INTRO+="\n<b>1)</b> Copy template files to a local folder\n"
+INTRO+="\n<b>2)</b> Modify the templates to your needs\n"
+INTRO+="\n<b>3)</b> Generate a new schedule in a new directory based on modified templates\n"
+$(zenity $OPTIONS --info --text="$INTRO")
+ans=$(zenity $OPTIONS --list --radiolist \
+    --text="First get and modify the templates\nthen generate schedule files" \
+    --column="Pick" --column="Option" \
+    TRUE "Get Templates" FALSE "Generate Schedule")
+if [ "$ans" = "Get Templates" ]
+then
+    template_opt="-t"
+    $(zenity $OPTIONS --info \
+        --text="Select the output directory for template files")
+    directory=$(zenity $OPTIONS \
+                --file-selection --directory --confirm-overwrite \
+                --filename=$CURDIR/)
+    if [ "$directory" ]
+    then
+        $(schedulecreator $template_opt $directory)
+        $(zenity $OPTIONS --info \
+            --width=300 \
+            --text="Now go and modify templates in $directory then run sc-wiz with schedule option")
+    fi
+elif [ "$ans"  = "Generate Schedule" ]
+then
+    $(zenity $OPTIONS --info --text="Select the configuration file")
+    schedule_file=$(zenity $OPTIONS \
+                --text "select input schedule template file" \
+                --file-selection --filename=$CURDIR/)
+    if [ -f "$schedule_file" ]
+    then
+        $(zenity $OPTIONS --info \
+            --text="Select the output directory for the schedule")
+        directory=$(zenity $OPTIONS \
+                    --text "Select output directory for schedule files" \
+                    --file-selection --directory --confirm-overwrite \
+                    --filename=$CURDIR/)
+        if [ "$directory" ]
+        then
+            $(schedulecreator -c $schedule_file $directory)
+        fi
+    fi
+fi
+

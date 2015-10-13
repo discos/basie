@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.templates &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.templates</h1><div class="highlight"><pre>
+<span class="c">#coding=utf-8</span>
+
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2013  INAF -IRA Italian institute of radioastronomy, bartolini@ira.inaf.it</span>
+<span class="c">#</span>
+<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing templates (as defined in standard string module) used to transorm classes instances into the</span>
+<span class="sd">representation used in the schedule files by ACS</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">scd_header</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="s">&quot;PROJECT: ${projectID}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;OBSERVER: ${observer}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;SCANLIST: ${lisfilename}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;PROCEDURELIST: ${cfgfilename}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;BACKENDLIST: ${bckfilename}</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;MODE: SEQ</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;SCANTAG: 1</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;INITPROC: ${initproc}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Used to convert a L{schedule.Schedule} instance into its representation in the .scd</span>
+<span class="sd">file header</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">sidereal_subscan</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="s">&quot;${ID}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;SIDEREAL</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${target}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${frame}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${longitude}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${latitude}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${epoch}&quot;</span> <span class="o">+</span> <span class="c">#\t is added in the code as</span>
+                                    <span class="c"># this param is optional!!!</span>
+                                    <span class="s">&quot;${offset_frame}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                                    <span class="s">&quot;${offset_lon}</span><span class="se">\t</span><span class="s">&quot;</span><span class="o">+</span>
+                                    <span class="s">&quot;${offset_lat}&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Used to convert an instance of L{subscan.SiderealSubscan} into its representation</span>
+<span class="sd">in the .lis file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">otf_subscan</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">Template</span><span class="p">(</span><span class="s">&quot;${ID}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;OTF</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${target}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${lon1}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${lat1}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${lon2}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${lat2}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${frame}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${s_frame}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${geom}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${descr}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${direction}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${duration}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${offset_frame}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${offset_lon}</span><span class="se">\t</span><span class="s">&quot;</span> <span class="o">+</span>
+                               <span class="s">&quot;${offset_lat}&quot;</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Used to convert an instance of L{subscan.OTFSubscan} into its representation</span>
+<span class="sd">in the .lis file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="format_layout"><a class="viewcode-back" href="../../schedulecreator.html#schedulecreator.templates.format_layout">[docs]</a><span class="k">def</span> <span class="nf">format_layout</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format a layout dictionary for writing to .dat file</span>
+<span class="sd">    @param name: layout name as in .lis file</span>
+<span class="sd">    @param conf: layout configuration</span>
+<span class="sd">    @type conf: dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> {</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">)</span>
+    <span class="c"># Take subscans info from conf dictionary</span>
+    <span class="n">subscans</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">&quot;subscans&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;got subscans info </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">subscans</span><span class="p">),))</span>
+    <span class="c">#TODO: add subscans info in dat file</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="n">res</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\t</span><span class="si">%s</span><span class="s">=</span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">),)</span>
+    <span class="n">res</span> <span class="o">+=</span> <span class="s">&quot;}</span><span class="se">\n\n</span><span class="s">&quot;</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

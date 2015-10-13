@@ -1,0 +1,1123 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator Package &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">SchduleCreator 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="schedulecreator-package">
+<h1>schedulecreator Package<a class="headerlink" href="#schedulecreator-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">schedulecreator</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-schedulecreator.__init__"></span><p>Schedulecreator is a software package conceived to implement scheduling of
+italian radiotelescopes via the creation of schedule files.</p>
+<div class="section" id="index">
+<h3>INDEX<a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>installation instructions</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>easy_install and pip </dt>
+<dd><ul class="first last simple">
+<li>distutils on windows</li>
+<li>distutils on linux</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">install package dependencies</p>
+</li>
+<li><p class="first">install</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">usage</p>
+</li>
+<li><p class="first">sc-wiz</p>
+</li>
+<li><p class="first">build documentation</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="installation-instructions">
+<h3>INSTALLATION INSTRUCTIONS<a class="headerlink" href="#installation-instructions" title="Permalink to this headline">¶</a></h3>
+<p>Schedule creator can run on python  versions &gt;= 2.4 but it has some dependencies on
+external modules, and some modules which got into standard python in later
+releases but provide backports for 2.4. 
+The package is not tested on any python 3.x version.
+Before installing the package make sure you download and extract the package
+archive at
+U{<a class="reference external" href="http://www.ira.inaf.it/~bartolini/schedulecreator/schedulecreator-0.3.tar.gz">http://www.ira.inaf.it/~bartolini/schedulecreator/schedulecreator-0.3.tar.gz</a>}</p>
+<p>Installation instructions can be reduced to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">dep</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>Note that you may need to have root privileges for installing python packages.
+If you wanna know more or you experience some issue, please go on reading.</p>
+<div class="section" id="easy-install-and-pip">
+<h4>EASY_INSTALL AND PIP<a class="headerlink" href="#easy-install-and-pip" title="Permalink to this headline">¶</a></h4>
+<p>We suggest to install dependencies via distutils.</p>
+<div class="section" id="distutils-on-windows">
+<h5>DISTUTILS ON WINDOWS<a class="headerlink" href="#distutils-on-windows" title="Permalink to this headline">¶</a></h5>
+<p>From a command prompt try to execute the command</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="p">:</span>\<span class="n">your</span> <span class="n">path</span>\<span class="o">&gt;</span> <span class="n">easy_install</span>
+</pre></div>
+</div>
+<p>This will tell you if easy_install is installed on your Windows PC
+If not just donwload and install python-setuptools package from
+<a class="reference external" href="https://pypi.python.org/pypi/setuptools">https://pypi.python.org/pypi/setuptools</a> , go to the bottom of the page
+and grab the .exe related to your python version. 
+If you&#8217;re unsure which python version you are running from a command
+prompt execute</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span><span class="p">:</span>\<span class="n">your</span> <span class="n">path</span>\<span class="o">&gt;</span> <span class="n">python</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="distutils-on-linux">
+<h5>DISTUTILS ON LINUX<a class="headerlink" href="#distutils-on-linux" title="Permalink to this headline">¶</a></h5>
+<p>On linux you should find setuptools prepackaged on most modern distros.</p>
+<p>On debian-based distros:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">you</span><span class="nd">@yourpc</span><span class="c"># sudo apt-get install python-setuptools</span>
+</pre></div>
+</div>
+<p>On RH based distros:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="nd">@yourpc</span><span class="c"># yum install python-setuptools</span>
+</pre></div>
+</div>
+<p>Once easy_install is installed, instructions are the same for every
+OS, so just follow the steps from command prompt or user shell.</p>
+<p>If possible we will use &#8216;pip&#8217;, a more friendly python package manager. 
+Install it with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">easy_install</span> <span class="n">pip</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="note-for-python-2-4">
+<h5>NOTE FOR PYTHON 2.4<a class="headerlink" href="#note-for-python-2-4" title="Permalink to this headline">¶</a></h5>
+<p>For B{Python2.4} users, use  pip version 1.1 which can be downloaded from
+U{<a class="reference external" href="https://pypi.python.org/packages/source/p/pip/pip-1.1.tar.gz">https://pypi.python.org/packages/source/p/pip/pip-1.1.tar.gz</a>} and install
+manually via</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="install-package-dependencies">
+<h4>INSTALL PACKAGE DEPENDENCIES<a class="headerlink" href="#install-package-dependencies" title="Permalink to this headline">¶</a></h4>
+<p>The package depends on other python packages which can be installed manually
+or via distutils.</p>
+<dl class="docutils">
+<dt>Required packages are:</dt>
+<dd><ul class="first last simple">
+<li>U{argparse&lt;<a class="reference external" href="https://pypi.python.org/pypi/argparse/">https://pypi.python.org/pypi/argparse/</a>&gt;}</li>
+<li>U{configobj&lt;<a class="reference external" href="https://pypi.python.org/pypi/configobj/">https://pypi.python.org/pypi/configobj/</a>&gt;}</li>
+<li>U{validate&lt;<a class="reference external" href="https://pypi.python.org/pypi/validate/">https://pypi.python.org/pypi/validate/</a>&gt;}</li>
+<li>U{pyephem&lt;<a class="reference external" href="https://pypi.python.org/pypi/pyephem/">https://pypi.python.org/pypi/pyephem/</a>&gt;}</li>
+<li>U{angles&lt;<a class="reference external" href="https://pypi.python.org/pypi/angles/">https://pypi.python.org/pypi/angles/</a>&gt;}</li>
+</ul>
+</dd>
+</dl>
+<p>You can install every dependecy via (note that you may need to be root):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">dep</span>
+</pre></div>
+</div>
+<p>Or you can download and install individual packages from
+U{B{pypi}&lt;<a class="reference external" href="https://pypi.python.org/pypi">https://pypi.python.org/pypi</a>&gt;}
+or using the package manager of your OS.</p>
+<p>If you don&#8217;t have access to make command (i.e. on Windows) you can also install
+dependencies using pip from the command line for each individual package</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">argparse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">configobj</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">validate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">angles</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyephem</span>
+</pre></div>
+</div>
+<p>or every package at once:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="n">argparse</span> <span class="n">configobj</span> <span class="n">validate</span> <span class="n">angles</span> <span class="n">pyephem</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install">
+<h4>INSTALL<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h4>
+<p>From the package directory just run</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> 
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>to install the package in the current python environment.
+Now you can remove the downloaded package or clean build products via:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">clean</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h3>USAGE<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<p>Once installed, the package comes with an executable &#8216;schedulecreator&#8217;</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">schedulecreator</span> <span class="o">--</span><span class="n">help</span> 
+</pre></div>
+</div>
+<p>The schedulecreator takes in input a configuration file formatted according to a
+specific syntax and generates 4 files used by antenna control system as the
+schedule.</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Fetch a precompiled configuration template</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">schedulecreator</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="o">-</span><span class="n">t</span> <span class="o">&lt;</span><span class="n">destination_directory</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Creates &lt;destination_directory&gt; and copy configuration.txt and targets.txt user
+templates into the folder. If run with -f it will override eventual existing
+files.
+Modify these files according to the comments you will find to generate a new schedule.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Generate a new schedule</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">schedulecreator</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="o">-</span><span class="n">s</span> <span class="o">&lt;</span><span class="n">input_configuration_file_path</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">destination_directory</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Generates the schedule files into the destination directory, creating the
+folder if necessary. 
+&lt;input_configuration_file_path&gt; is the path to a valid configuration file as copied
+and modified from user template in step 1.
+if run with -f overrides eventual existing files.</p>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="sc-wiz">
+<h3>SC-WIZ<a class="headerlink" href="#sc-wiz" title="Permalink to this headline">¶</a></h3>
+<p>On linux you get accesso to a I{B{sc-wiz}} (Schedule Creator Wizard) command which will guide you through
+a serie of graphical dialogs to the creation of a schedule.
+sc-wiz is built with U{zenity&lt;<a class="reference external" href="https://help.gnome.org/users/zenity/stable/">https://help.gnome.org/users/zenity/stable/</a>&gt;} so
+make sure you have it installed for your distro.</p>
+</div>
+<div class="section" id="build-documentation">
+<h3>BUILD DOCUMENTATION<a class="headerlink" href="#build-documentation" title="Permalink to this headline">¶</a></h3>
+<p>You can generate a local copy of the developer documentation using epydoc via</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">make</span> <span class="n">doc</span>
+</pre></div>
+</div>
+<p>You will find the doc under doc/html/</p>
+<p>&#64;version: 0.4
+&#64;status: testing (pre-release)
+&#64;authors: Paolo Libardi, Simona Righini, Marco Bartolini
+&#64;organization: INAF -IRA
+&#64;copyright: INAF - IRA (c) 2013
+&#64;license: gpl v3.0
+&#64;contact: <a class="reference external" href="mailto:bartolini&#37;&#52;&#48;ira&#46;inaf&#46;it">bartolini<span>&#64;</span>ira<span>&#46;</span>inaf<span>&#46;</span>it</a></p>
+<dl class="function">
+<dt id="schedulecreator.__init__.cmd_line">
+<tt class="descclassname">schedulecreator.__init__.</tt><tt class="descname">cmd_line</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/__init__.html#cmd_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.__init__.cmd_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-schedulecreator.angle_parser">
+<span id="angle-parser-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">angle_parser</span></tt> Module<a class="headerlink" href="#module-schedulecreator.angle_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="schedulecreator.angle_parser.VdtAngleError">
+<em class="property">exception </em><tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">VdtAngleError</tt><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#VdtAngleError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.VdtAngleError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">validate.ValidateError</span></tt></p>
+<p>Raised when trying to parse a wrongly formatted angle</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.check_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">check_angle</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#check_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.check_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>validate a string to create an angles.Angle object
+tries in order: decimal, sexagesimal degrees and hours
+&#64;return: the Angle object created
+&#64;raise VdtAngleError: if value is not valid</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.check_dec_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">check_dec_angle</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#check_dec_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.check_dec_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validating function for angle decimal representation.
+Used in the rich_validator</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.check_dms_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">check_dms_angle</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#check_dms_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.check_dms_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validating function for angle sexagesimal representation in degrees.
+Used in the rich_validator</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.check_hms_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">check_hms_angle</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#check_hms_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.check_hms_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validating function for angle sexagesimal representation in hours.
+Used in the rich_validator</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.angle_parser.dec_angle_re">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">dec_angle_re</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x3abb8f0&gt;</em><a class="headerlink" href="#schedulecreator.angle_parser.dec_angle_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>Regular espression matching angle valid decimal representation</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.angle_parser.dms_angle_re">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">dms_angle_re</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x352c2a0&gt;</em><a class="headerlink" href="#schedulecreator.angle_parser.dms_angle_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>Regular espression matching angle valid sexagesimal representation in degrees
+units</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.dms_to_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">dms_to_angle</tt><big>(</big><em>dms</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#dms_to_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.dms_to_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the angle from a tuple of numbers or strings giving its sexagesimal
+representation in degrees
+&#64;param dms: (degrees, minutes, seconds)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.angle_parser.hms_angle_re">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">hms_angle_re</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x3abda80&gt;</em><a class="headerlink" href="#schedulecreator.angle_parser.hms_angle_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>Regular espression matching angle valid sexagesimal representation in hour units</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.angle_parser.hms_to_angle">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">hms_to_angle</tt><big>(</big><em>hms</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/angle_parser.html#hms_to_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.angle_parser.hms_to_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the angle from a tuple of numbers or strings giving its sexagesimal
+representation in hours
+&#64;param hms: (degrees, minutes, seconds)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.angle_parser.validate_options">
+<tt class="descclassname">schedulecreator.angle_parser.</tt><tt class="descname">validate_options</tt><em class="property"> = {'dec_angle': &lt;function check_dec_angle at 0x3b24a28&gt;, 'angle': &lt;function check_angle at 0x3b24b90&gt;, 'hms_angle': &lt;function check_hms_angle at 0x3b24b18&gt;, 'dms_angle': &lt;function check_dms_angle at 0x3b24aa0&gt;}</em><a class="headerlink" href="#schedulecreator.angle_parser.validate_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>options added to the rich_validator and usable in .ini files</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.backend">
+<span id="backend-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">backend</span></tt> Module<a class="headerlink" href="#module-schedulecreator.backend" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.backend.TotalPowerBackend">
+<em class="property">class </em><tt class="descclassname">schedulecreator.backend.</tt><tt class="descname">TotalPowerBackend</tt><big>(</big><em>name</em>, <em>integration</em>, <em>sampling</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/backend.html#TotalPowerBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.backend.TotalPowerBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="schedulecreator.backend.TotalPowerBackend.set_sections">
+<tt class="descname">set_sections</tt><big>(</big><em>nfeed</em>, <em>bandwidth</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/backend.html#TotalPowerBackend.set_sections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.backend.TotalPowerBackend.set_sections" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.errors">
+<span id="errors-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">errors</span></tt> Module<a class="headerlink" href="#module-schedulecreator.errors" title="Permalink to this headline">¶</a></h2>
+<p>This module defines scheduleerror error classes,
+should be imported everywhere as from errors import *</p>
+<dl class="exception">
+<dt id="schedulecreator.errors.CoordinateError">
+<em class="property">exception </em><tt class="descclassname">schedulecreator.errors.</tt><tt class="descname">CoordinateError</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/errors.html#CoordinateError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.errors.CoordinateError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.errors.ScheduleError" title="schedulecreator.errors.ScheduleError"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.errors.ScheduleError</span></tt></a></p>
+<p>Used when illegal operations are done with coordinates objects</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="schedulecreator.errors.ProcedureError">
+<em class="property">exception </em><tt class="descclassname">schedulecreator.errors.</tt><tt class="descname">ProcedureError</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/errors.html#ProcedureError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.errors.ProcedureError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.errors.ScheduleError" title="schedulecreator.errors.ScheduleError"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.errors.ScheduleError</span></tt></a></p>
+<p>Used when illegal operations are done with procedure objects</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="schedulecreator.errors.ReceiverError">
+<em class="property">exception </em><tt class="descclassname">schedulecreator.errors.</tt><tt class="descname">ReceiverError</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/errors.html#ReceiverError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.errors.ReceiverError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#schedulecreator.errors.ScheduleError" title="schedulecreator.errors.ScheduleError"><tt class="xref py py-class docutils literal"><span class="pre">schedulecreator.errors.ScheduleError</span></tt></a></p>
+<p>Error in receivers specifications</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="schedulecreator.errors.ScheduleError">
+<em class="property">exception </em><tt class="descclassname">schedulecreator.errors.</tt><tt class="descname">ScheduleError</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/errors.html#ScheduleError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.errors.ScheduleError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Generic error in schedulecreator package</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.frame">
+<span id="frame-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">frame</span></tt> Module<a class="headerlink" href="#module-schedulecreator.frame" title="Permalink to this headline">¶</a></h2>
+<p>Module incapsulating all coordinates logics. 
+Depends on astropy for coordinate conversions between galactic and equatorial
+systems.</p>
+<dl class="docutils">
+<dt>exported classes:</dt>
+<dd><ul class="first last simple">
+<li>Frame - a coordinate frame</li>
+<li>Coord - coordinates with a frame</li>
+</ul>
+</dd>
+<dt>exported constants:</dt>
+<dd><ul class="first last simple">
+<li>frames</li>
+<li>EQ, GAL, HOR</li>
+<li>axes</li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="schedulecreator.frame.Coord">
+<em class="property">class </em><tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">Coord</tt><big>(</big><em>frame</em>, <em>lon</em>, <em>lat</em>, <em>epoch='j2000'</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/frame.html#Coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.frame.Coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Stores a coordinate couple associated with their reference frame and epoch.
+&#64;param frame: a coordinate frame
+&#64;type frame: Frame
+&#64;param lon: longitude component
+&#64;type lon: VAngle
+&#64;param lat: latitude component
+&#64;type lat: VAngle
+&#64;param epoch: coordinates epoch defaults to j2000</p>
+<dl class="method">
+<dt id="schedulecreator.frame.Coord.fmt">
+<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/frame.html#Coord.fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.frame.Coord.fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns formatted (lon, lat)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.frame.Coord.transform">
+<tt class="descname">transform</tt><big>(</big><em>dest_frame</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/frame.html#Coord.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.frame.Coord.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>conversion between different coordinate frame systems
+&#64;param dest_frame: the output frame system 
+&#64;type dest_frame: Frame</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.frame.EQ">
+<tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">EQ</tt><em class="property"> = &lt;schedulecreator.frame.Frame object at 0x3cab090&gt;</em><a class="headerlink" href="#schedulecreator.frame.EQ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equaltorial coordinate frame</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.frame.Frame">
+<em class="property">class </em><tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">Frame</tt><big>(</big><em>name</em>, <em>lon</em>, <em>lat</em>, <em>offset</em>, <em>allocator</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/frame.html#Frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.frame.Frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Frame object containing coordinates names for a given frame</p>
+<dl class="attribute">
+<dt id="schedulecreator.frame.Frame.axes">
+<tt class="descname">axes</tt><a class="reference internal" href="_modules/schedulecreator/frame.html#Frame.axes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.frame.Frame.axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>(self.lon_name, self.lat_name)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.frame.GAL">
+<tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">GAL</tt><em class="property"> = &lt;schedulecreator.frame.Frame object at 0x3cab110&gt;</em><a class="headerlink" href="#schedulecreator.frame.GAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Galactic coordinate frame</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.frame.HOR">
+<tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">HOR</tt><em class="property"> = &lt;schedulecreator.frame.Frame object at 0x3cab150&gt;</em><a class="headerlink" href="#schedulecreator.frame.HOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal coordinate frame</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.frame.axes">
+<tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">axes</tt><em class="property"> = ('LON', 'LAT', 'RA', 'DEC', 'AZ', 'EL', 'BOTH')</em><a class="headerlink" href="#schedulecreator.frame.axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>All possible value for axis label, including &#8220;BOTH&#8221;</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.frame.frames">
+<tt class="descclassname">schedulecreator.frame.</tt><tt class="descname">frames</tt><em class="property"> = {'HOR': &lt;schedulecreator.frame.Frame object at 0x3cab150&gt;, 'GAL': &lt;schedulecreator.frame.Frame object at 0x3cab110&gt;, 'EQ': &lt;schedulecreator.frame.Frame object at 0x3cab090&gt;}</em><a class="headerlink" href="#schedulecreator.frame.frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>frames dictionary</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.layout">
+<span id="layout-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">layout</span></tt> Module<a class="headerlink" href="#module-schedulecreator.layout" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="schedulecreator.layout.COMMON_CONSTANTS">
+<tt class="descclassname">schedulecreator.layout.</tt><tt class="descname">COMMON_CONSTANTS</tt><em class="property"> = {'NPHASES': 1, 'SCANROT': 0.0, 'WOBPATT': '', 'INCLINAT': 0, 'TSYNC': 0.0, 'LONGASC': 0, 'WOBCYCLE': 0.0, 'ZIGZAG': 1, 'NATIVEPROJECTION': 'SFL/SFL', 'WOBUSED': 0, 'WOBMODE': '', 'BASISPROJECTION': 'SFL/SFL', 'PHASEn': 'NONE', 'DISTANCE': 0, 'ORBEPOCH': 0, 'CRVAL1': 0.0, 'OMEGA': 0, 'WOBTHROW': 0.0, 'PERIDATE': 0, 'ORBEQNOX': 0, 'PERIDIST': 0, 'FRTHRWLO': 0.0, 'TBLANK': 0.0, 'ECCENTR': 0, 'FRTHRWHI': 0.0, 'WOBDIR': ''}</em><a class="headerlink" href="#schedulecreator.layout.COMMON_CONSTANTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Common parameters for every scan. Some of these in the future will be derived
+from runtime informations.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.layout.CROSS_CONSTANTS">
+<tt class="descclassname">schedulecreator.layout.</tt><tt class="descname">CROSS_CONSTANTS</tt><em class="property"> = {'SCANYSPC': 0.0, 'SCANSKEW': 0.0, 'SCANGEOM': 'CROSS', 'SCANMODE': 'OTF', 'SCANTYPE': 'POINT', 'CROCYCLE': 'O', 'SCANLINE': 2, 'SCANRPTS': 2, 'SCANDIR': ''}</em><a class="headerlink" href="#schedulecreator.layout.CROSS_CONSTANTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Costants used for cross scans.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.layout.get_wcs_params">
+<tt class="descclassname">schedulecreator.layout.</tt><tt class="descname">get_wcs_params</tt><big>(</big><em>_scan</em>, <em>_target</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/layout.html#get_wcs_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.layout.get_wcs_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.layout.get_layout_params">
+<tt class="descclassname">schedulecreator.layout.</tt><tt class="descname">get_layout_params</tt><big>(</big><em>_scan</em>, <em>_target</em>, <em>_subscans</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/layout.html#get_layout_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.layout.get_layout_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.procedures">
+<span id="procedures-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">procedures</span></tt> Module<a class="headerlink" href="#module-schedulecreator.procedures" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="schedulecreator.procedures.CALOFF">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">CALOFF</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42f10&gt;</em><a class="headerlink" href="#schedulecreator.procedures.CALOFF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{caloff} procedure</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.CALON">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">CALON</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42ed0&gt;</em><a class="headerlink" href="#schedulecreator.procedures.CALON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{calon} procedure</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.INIT">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">INIT</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42e90&gt;</em><a class="headerlink" href="#schedulecreator.procedures.INIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{init} procedure</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.NULL">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">NULL</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42f50&gt;</em><a class="headerlink" href="#schedulecreator.procedures.NULL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{null} procedure</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.PROC_PREFIX">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">PROC_PREFIX</tt><em class="property"> = 'PROCEDURE_'</em><a class="headerlink" href="#schedulecreator.procedures.PROC_PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prefix for procedures name</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.procedures.Procedure">
+<em class="property">class </em><tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">Procedure</tt><big>(</big><em>name</em>, <em>nparams</em>, <em>body</em>, <em>spec=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/procedures.html#Procedure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.procedures.Procedure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Class representing a procedure template.
+Remeber that the module already defines some standard procedures!
+Use it like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">procedures</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myproc</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">Procedure</span><span class="p">(</span><span class="s">&quot;myp&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\t</span><span class="s">comm=$1</span><span class="se">\n\t</span><span class="s">end_comm</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">myproc</span><span class="p">)</span> 
+<span class="go">&#39;MYP(1){\n\tcomm=$1\n\tend_comm\n}\n&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myproc</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  
+<span class="go">&#39;MYP=10&#39;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="schedulecreator.procedures.Procedure.execute">
+<tt class="descname">execute</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/procedures.html#Procedure.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.procedures.Procedure.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to get the procedure syntax as it has to be called from within the
+.scd schedule file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.TSYS">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">TSYS</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42e50&gt;</em><a class="headerlink" href="#schedulecreator.procedures.TSYS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{tsys} procedure</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.TSYS_WAIT_TIME">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">TSYS_WAIT_TIME</tt><em class="property"> = 2</em><a class="headerlink" href="#schedulecreator.procedures.TSYS_WAIT_TIME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time to wait before issuing a tsys command (sec.)</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.procedures.WAIT">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">WAIT</tt><em class="property"> = &lt;schedulecreator.procedures.Procedure object at 0x3e42dd0&gt;</em><a class="headerlink" href="#schedulecreator.procedures.WAIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard B{wait} procedure</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.procedures.inc_arguments">
+<tt class="descclassname">schedulecreator.procedures.</tt><tt class="descname">inc_arguments</tt><big>(</big><em>expr</em>, <em>inc=1</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/procedures.html#inc_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.procedures.inc_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment $n substitutions of a fixed amount
+i.e. $1 will be substituted by $2 ecc ... 
+In general we will have every $(n) -&gt; $(n + inc)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.radiotelescopes">
+<span id="radiotelescopes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">radiotelescopes</span></tt> Module<a class="headerlink" href="#module-schedulecreator.radiotelescopes" title="Permalink to this headline">¶</a></h2>
+<p>Radiotelescopes definitions and constants.
+These should match values you find in the CDB.
+Each radiotelescope is represented a dictionary containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li>max_acc: maximum acceleration obtained as root square sum of max
+acceleration in both axis</li>
+<li>acc_scale_factor: scale factor used to overstimate maximum acceleration</li>
+<li>receivers: receivers as defined in L{receiver} module</li>
+</ul>
+</div></blockquote>
+<dl class="data">
+<dt id="schedulecreator.radiotelescopes.MED">
+<tt class="descclassname">schedulecreator.radiotelescopes.</tt><tt class="descname">MED</tt><em class="property"> = {'acc_scale_factor': 15, 'max_acc': 0.6403124237432849, 'receivers': {'X': &lt;schedulecreator.receiver.Receiver object at 0x3cfebd0&gt;, 'C': &lt;schedulecreator.receiver.Receiver object at 0x3cfeb90&gt;, 'K': &lt;schedulecreator.receiver.Receiver object at 0x3cfec10&gt;, 'CL': &lt;schedulecreator.receiver.Receiver object at 0x3cfe9d0&gt;}}</em><a class="headerlink" href="#schedulecreator.radiotelescopes.MED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Medicina radiotelescope constants</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.radiotelescopes.NOTO">
+<tt class="descclassname">schedulecreator.radiotelescopes.</tt><tt class="descname">NOTO</tt><em class="property"> = {'acc_scale_factor': 10, 'max_acc': 0.6403124237432849, 'receivers': {}}</em><a class="headerlink" href="#schedulecreator.radiotelescopes.NOTO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Noto radiotelescope constants</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.radiotelescopes.SRT">
+<tt class="descclassname">schedulecreator.radiotelescopes.</tt><tt class="descname">SRT</tt><em class="property"> = {'acc_scale_factor': 15, 'max_acc': 0.47169905660283024, 'receivers': {'K': &lt;schedulecreator.receiver.Receiver object at 0x3cfed10&gt;, 'P': &lt;schedulecreator.receiver.Receiver object at 0x3cfec50&gt;, 'C': &lt;schedulecreator.receiver.Receiver object at 0x3cfecd0&gt;, 'L': &lt;schedulecreator.receiver.Receiver object at 0x3cfec90&gt;, 'KM': &lt;schedulecreator.receiver.Receiver object at 0x3cfed50&gt;}}</em><a class="headerlink" href="#schedulecreator.radiotelescopes.SRT" title="Permalink to this definition">¶</a></dt>
+<dd><p>SRT radiotelescope constants</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.receiver">
+<span id="receiver-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">receiver</span></tt> Module<a class="headerlink" href="#module-schedulecreator.receiver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.receiver.Receiver">
+<em class="property">class </em><tt class="descclassname">schedulecreator.receiver.</tt><tt class="descname">Receiver</tt><big>(</big><em>name, fmin, fmax, beamsizetable=[[0.0], [0.0]], nfeed=2, feed_offsets=[(&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;), (&lt;VAngle 0.00000 deg&gt;, &lt;VAngle 0.00000 deg&gt;)]</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/receiver.html#Receiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.receiver.Receiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>represents a receiver and its characteristics</p>
+<dl class="attribute">
+<dt id="schedulecreator.receiver.Receiver.beamsize">
+<tt class="descname">beamsize</tt><a class="reference internal" href="_modules/schedulecreator/receiver.html#Receiver.beamsize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.receiver.Receiver.beamsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get receiver default beamsize (calculated at self.fmin)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.receiver.Receiver.get_beamsize">
+<tt class="descname">get_beamsize</tt><big>(</big><em>freq=None</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/receiver.html#Receiver.get_beamsize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.receiver.Receiver.get_beamsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the beamsize for this receiver at a given frequency. 
+Read from beamsize_table the nearest frequency value.
+If freq is None defauls to self.fmin
+&#64;param freq: frequency (MHz)
+&#64;type freq: float
+&#64;return: beamsize at given frequency</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.receiver.Receiver.set_feed_offsets">
+<tt class="descname">set_feed_offsets</tt><big>(</big><em>feed_number</em>, <em>offsets</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/receiver.html#Receiver.set_feed_offsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.receiver.Receiver.set_feed_offsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the feed offset for one feed
+&#64;param offsets: (offset_lon, offset_lat)
+&#64;raise ReceiverError: if feed_number is too high</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.receiver.MED">
+<tt class="descclassname">schedulecreator.receiver.</tt><tt class="descname">MED</tt><em class="property"> = {'X': &lt;schedulecreator.receiver.Receiver object at 0x3cfebd0&gt;, 'C': &lt;schedulecreator.receiver.Receiver object at 0x3cfeb90&gt;, 'K': &lt;schedulecreator.receiver.Receiver object at 0x3cfec10&gt;, 'CL': &lt;schedulecreator.receiver.Receiver object at 0x3cfe9d0&gt;}</em><a class="headerlink" href="#schedulecreator.receiver.MED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module level variable which defines receivers in Medicina radiotelescope</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.receiver.SRT">
+<tt class="descclassname">schedulecreator.receiver.</tt><tt class="descname">SRT</tt><em class="property"> = {'K': &lt;schedulecreator.receiver.Receiver object at 0x3cfed10&gt;, 'P': &lt;schedulecreator.receiver.Receiver object at 0x3cfec50&gt;, 'C': &lt;schedulecreator.receiver.Receiver object at 0x3cfecd0&gt;, 'L': &lt;schedulecreator.receiver.Receiver object at 0x3cfec90&gt;, 'KM': &lt;schedulecreator.receiver.Receiver object at 0x3cfed50&gt;}</em><a class="headerlink" href="#schedulecreator.receiver.SRT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module level variable which defines receivers in SRT radiotelescope</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.receiver.NOTO">
+<tt class="descclassname">schedulecreator.receiver.</tt><tt class="descname">NOTO</tt><em class="property"> = {}</em><a class="headerlink" href="#schedulecreator.receiver.NOTO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Module level variable which defines receivers in Noto radiotelescope</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.rich_validator">
+<span id="rich-validator-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rich_validator</span></tt> Module<a class="headerlink" href="#module-schedulecreator.rich_validator" title="Permalink to this headline">¶</a></h2>
+<p>This module extends the validate options used to parse schedule creator
+arguments from configuration file.
+In particular it adds new possible instances to be used in the .ini schemas
+files.</p>
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_cross_scan">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_cross_scan</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_cross_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_cross_scan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_date">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_date</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_file">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_file</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_filename">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_filename</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_frame">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_frame</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string to a frame.Frame instance.
+Used as a validating function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_future_date">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_future_date</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_future_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_future_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_nodding">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_nodding</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_nodding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_nodding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_nodding_sequence">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_nodding_sequence</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_nodding_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_nodding_sequence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_onoff">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_onoff</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_onoff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_onoff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_onoff_sequence">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_onoff_sequence</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_onoff_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_onoff_sequence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_otf_map">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_otf_map</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_otf_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_otf_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_raster_map">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_raster_map</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_raster_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_raster_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.check_scan">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">check_scan</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#check_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.check_scan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.string2list">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">string2list</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#string2list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.string2list" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;param value: a list of items separated by &#8216;,&#8217; or whitespaces
+&#64;type value: string
+&#64;return: [first, second, third ... ]</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.rich_validator.valid_list_element">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">valid_list_element</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x3f236c0&gt;</em><a class="headerlink" href="#schedulecreator.rich_validator.valid_list_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>regular expression matching list items separated by whitespace characters or
+&#8216;,&#8217; items enclosed in square brackets are kept intact.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.rich_validator.valid_nodding_element">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">valid_nodding_element</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x407fd20&gt;</em><a class="headerlink" href="#schedulecreator.rich_validator.valid_nodding_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>regular expression matching valid position switch geometries</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.rich_validator.valid_onoff_element">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">valid_onoff_element</tt><em class="property"> = &lt;_sre.SRE_Pattern object at 0x407e2b0&gt;</em><a class="headerlink" href="#schedulecreator.rich_validator.valid_onoff_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>regular expression matching valid onoff geometries</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.validate">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">validate</tt><big>(</big><em>filename</em>, <em>specfilename</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.rich_validator.validate_configuration">
+<tt class="descclassname">schedulecreator.rich_validator.</tt><tt class="descname">validate_configuration</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/rich_validator.html#validate_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.rich_validator.validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.schedule">
+<span id="schedule-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">schedule</span></tt> Module<a class="headerlink" href="#module-schedulecreator.schedule" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.schedule.Schedule">
+<em class="property">class </em><tt class="descclassname">schedulecreator.schedule.</tt><tt class="descname">Schedule</tt><big>(</big><em>projectID</em>, <em>observer</em>, <em>scheduleLabel</em>, <em>radiotelescope</em>, <em>receiver</em>, <em>scheduleRuns</em>, <em>outputFormat</em>, <em>targetsFile</em>, <em>backend</em>, <em>scans</em>, <em>tsys</em>, <em>repetitions</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/schedule.html#Schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.schedule.Schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A whole scheduled activity, 
+comprises scans definitions and targets parsed from spec file.
+Has methods for writing output schedule files.</p>
+<dl class="method">
+<dt id="schedulecreator.schedule.Schedule.set_base_dir">
+<tt class="descname">set_base_dir</tt><big>(</big><em>base_path</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/schedule.html#Schedule.set_base_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.schedule.Schedule.set_base_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the output directory for the schedule files.
+Creates the directory if it does not exist
+&#64;param base_path: the path (relative or absolute) of the output
+directory</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.target">
+<span id="target-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">target</span></tt> Module<a class="headerlink" href="#module-schedulecreator.target" title="Permalink to this headline">¶</a></h2>
+<p>Module containig target objects definitions and logics for parsing target
+specified in a text file
+exposed classes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>TargetError</li>
+<li>Target</li>
+</ul>
+</div></blockquote>
+<dl class="class">
+<dt id="schedulecreator.target.Target">
+<em class="property">class </em><tt class="descclassname">schedulecreator.target.</tt><tt class="descname">Target</tt><big>(</big><em>label</em>, <em>frame</em>, <em>longitude</em>, <em>latitude</em>, <em>epoch='2000'</em>, <em>offset_frame=None</em>, <em>offset_lon=&lt;VAngle 0.00000 deg&gt;</em>, <em>offset_lat=&lt;VAngle 0.00000 deg&gt;</em>, <em>vdef=None</em>, <em>svel=None</em>, <em>vframe=None</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/target.html#Target"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.target.Target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="schedulecreator.target.Target.check_consistency">
+<tt class="descname">check_consistency</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/target.html#Target.check_consistency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.target.Target.check_consistency" title="Permalink to this definition">¶</a></dt>
+<dd><p>if FRAME = HOR and LON is hours =&gt; error
+if FRAME = EQ|GAL ==&gt; 0 &lt; deg &lt; 360 per LON &amp;&amp; -90 &lt; deg &lt; 90 per LAT
+(posso controllarlo dopo averli trasformati in angoli - occhio che si leggono
+anche le ore!!!
+if FRAME = HOR ==&gt; 0 &lt; deg &lt; 360 per AZ &amp;&amp; 0 &lt; deg &lt; 90 per EL</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.target.Target.transform">
+<tt class="descname">transform</tt><big>(</big><em>dest_frame</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/target.html#Target.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.target.Target.transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.target_parser">
+<span id="target-parser-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">target_parser</span></tt> Module<a class="headerlink" href="#module-schedulecreator.target_parser" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="schedulecreator.target_parser.OPTION_RE">
+<tt class="descclassname">schedulecreator.target_parser.</tt><tt class="descname">OPTION_RE</tt><em class="property"> = '(?P&lt;opt&gt;\\S+)\\s*=\\s*(?P&lt;val&gt;\\S+)\\s*'</em><a class="headerlink" href="#schedulecreator.target_parser.OPTION_RE" title="Permalink to this definition">¶</a></dt>
+<dd><p>string pattern identifying a target line.
+The line must be composed of &#8216;label&#8217; &#8216;scantype&#8217; &#8216;frame&#8217; &#8216;longitude&#8217;
+&#8216;latitude&#8217; and multiple &#8216;key = value&#8217; optional parameters.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.target_parser.parse_file">
+<tt class="descclassname">schedulecreator.target_parser.</tt><tt class="descname">parse_file</tt><big>(</big><em>filename</em>, <em>check_values=True</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/target_parser.html#parse_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.target_parser.parse_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a target txt file into a list of Target objects.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.templates">
+<span id="templates-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">templates</span></tt> Module<a class="headerlink" href="#module-schedulecreator.templates" title="Permalink to this headline">¶</a></h2>
+<p>Module containing templates (as defined in standard string module) used to transorm classes instances into the
+representation used in the schedule files by ACS</p>
+<dl class="function">
+<dt id="schedulecreator.templates.format_layout">
+<tt class="descclassname">schedulecreator.templates.</tt><tt class="descname">format_layout</tt><big>(</big><em>name</em>, <em>conf</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/templates.html#format_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.templates.format_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a layout dictionary for writing to .dat file
+&#64;param name: layout name as in .lis file
+&#64;param conf: layout configuration
+&#64;type conf: dictionary</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.templates.otf_subscan">
+<tt class="descclassname">schedulecreator.templates.</tt><tt class="descname">otf_subscan</tt><em class="property"> = &lt;string.Template object at 0x3fcc2d0&gt;</em><a class="headerlink" href="#schedulecreator.templates.otf_subscan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to convert an instance of L{subscan.OTFSubscan} into its representation
+in the .lis file</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.templates.scd_header">
+<tt class="descclassname">schedulecreator.templates.</tt><tt class="descname">scd_header</tt><em class="property"> = &lt;string.Template object at 0x3fcc250&gt;</em><a class="headerlink" href="#schedulecreator.templates.scd_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to convert a L{schedule.Schedule} instance into its representation in the .scd
+file header</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.templates.sidereal_subscan">
+<tt class="descclassname">schedulecreator.templates.</tt><tt class="descname">sidereal_subscan</tt><em class="property"> = &lt;string.Template object at 0x3fcc290&gt;</em><a class="headerlink" href="#schedulecreator.templates.sidereal_subscan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to convert an instance of L{subscan.SiderealSubscan} into its representation
+in the .lis file</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-schedulecreator.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utitlity functions.</p>
+<dl class="docutils">
+<dt>functions:</dt>
+<dd><ul class="first last simple">
+<li>get_user_templates: copy user template files</li>
+<li>ceil_to_odd(dec): returns the nearest bigger odd int</li>
+<li>ceil_to_half(dec): nearest bigger half unit</li>
+<li>extrude_from_rectange: get a point outside of a rectangle, used for tsys</li>
+</ul>
+</dd>
+</dl>
+<dl class="function">
+<dt id="schedulecreator.utils.ceil_to_half">
+<tt class="descclassname">schedulecreator.utils.</tt><tt class="descname">ceil_to_half</tt><big>(</big><em>dec</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/utils.html#ceil_to_half"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.utils.ceil_to_half" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;param dec: a floating point nunmber
+&#64;return: the minor half unit bigger then dec</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.utils.ceil_to_odd">
+<tt class="descclassname">schedulecreator.utils.</tt><tt class="descname">ceil_to_odd</tt><big>(</big><em>dec</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/utils.html#ceil_to_odd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.utils.ceil_to_odd" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;param dec: a floating point number
+&#64;return: the minor integer odd number greater then dec.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.utils.extrude_from_rectangle">
+<tt class="descclassname">schedulecreator.utils.</tt><tt class="descname">extrude_from_rectangle</tt><big>(</big><em>x</em>, <em>y</em>, <em>extremes</em>, <em>delta</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/utils.html#extrude_from_rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.utils.extrude_from_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>project a point to the nearest side of a containing rectangle defined by the
+point in extremes
+&#64;param x: x coordinate of the inner point
+&#64;param y: y coordinate of the inner point
+&#64;param extremes: [[x0, y0], ... [x3,y3]] coordinates of the extremes of a
+rectangle containing the point
+&#64;param delta: how much to extrude the point from the polygon</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="schedulecreator.utils.get_user_templates">
+<tt class="descclassname">schedulecreator.utils.</tt><tt class="descname">get_user_templates</tt><big>(</big><em>dst</em>, <em>force=False</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/utils.html#get_user_templates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.utils.get_user_templates" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy user template files into destination directory.
+If destination directory does not exists tries to create it.
+&#64;param dst: the destination directory
+&#64;param force: if True override present files</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.valid_angles">
+<span id="valid-angles-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">valid_angles</span></tt> Module<a class="headerlink" href="#module-schedulecreator.valid_angles" title="Permalink to this headline">¶</a></h2>
+<p>This module implements logics related to angle representations and calculation
+inside the schedule creator.
+It enriches the Angle class defined in astropy.coordinates.Angle adding validating
+options to the validate module and conversions from and to string.</p>
+<dl class="data">
+<dt id="schedulecreator.valid_angles.ANGLE_DECIMALS">
+<tt class="descclassname">schedulecreator.valid_angles.</tt><tt class="descname">ANGLE_DECIMALS</tt><em class="property"> = 3</em><a class="headerlink" href="#schedulecreator.valid_angles.ANGLE_DECIMALS" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSTANT. Decimal angles digits used in string fomratting</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.valid_angles.SEXA_SEPARATOR">
+<tt class="descclassname">schedulecreator.valid_angles.</tt><tt class="descname">SEXA_SEPARATOR</tt><em class="property"> = ':'</em><a class="headerlink" href="#schedulecreator.valid_angles.SEXA_SEPARATOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSTANT. separator used in angle hour and sexagesimal representation</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="schedulecreator.valid_angles.VAngle">
+<em class="property">class </em><tt class="descclassname">schedulecreator.valid_angles.</tt><tt class="descname">VAngle</tt><big>(</big><em>angle</em>, <em>unit=Unit(&quot;deg&quot;)</em>, <em>bounds=(-360</em>, <em>360)</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/valid_angles.html#VAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.valid_angles.VAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">astropy.coordinates.angles.Angle</span></tt></p>
+<dl class="method">
+<dt id="schedulecreator.valid_angles.VAngle.fmt">
+<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/valid_angles.html#VAngle.fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.valid_angles.VAngle.fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the string representation of the angle according to its original
+fromat</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.valid_angles.VAngle.fmt_dec">
+<tt class="descname">fmt_dec</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/valid_angles.html#VAngle.fmt_dec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.valid_angles.VAngle.fmt_dec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the decimal string representation of the angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.valid_angles.VAngle.fmt_dms">
+<tt class="descname">fmt_dms</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/valid_angles.html#VAngle.fmt_dms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.valid_angles.VAngle.fmt_dms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sexagesimal string representation of the angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="schedulecreator.valid_angles.VAngle.fmt_hms">
+<tt class="descname">fmt_hms</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/schedulecreator/valid_angles.html#VAngle.fmt_hms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.valid_angles.VAngle.fmt_hms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sexagesimal string representation of the angle in hours</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="data">
+<dt id="schedulecreator.valid_angles.ZERO_ANGLE">
+<tt class="descclassname">schedulecreator.valid_angles.</tt><tt class="descname">ZERO_ANGLE</tt><em class="property"> = &lt;VAngle 0.00000 deg&gt;</em><a class="headerlink" href="#schedulecreator.valid_angles.ZERO_ANGLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>CONSTANT, used in schedule creator to represent the zero angle.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-schedulecreator.velocity">
+<span id="velocity-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">velocity</span></tt> Module<a class="headerlink" href="#module-schedulecreator.velocity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="schedulecreator.velocity.Velocity">
+<em class="property">class </em><tt class="descclassname">schedulecreator.velocity.</tt><tt class="descname">Velocity</tt><big>(</big><em>vdef</em>, <em>vframe</em>, <em>svel</em><big>)</big><a class="reference internal" href="_modules/schedulecreator/velocity.html#Velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#schedulecreator.velocity.Velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="schedulecreator.scan.html">scan Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#id1"><tt class="docutils literal"><span class="pre">scan</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.cross"><tt class="docutils literal"><span class="pre">cross</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.maps"><tt class="docutils literal"><span class="pre">maps</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.nodding"><tt class="docutils literal"><span class="pre">nodding</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.onoff"><tt class="docutils literal"><span class="pre">onoff</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.scanmode"><tt class="docutils literal"><span class="pre">scanmode</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schedulecreator.scan.html#module-schedulecreator.scan.subscan"><tt class="docutils literal"><span class="pre">subscan</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">schedulecreator Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">schedulecreator</span></tt> Package</a><ul>
+<li><a class="reference internal" href="#index">INDEX</a></li>
+<li><a class="reference internal" href="#installation-instructions">INSTALLATION INSTRUCTIONS</a><ul>
+<li><a class="reference internal" href="#easy-install-and-pip">EASY_INSTALL AND PIP</a><ul>
+<li><a class="reference internal" href="#distutils-on-windows">DISTUTILS ON WINDOWS</a></li>
+<li><a class="reference internal" href="#distutils-on-linux">DISTUTILS ON LINUX</a></li>
+<li><a class="reference internal" href="#note-for-python-2-4">NOTE FOR PYTHON 2.4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#install-package-dependencies">INSTALL PACKAGE DEPENDENCIES</a></li>
+<li><a class="reference internal" href="#install">INSTALL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#usage">USAGE</a></li>
+<li><a class="reference internal" href="#sc-wiz">SC-WIZ</a></li>
+<li><a class="reference internal" href="#build-documentation">BUILD DOCUMENTATION</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-schedulecreator.angle_parser"><tt class="docutils literal"><span class="pre">angle_parser</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.backend"><tt class="docutils literal"><span class="pre">backend</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.errors"><tt class="docutils literal"><span class="pre">errors</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.frame"><tt class="docutils literal"><span class="pre">frame</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.layout"><tt class="docutils literal"><span class="pre">layout</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.procedures"><tt class="docutils literal"><span class="pre">procedures</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.radiotelescopes"><tt class="docutils literal"><span class="pre">radiotelescopes</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.receiver"><tt class="docutils literal"><span class="pre">receiver</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.rich_validator"><tt class="docutils literal"><span class="pre">rich_validator</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.schedule"><tt class="docutils literal"><span class="pre">schedule</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.target"><tt class="docutils literal"><span class="pre">target</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.target_parser"><tt class="docutils literal"><span class="pre">target_parser</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.templates"><tt class="docutils literal"><span class="pre">templates</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.valid_angles"><tt class="docutils literal"><span class="pre">valid_angles</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-schedulecreator.velocity"><tt class="docutils literal"><span class="pre">velocity</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/schedulecreator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">SchduleCreator 0.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

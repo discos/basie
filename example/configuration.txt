@@ -1,0 +1,49 @@
+projectID = ProjectName
+observer = YourName
+scheduleLabel = TestSched
+# MED or SRT
+radiotelescope = SRT
+receiver = C
+# fits or mbfits
+outputFormat = fits
+# default repetitions value for each scan
+repetitions = 1
+# default tsys value for each scan
+tsys = 0
+
+# File name of the target specs in this same directory
+targetsFile = targets.txt
+
+[backend]
+    # integration period in ms
+    integration = 10
+    # sampling interval in ms
+    samplingInterval = 10.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 300
+
+[scans]
+
+    #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
+     EqCross1_3 = CROSS EQ 1.0d 3.0
+     EqCross1_5 = CROSS EQ 1.0d 5.0    
+     HorCross1_3 = CROSS HOR 1.0d 3.0
+
+    #OTFSCANNAME = OTFMAP FRAME AXIS START LENGTH_X LENGTH_Y SPEED SEPARATION
+     ELMAP1x1TL = OTFMAP HOR EL TL 1.0d 1.0d 5.0 0.04d
+     AZMAP1x1TR = OTFMAP HOR AZ TR 1.0d 1.0d 5.0 0.04d  
+     RAMAP1x1BL = OTFMAP EQ RA BL 1.0d 1.0d 5.0 0.04d
+     DECMAP1x1BR = OTFMAP EQ DEC BR 1.0d 1.0d 5.0 0.04d
+     GLONMAP2x2TL = OTFMAP GAL LON TL 2.0d 2.0d 10.0 0.4d
+     GLATMAP2x2TL = OTFMAP GAL LAT TL 2.0d 2.0d 10.0 0.4d
+     EQMap1x1 = OTFMAP EQ BOTH TL 1.0d 1.0d 5.0 0.04d  
+
+    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION SEPARATION
+     HorRasterTL = RASTERMAP HOR LON TL 1.0d 1.0d 10.0 0.1d 
+     HorRasterTR = RASTERMAP HOR LAT TR 1.0d 1.0d 5.0 0.1d 
+
+    #ONOFFNAME = ONOFF DURATION OFF_FRAME LON_OFF LAT_OFF [4on,4off,2on_cal,2off_cal .. ]
+     OOSCAN = ONOFF 4.0 EQ 1.0d 1.0d [4on,4off,2off_cal]
+     ONSCAN = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
+

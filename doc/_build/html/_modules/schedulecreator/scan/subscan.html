@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>schedulecreator.scan.subscan &mdash; SchduleCreator 0.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="SchduleCreator 0.4 documentation" href="../../../index.html" />
+    <link rel="up" title="schedulecreator.scan" href="../scan.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" accesskey="U">schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for schedulecreator.scan.subscan</h1><div class="highlight"><pre>
+<span class="c">#coding=utf-8</span>
+
+<span class="c">#</span>
+<span class="c">#</span>
+<span class="c">#    Copyright (C) 2013  INAF -IRA Italian institute of radioastronomy, bartolini@ira.inaf.it</span>
+<span class="c">#</span>
+<span class="c">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">#    (at your option) any later version.</span>
+<span class="c">#</span>
+<span class="c">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">#    GNU General Public License for more details.</span>
+<span class="c">#</span>
+<span class="c">#    You should have received a copy of the GNU General Public License</span>
+<span class="c">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Subscan related classes and funcions:</span>
+<span class="sd">B{Classes}</span>
+<span class="sd">    - SubscanError</span>
+<span class="sd">    - Subscan: a generic subscan </span>
+<span class="sd">        - OTFSubscan: a generic on the fly subscan</span>
+<span class="sd">        - SiderealSubscan: a generic sidereal subscan</span>
+<span class="sd">B{Functions}</span>
+<span class="sd">Used to get subscan classes instances. Subscans are often returned in couples</span>
+<span class="sd">together with their associated Tsys sidereal subscan.</span>
+<span class="sd">    - get_cen_otf_subscan</span>
+<span class="sd">    - get_ss_otf_subscan (not implemented)</span>
+<span class="sd">    - get_sidereal_subscan</span>
+<span class="sd">    - get_tsys_subscan</span>
+<span class="sd">    - get_couple_subscan</span>
+<span class="sd">    - get_sid_couple_subscan</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">schedulecreator.valid_angles</span> <span class="kn">import</span> <span class="n">VAngle</span>
+<span class="kn">from</span> <span class="nn">schedulecreator.schedule</span> <span class="kn">import</span> <span class="n">ScheduleError</span>
+<span class="kn">from</span> <span class="nn">schedulecreator</span> <span class="kn">import</span> <span class="n">templates</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">procedures</span>
+
+
+<span class="n">TSYS_SIGMA</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Used for calculating TSYS subscans coordinate offsets as TSYS_SIGMA * beamsize</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Subscan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.Subscan">[docs]</a><span class="k">class</span> <span class="nc">Subscan</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generic subscan. Contains common subscan attributes and is meant to be</span>
+<span class="sd">    override by specific subscan classes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span> <span class="c">#static counter attribute </span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">is_tsys</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="n">is_cal</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor.</span>
+<span class="sd">        Give the subscan a unique ID.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">Subscan</span><span class="o">.</span><span class="n">ID</span> <span class="c">#This value will be the same found in the lis file</span>
+        <span class="n">Subscan</span><span class="o">.</span><span class="n">ID</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">_target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_tsys</span> <span class="o">=</span> <span class="n">is_tsys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+        <span class="c">#self.SEQ_ID = 0 #position in the respective scan, default value 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_cal</span> <span class="o">=</span> <span class="n">is_cal</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cal</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_tsys</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ScheduleError</span><span class="p">(</span><span class="s">&quot;Subscan cannot be tsys and cal at the same time&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_cal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">CALON</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">CALOFF</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_tsys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">NULL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">TSYS</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c">#Default</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">NULL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">NULL</span>
+
+<div class="viewcode-block" id="Subscan.add_post_procedure"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.Subscan.add_post_procedure">[docs]</a>    <span class="k">def</span> <span class="nf">add_post_procedure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">==</span> <span class="n">procedures</span><span class="o">.</span><span class="n">NULL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="n">proc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">+</span> <span class="n">proc</span>
+</div>
+<div class="viewcode-block" id="Subscan.add_pre_procedure"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.Subscan.add_pre_procedure">[docs]</a>    <span class="k">def</span> <span class="nf">add_pre_procedure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">==</span> <span class="n">procedures</span><span class="o">.</span><span class="n">NULL</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">=</span> <span class="n">proc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_procedure</span> <span class="o">+</span> <span class="n">proc</span>
+</div></div>
+<div class="viewcode-block" id="OTFSubscan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.OTFSubscan">[docs]</a><span class="k">class</span> <span class="nc">OTFSubscan</span><span class="p">(</span><span class="n">Subscan</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    On the flight sunbscan class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">lon2</span><span class="p">,</span> <span class="n">lat2</span><span class="p">,</span> <span class="n">descr</span><span class="p">,</span> <span class="n">scan_frame</span><span class="p">,</span>
+                 <span class="n">geom</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">is_tsys</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_cal</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Subscan</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">is_tsys</span><span class="p">,</span> <span class="n">is_cal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span> <span class="o">=</span> <span class="n">scan_frame</span>
+        <span class="c">#check that offset frame and scan frame are equal</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span><span class="p">:</span><span class="c">#default behaviour</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;offset frame </span><span class="si">%s</span><span class="s"> different from scan frame </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ScheduleError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lon2</span> <span class="o">=</span> <span class="n">lon2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat2</span> <span class="o">=</span> <span class="n">lat2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="c">#check consistnecy of frames specifications</span>
+        <span class="c">#we already know that offset and scan </span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span><span class="p">:</span><span class="c">#possible mistake!</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&quot;SUBSCAN </span><span class="si">%d</span><span class="s"> : scan_frame and coordinates_frame are different&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span> <span class="ow">and</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">==</span> <span class="s">&quot;CEN&quot;</span> <span class="ow">and</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">HOR</span><span class="p">):</span>
+                <span class="k">pass</span> <span class="c">#OK - only success condition</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ScheduleError</span><span class="p">(</span><span class="s">&quot;not compatible frame types&quot;</span><span class="p">)</span><span class="c">#very bad!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geom</span> <span class="o">=</span> <span class="n">geom</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_lon1</span><span class="p">,</span> <span class="n">_lat1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">fmt</span><span class="p">()</span>
+        <span class="n">_offset_lon</span><span class="p">,</span> <span class="n">_offset_lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">fmt</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">templates</span><span class="o">.</span><span class="n">otf_subscan</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+                    <span class="nb">dict</span><span class="p">(</span>
+                         <span class="n">ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+                         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                         <span class="n">lon1</span> <span class="o">=</span> <span class="n">_lon1</span><span class="p">,</span>
+                         <span class="n">lat1</span> <span class="o">=</span> <span class="n">_lat1</span><span class="p">,</span>
+                         <span class="n">lon2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lon2</span><span class="o">.</span><span class="n">fmt</span><span class="p">(),</span>
+                         <span class="n">lat2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat2</span><span class="o">.</span><span class="n">fmt</span><span class="p">(),</span>
+                         <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">s_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span>
+                         <span class="n">descr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descr</span><span class="p">,</span>
+                         <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">,</span>
+                         <span class="n">duration</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">),</span>
+                         <span class="n">offset_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">offset_name</span><span class="p">,</span>
+                         <span class="n">offset_lon</span> <span class="o">=</span> <span class="n">_offset_lon</span><span class="p">,</span>
+                         <span class="n">offset_lat</span> <span class="o">=</span> <span class="n">_offset_lat</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="SiderealSubscan"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.SiderealSubscan">[docs]</a><span class="k">class</span> <span class="nc">SiderealSubscan</span><span class="p">(</span><span class="n">Subscan</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">is_tsys</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_cal</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="n">Subscan</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_target</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">is_tsys</span><span class="p">,</span> <span class="n">is_cal</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_lon</span><span class="p">,</span> <span class="n">_lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">fmt</span><span class="p">()</span>
+        <span class="n">_offset_lon</span><span class="p">,</span> <span class="n">_offset_lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">fmt</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">frame</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">EQ</span><span class="p">:</span>
+            <span class="n">_epoch</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">epoch</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_epoch</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">templates</span><span class="o">.</span><span class="n">sidereal_subscan</span><span class="o">.</span><span class="n">substitute</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                 <span class="n">ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span>
+                 <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                 <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                 <span class="n">longitude</span> <span class="o">=</span> <span class="n">_lon</span><span class="p">,</span>
+                 <span class="n">latitude</span> <span class="o">=</span> <span class="n">_lat</span><span class="p">,</span>
+                 <span class="n">epoch</span> <span class="o">=</span> <span class="n">_epoch</span><span class="p">,</span>
+                 <span class="n">offset_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">offset_name</span><span class="p">,</span>
+                 <span class="n">offset_lon</span> <span class="o">=</span> <span class="n">_offset_lon</span><span class="p">,</span>
+                 <span class="n">offset_lat</span> <span class="o">=</span> <span class="n">_offset_lat</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_cen_otf"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_cen_otf">[docs]</a><span class="k">def</span> <span class="nf">get_cen_otf</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> 
+                <span class="n">duration</span><span class="p">,</span> 
+                <span class="n">length</span><span class="p">,</span> 
+                <span class="n">offset</span><span class="p">,</span> 
+                <span class="n">const_axis</span><span class="p">,</span> 
+                <span class="n">direction</span><span class="p">,</span>
+                <span class="n">scan_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get an I{OTF} subscan with description I{CEN}.</span>
+<span class="sd">    @return: an L{OTFSubscan} instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__target</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">_target</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">const_axis</span> <span class="o">==</span> <span class="s">&quot;LON&quot;</span><span class="p">:</span>
+        <span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="n">_target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;offset lon: </span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">degrees</span><span class="p">,))</span>
+        <span class="n">lon2</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">lat2</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="k">elif</span> <span class="n">const_axis</span> <span class="o">==</span> <span class="s">&quot;LAT&quot;</span><span class="p">:</span>
+        <span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="n">_target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;offset lat: </span><span class="si">%f</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">degrees</span><span class="p">,))</span>
+        <span class="n">lon2</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="n">lat2</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">attr</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_target</span> <span class="o">=</span> <span class="n">__target</span><span class="p">,</span>
+                <span class="n">descr</span> <span class="o">=</span> <span class="s">&#39;CEN&#39;</span><span class="p">,</span>
+                <span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span><span class="p">,</span>
+                <span class="n">lon2</span> <span class="o">=</span> <span class="n">lon2</span><span class="p">,</span>
+                <span class="n">lat2</span> <span class="o">=</span> <span class="n">lat2</span><span class="p">,</span>
+                <span class="n">geom</span> <span class="o">=</span> <span class="n">const_axis</span><span class="p">,</span>
+                <span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span><span class="p">,</span>
+                <span class="n">scan_frame</span> <span class="o">=</span> <span class="n">scan_frame</span><span class="p">,</span>
+               <span class="p">)</span>
+    <span class="k">return</span> <span class="n">OTFSubscan</span><span class="p">(</span><span class="o">**</span><span class="n">attr</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_ss_otf"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_ss_otf">[docs]</a><span class="k">def</span> <span class="nf">get_ss_otf</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    @raise NotImplementedError: we still have no useful case for implemting this</span>
+<span class="sd">    function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;is there any useful case for implementing this?&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_sidereal"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_sidereal">[docs]</a><span class="k">def</span> <span class="nf">get_sidereal</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">is_tsys</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">is_cal</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    @param _target: the subscan target</span>
+<span class="sd">    @type _target: target.Target</span>
+<span class="sd">    @param offset_lon: additionale longitude offset</span>
+<span class="sd">    @type offset_lon: angles.Angle</span>
+<span class="sd">    @param offset_lat: additional latitude offset</span>
+<span class="sd">    @type offset_lat: angles.Angle</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__target</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">_target</span><span class="p">)</span>
+    <span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lon</span> <span class="o">+</span> <span class="n">offset_lon</span><span class="p">)</span>
+    <span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="n">__target</span><span class="o">.</span><span class="n">offset_coord</span><span class="o">.</span><span class="n">lat</span> <span class="o">+</span> <span class="n">offset_lat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SiderealSubscan</span><span class="p">(</span><span class="n">__target</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">is_tsys</span><span class="p">,</span> <span class="n">is_cal</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="get_tsys"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_tsys">[docs]</a><span class="k">def</span> <span class="nf">get_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a Tsys subscan.</span>
+<span class="sd">    This basically returns a SIDEREAL subscan where source name is I{Tsys} and</span>
+<span class="sd">    duration is I{0.0}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__target</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">_target</span><span class="p">)</span>
+    <span class="n">__target</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Tsys&quot;</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">get_sidereal</span><span class="p">(</span><span class="n">__target</span><span class="p">,</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                              <span class="n">is_tsys</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">post_procedure</span> <span class="o">=</span> <span class="n">procedures</span><span class="o">.</span><span class="n">TSYS</span>
+    <span class="k">return</span> <span class="n">st</span>
+</div>
+<div class="viewcode-block" id="get_cen_otf_tsys"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_cen_otf_tsys">[docs]</a><span class="k">def</span> <span class="nf">get_cen_otf_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> 
+                       <span class="n">duration</span><span class="p">,</span> 
+                       <span class="n">length</span><span class="p">,</span> 
+                       <span class="n">offset</span><span class="p">,</span> 
+                       <span class="n">const_axis</span><span class="p">,</span> 
+                       <span class="n">direction</span><span class="p">,</span>
+                       <span class="n">scan_frame</span><span class="p">,</span> 
+                       <span class="n">beamsize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a couple composed of a CEN_OTF subscan and its relative SIDEREAL TSYS</span>
+<span class="sd">    subscan.</span>
+<span class="sd">    @return: (otf_subscan, tsys_subscan)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;get couple subscan offset: </span><span class="si">%f</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">offset</span><span class="o">.</span><span class="n">degrees</span><span class="p">,))</span>
+    <span class="n">negative_offset</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="n">beamsize</span> <span class="o">*</span> <span class="n">TSYS_SIGMA</span><span class="p">))</span>
+    <span class="n">positive_offset</span> <span class="o">=</span> <span class="n">VAngle</span><span class="p">(</span><span class="n">length</span><span class="o">.</span><span class="n">degrees</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="n">beamsize</span> <span class="o">*</span> <span class="n">TSYS_SIGMA</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">const_axis</span> <span class="o">==</span> <span class="s">&quot;LAT&quot;</span><span class="p">:</span>
+        <span class="n">_offset_lat</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s">&quot;INC&quot;</span><span class="p">:</span>
+            <span class="n">_offset_lon</span> <span class="o">=</span> <span class="n">negative_offset</span>
+        <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s">&quot;DEC&quot;</span><span class="p">:</span>
+            <span class="n">_offset_lon</span> <span class="o">=</span> <span class="n">positive_offset</span>
+    <span class="k">elif</span> <span class="n">const_axis</span> <span class="o">==</span> <span class="s">&quot;LON&quot;</span><span class="p">:</span>
+        <span class="n">_offset_lon</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s">&quot;INC&quot;</span><span class="p">:</span>
+            <span class="n">_offset_lat</span> <span class="o">=</span> <span class="n">negative_offset</span>
+        <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s">&quot;DEC&quot;</span><span class="p">:</span>
+            <span class="n">_offset_lat</span> <span class="o">=</span> <span class="n">positive_offset</span>
+    <span class="n">ss</span> <span class="o">=</span> <span class="n">get_cen_otf</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">const_axis</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span>
+                    <span class="n">scan_frame</span><span class="p">)</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">get_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">_offset_lon</span><span class="p">,</span> <span class="n">_offset_lat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ss</span><span class="p">,</span> <span class="n">st</span>
+</div>
+<div class="viewcode-block" id="get_sid_tsys"><a class="viewcode-back" href="../../../schedulecreator.scan.html#schedulecreator.scan.subscan.get_sid_tsys">[docs]</a><span class="k">def</span> <span class="nf">get_sid_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> 
+                 <span class="n">offset_lon</span><span class="p">,</span> 
+                 <span class="n">offset_lat</span><span class="p">,</span> 
+                 <span class="n">extremes</span><span class="p">,</span> 
+                 <span class="n">duration</span><span class="p">,</span>
+                 <span class="n">beamsize</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a couple of sidereal subscans, where the first is an actual subscan and the</span>
+<span class="sd">    second is a tsys subscan obtained pointing the antenna out of a rectangular</span>
+<span class="sd">    polygon containing the source.</span>
+<span class="sd">    @param _target: the source to be observed</span>
+<span class="sd">    @type _target: L{target.Target}</span>
+<span class="sd">    @param offset_lon: longitude offset of the subscan</span>
+<span class="sd">    @param offset_lat: latitude offset of the subscan</span>
+<span class="sd">    @param extremes: An array containing the offsets of the extremes of the rectangular polygon</span>
+<span class="sd">    containing the source (i.e. the borders of a raster map) </span>
+<span class="sd">    @type extremes: [(x0,y0), (x1,y1), (x2,y2), (x3,y3)]</span>
+<span class="sd">    @param duration: subscan duration (Sec. ) </span>
+<span class="sd">    @type duration: float</span>
+<span class="sd">    @param beamsize: beam size used to calculated tsys subscan offsets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ss</span> <span class="o">=</span> <span class="n">get_sidereal</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">offset_lon</span><span class="p">,</span> <span class="n">offset_lat</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+    <span class="n">tsys_offsets</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">extrude_from_rectangle</span><span class="p">(</span><span class="n">offset_lon</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span> 
+                                                <span class="n">offset_lat</span><span class="o">.</span><span class="n">degrees</span><span class="p">,</span>
+                                                <span class="n">extremes</span><span class="p">,</span> 
+                                                <span class="n">beamsize</span> <span class="o">*</span> <span class="n">TSYS_SIGMA</span><span class="p">)</span>
+    <span class="n">_offsets</span> <span class="o">=</span> <span class="p">(</span><span class="n">VAngle</span><span class="p">(</span><span class="n">tsys_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">VAngle</span><span class="p">(</span><span class="n">tsys_offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">get_tsys</span><span class="p">(</span><span class="n">_target</span><span class="p">,</span> <span class="n">_offsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ss</span><span class="p">,</span> <span class="n">st</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">SchduleCreator 0.4 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../scan.html" >schedulecreator.scan</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Marco Bartolini, Simona Righini.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
