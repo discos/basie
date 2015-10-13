@@ -1,10 +1,10 @@
-schedulecreator Package
+basie Package
 =======================
 
-:mod:`schedulecreator` Package
+:mod:`basie` Package
 ------------------------------
 
-.. automodule:: schedulecreator.__init__
+.. automodule:: basie.__init__
     :members:
     :undoc-members:
     :show-inheritance:
@@ -12,7 +12,7 @@ schedulecreator Package
 :mod:`angle_parser` Module
 --------------------------
 
-.. automodule:: schedulecreator.angle_parser
+.. automodule:: basie.angle_parser
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,7 +20,7 @@ schedulecreator Package
 :mod:`backend` Module
 ---------------------
 
-.. automodule:: schedulecreator.backend
+.. automodule:: basie.backend
     :members:
     :undoc-members:
     :show-inheritance:
