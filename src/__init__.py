@@ -1,25 +1,7 @@
 #coding=utf-8
 
-#
-#
-#    Copyright (C) 2013  INAF -IRA Italian institute of radioastronomy, bartolini@ira.inaf.it
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-
 """
-Schedulecreator is a software package conceived to implement scheduling of
+Basie is a software package conceived to implement scheduling of
 italian radiotelescopes via the creation of schedule files.
 
 INDEX
@@ -39,9 +21,9 @@ INDEX
 INSTALLATION INSTRUCTIONS
 =========================
 
-Schedule creator can run on python  versions >= 2.4 but it has some dependencies on
+Basie can run on python  versions >= 2.5 but it has some dependencies on
 external modules, and some modules which got into standard python in later
-releases but provide backports for 2.4. 
+releases but provide backports for 2.5. 
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
@@ -204,16 +186,16 @@ You can generate a local copy of the developer documentation using epydoc via
 
 You will find the doc under doc/html/ 
 
-@version: 0.4
+@version: 0.5
 @status: testing (pre-release)
-@authors: Paolo Libardi, Simona Righini, Marco Bartolini
+@authors: marco Bartolini, Simona Righini
 @organization: INAF -IRA
-@copyright: INAF - IRA (c) 2013
-@license: gpl v3.0
+@copyright: INAF - IRA (c) 2015
+@license: 3 clause BSD
 @contact: bartolini@ira.inaf.it
 """
 
-VERSION = "0.4.3"
+VERSION = "0.5"
 NURAGHE_TAG = "nuraghe-0.5"
 ESCS_TAG = "escs-0.5"
 

@@ -1,11 +1,11 @@
 #coding=utf-8
 
 import unittest
-import schedulecreator
+import basie
 
 class TestInstallation(unittest.TestCase):
     def test_version(self):
-        self.assertEqual(schedulecreator.VERSION, "0.4.2 astropy")
+        self.assertEqual(basie.VERSION, "0.5")
 
     def test_astropy_version(self):
         import astropy
