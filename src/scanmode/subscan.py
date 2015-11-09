@@ -40,9 +40,11 @@ import logging
 logger = logging.getLogger(__name__)
 import copy
 
-from schedulecreator.valid_angles import VAngle
-from schedulecreator import templates, frame, utils, procedures
-from schedulecreator.errors import ScheduleError
+from persistent import Persistent
+
+from basie.valid_angles import VAngle
+from basie import templates, frame, utils, procedures
+from basie.errors import ScheduleError
 
 
 TSYS_SIGMA = 5
@@ -50,7 +52,7 @@ TSYS_SIGMA = 5
 Used for calculating TSYS subscans coordinate offsets as TSYS_SIGMA * beamsize
 """
 
-class Subscan(object):
+class Subscan(Persistent):
     """
     Generic subscan. Contains common subscan attributes and is meant to be
     override by specific subscan classes

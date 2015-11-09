@@ -26,8 +26,9 @@ specific targets
 
 import logging
 logger = logging.getLogger(__name__)
+from persistent import Persistent
 
-class ScanMode(object):
+class ScanMode(Persistent):
     """
     Base class for all Scan types. Gives a unique ID to the scan and implements
     L{iter_subscans<self.iter_subscans>} method valid for all subclasses.

@@ -12,8 +12,8 @@ class NoddingScan(ScanMode):
         self.unit_subscans = sum(el[0] for el in self.sequence)
 
     def _do_scan(self, _target, _receiver, _frequency):
-        offset_a = _receiver.get_offset_for_feed(self.feed_a)
-        offset_b = _receiver.get_offset_for_feed(self.feed_b)
+        offset_a = _receiver.feed_offsets[self.feed_a]
+        offset_b = _receiver.feed_offsets[self.feed_b]
         _subscans = []
         for element in self.sequence:
             for repetitions in range(element[0]):

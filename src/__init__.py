@@ -195,9 +195,9 @@ You will find the doc under doc/html/
 @contact: bartolini@ira.inaf.it
 """
 
-VERSION = "0.5"
-NURAGHE_TAG = "nuraghe-0.5"
-ESCS_TAG = "escs-0.5"
+VERSION = "0.5-rc"
+NURAGHE_TAG = "nuraghe-0.5-rc"
+ESCS_TAG = "escs-0.5-rc"
 
 def cmd_line():
     import argparse
