@@ -54,14 +54,14 @@ class XBackend(Backend):
 
 
 class TotalPowerBackend(Backend):
-    def __init__(self, name, integration, sampling, bandwidth):
+    def __init__(self, name, integration, samplingInterval, bandwidth):
         Backend.__init__(self, name, "TotalPower")
-        self.integration = integration
-        self.samplingInterval = sampling
+        self.integration = float(integration)
+        self.samplingInterval = float(samplingInterval)
         self.sections = []
         self.valid_filters = [300.0, 730.0, 1250.0, 2000.0]
         self.can_activate_switching_mark = True
-        self.bandwidth = bandwidth
+        self.bandwidth = float(bandwidth)
 
     def set_sections(self, nfeed, bandwidth):
         if not bandwidth in self.valid_filters:
@@ -84,3 +84,14 @@ class TotalPowerBackend(Backend):
         res += enable_string
         return res
             
+def BackendFactory(configuration_dict):
+    if not "type" in configuration_dict:
+        raise ScheduleError("missing Backend type")
+    _type = configuration_dict.pop('type').upper()
+    if _type == 'TOTALPOWER':
+        return TotalPowerBackend(**configuration_dict)
+    elif _type == 'XARCOS':
+        return XBackend(**configuration_dict)
+    else:
+        raise ScheduleError("invalid Backend type: %s" % (_type,))
+

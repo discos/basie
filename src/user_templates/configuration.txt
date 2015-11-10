@@ -16,8 +16,10 @@ restFrequency = 22000
 # File name of the target specs in this same directory
 targetsFile = targets.txt
 
+[backends]
 # Here we configure which backend we are using in this schedule.
-[totalpower]
+[[TP]]
+    type = TOTALPOWER
     # integration period in ms
     integration = 10
     # sampling interval in ms
@@ -26,9 +28,20 @@ targetsFile = targets.txt
     # 300, 730, 1250, 2000
     bandwidth = 300
 
-#[xarcos]
-#    # one of XK77 XK03 XK06 XK00 XC00
-#    configuration = XK77
+[[TP20_730]]
+    type = TOTALPOWER
+    # integration period in ms
+    integration = 20
+    # sampling interval in ms
+    samplingInterval = 20.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 730
+
+[[XK77]]
+    type = XARCOS
+    # one of XK77 XK03 XK06 XK00 XC00
+    configuration = XK77
 
 [scans]
 
