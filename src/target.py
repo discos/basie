@@ -22,6 +22,7 @@
 Module containig target objects definitions
 exposed classes: 
     - Target 
+    - ObservedTarget
 """
 
 import logging
@@ -85,4 +86,9 @@ class Target(Persistent):
             if not (0 <= self.coord.lat.deg <= 90):
                 raise ScheduleError("Latitude must be 0 <= lat <= 90")
 
+class ObservedTarget(Target):
+    def __init__(self, label, coord, offset, velocity, repetitions, tsys):
+        Target.__init__(self, label, coord, offset, velocity)
+        self.repetitions = repetitions
+        self.tsys = tsys
 

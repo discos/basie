@@ -10,7 +10,7 @@ import angle_parser
 import rich_validator
 from target import ObservedTarget
 import frame
-import velocity
+from velocity import Velocity
 
 """
 string pattern identifying an option.
@@ -25,6 +25,7 @@ The line must be composed of \'label\' \'scantype\' \'frame\' \'longitude\'
 """
 TARGET_RE = "^(?P<label>\S+)\s+" + \
             "(?P<scantype>\S+)\s+" + \
+            "(?P<backend>\S+)\s+" + \
             "(?P<frame>eq|hor|gal)\s+" +\
             "(?P<longitude>\S+)\s+" +\
             "(?P<latitude>\S+)\s*" +\
@@ -52,8 +53,8 @@ def _parse_options(line):
             options['repetitions'] = int(val)
         elif key == 'offset_frame':
             options['offset_frame'] = rich_validator.check_frame(val)
-        elif key == 'vframe':
-            options['vframe'] = rich_validator.check_vframe(val)
+        elif key == 'vref':
+            options['vref'] = rich_validator.check_vref(val)
         elif key == 'vdef':
             options['vdef'] = rich_validator.check_vdef(val)
         elif key == 'svel':
@@ -76,6 +77,14 @@ def _parse_target_line(line):
         target_args = matches.groupdict()
         option_string = target_args.pop('optionals')
         option_args = (_parse_options(option_string))
+        if 'vdef' in option_args \
+           and 'vref' in option_args \
+           and 'svel' in option_args:
+            _target_vel = Velocity(option_args['svel'],
+                                   option_args['vdef'],
+                                   option_args['vref'])
+        else:
+            _target_vel = Velocity()
         obs_target = ObservedTarget(
                                 label = target_args['label'],
                                 coord = frame.Coord(
@@ -91,12 +100,12 @@ def _parse_target_line(line):
                                         option_args.get("offset_lat",
                                                         VAngle(0.0)),
                                                     ),
-                                vel = velocity.Velocity(), #TODO: implement this!!
+                                vel = _target_vel, 
                                 repetitions = option_args.get('repetitions',
                                                               None),
                                 tsys = option_args.get('tsys', None),
                                )
-        return target_args['scantype'], obs_target
+        return target_args['scantype'], target_args['backend'], obs_target
 
 def parse_file(filename, check_values=True):
     """

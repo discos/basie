@@ -1,15 +1,28 @@
 # Comment lines to exclude them from the schedule computation
-#LABEL  SCANTYPE    TARGET_FRAME  LONGITUDE      LATITUDE     [tsys, repetitions, offset_lon, offset_lat, offset_frame]
-Alpha   EqCross1_3  EQ  12:00:00h +45:00:00  
-Alpha   EqCross1_3  EQ  180:00:00 +45:00:00 
-Alpha   EqCross1_3  EQ  180.0d  +45.0d
-Beta    HorCross1_3 HOR 124.5d  38.2d  
-Gamma   EqCross1_5  EQ  13:45:12.3h +34:56:43.0  tsys=2  repetitions=4  
-Gamma   EqCross1_5  EQ  13:45:12.3h +34:56:43.0  offset_lon=-0.5d   
-Delta   RAMAP1x1BL  EQ  12:00:00h +45:00:00
-Delta   DECMAP1x1BR EQ  12:00:00h +45:00:00
-Delta   EQMap1x1    EQ  12:00:00h +45:00:00
-Epsilon GLONMAP2x2TL GAL 275.0d -12.0d  tsys=10 
-Epsilon GLATMAP2x2TL GAL 275.0d -12.0d  tsys=10
-Zeta    HorRasterTL EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
-Zeta    OOSCAN EQ  12:00:00h +45:00:00
+#
+# Obligatroy params:
+# LABEL SCANTYPE BACKEND TARGET_FRAME LONGITUDE LATITUDE     
+# where:
+# SCANTYPE is defined in configuration file
+# BACKEND is defined in configuration file
+# TARGET_FRAME = [EQ, GAL, HOR]
+#
+# Optional params:
+# [tsys, repetitions, offset_lon, offset_lat, offset_frame, vref, vdef,
+# svel]
+# vref = ["BARI", "LSRK", "LSRD", "GALCEN", "TOPCEN"]
+# vdef = ["OP", "RD", "Z"]
+
+Alpha   EqCross1_3  TP EQ  12:00:00h +45:00:00  
+Alpha   EqCross1_3  TP EQ  180:00:00 +45:00:00 
+Alpha   EqCross1_3  TP EQ  180.0d  +45.0d
+Beta    HorCross1_3 TP HOR 124.5d  38.2d  
+Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  tsys=2  repetitions=4  
+Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  offset_lon=-0.5d   
+Delta   RAMAP1x1BL  TP EQ  12:00:00h +45:00:00
+Delta   DECMAP1x1BR TP EQ  12:00:00h +45:00:00
+Delta   EQMap1x1    TP EQ  12:00:00h +45:00:00
+Epsilon GLONMAP2x2TL TP GAL 275.0d -12.0d  tsys=10 
+Epsilon GLATMAP2x2TL TP GAL 275.0d -12.0d  tsys=10
+Zeta    HorRasterTL TP EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
+Zeta    OOSCAN TP EQ  12:00:00h +45:00:00

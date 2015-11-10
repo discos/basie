@@ -38,7 +38,7 @@ import angle_parser
 import frame
 from scanmode import *
 import utils
-from backend import TotalPower, XBackend
+from backend import BackendFactory
 
 valid_list_element = re.compile("\[.+\]|[^\s,]+")
 """
@@ -76,6 +76,22 @@ def check_frame(value):
     if not value in frame.frames:
         raise v.ValidateError("%s is not a valid frame" % (value,))
     return frame.frames[value]
+
+def check_vdef(value):
+    if isinstance(value, list):
+        raise v.ValidateError("expected frame value, found list")
+    _value = value.upper()
+    if not _value in velocity.VDEFS:
+        raise v.ValidateError("%s is not a valid velocity definition" % (_value,))
+    return _value
+
+def check_vref(value):
+    if isinstance(value, list):
+        raise v.ValidateError("expected frame value, found list")
+    _value = value.upper()
+    if not _value in velocity.VREFS:
+        raise v.ValidateError("%s is not a valid velocity reference" % (_value,))
+    return _value
 
 def check_cross_scan(value):
     if not isinstance(value, list):
@@ -262,6 +278,9 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
         for _, var, ex in flat_errs:
             logger.error("%s : %s\n" % (var, str(ex)))
         raise v.ValidateError("Could not validate %s vs %s" % (filename, specfilename))
+    for k,v in conf["backends"].iteritems():
+        v["name"] = k
+        conf["backends"][k] = BackendFactory(v)    
     return conf
 
 def validate_configuration(filename):
