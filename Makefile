@@ -9,9 +9,7 @@ INSTALL=pip install
 all: dep install 
 
 dep:
-	$(INSTALL) astropy
-	$(INSTALL) configobj
-	$(INSTALL) validate
+	$(INSTALL) -r requirements.txt
 
 install: $(SOURCES)
 	$(PYTHON) setup.py install

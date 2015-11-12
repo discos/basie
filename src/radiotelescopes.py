@@ -77,7 +77,8 @@ SRT.receivers["KM"].has_derotator = True
 SRT.receivers["KM"].feed_extent = VAngle(0.037545204)
 SRT.receivers["KM"].interleave = SRT.receivers["KM"].feed_extent / 3.0
 
-radiotelescopes = dict(
-                       "SRT" = SRT,
-                       "MED" = MED,
-                       "NOTO" = NOTO)
+radiotelescopes = {
+                   "SRT" : SRT,
+                   "MED" : MED,
+                   "NOTO" : NOTO,
+                  }

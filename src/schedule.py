@@ -38,16 +38,21 @@ from radiotelescopes import radiotelescopes
 
 class Schedule(Persistent):
     def __init__(self, *args, **kwargs):
+        logger.debug("creating schedule")
+        logger.debug("got kwargs: %s" % (kwargs,))
+        logger.debug("got args: %s" % (args,))
         self.projectID = kwargs.get("projectID") or "testProject"
         self.observer = kwargs.get("observer") or "testObserver"
         self.label = kwargs.get("label") or "testSchedule"
         self.repetitions = kwargs.get("repetitions") or 1
+        self.tsys = kwargs.get("tsys") or 1
         self.scheduleRuns = kwargs.get("scheduleRuns") or 1
         self.frequency = kwargs.get("frequency") or [0.0]
         self.scanmodes = kwargs.get("scanmodes") or None
         self.base_dir = os.path.abspath('.') #default 
         self.backends = kwargs.get("backends")
         self.radiotelescope = radiotelescopes[kwargs.get("radiotelescope").upper()]
+        logger.debug("GOT RADIOTELESCOPE: %s" % (self.radiotelescope,))
         self.receiver = self.radiotelescope.receivers[kwargs.get("receiver").upper()]
         self.scans = []
         self._configure_totalpower_sections()
@@ -59,13 +64,14 @@ class Schedule(Persistent):
 
     def add_scan(self, _target, _scanmode, _backend):
         self.scans.append(
-            Scan(_target,
+            scan.Scan(_target,
                  self.scanmodes[_scanmode],
                  self.receiver,
                  self.frequency,
                  self.backends[_backend],
                  _target.repetitions or self.repetitions,
                  _target.tsys or self.tsys,
+                )
         )
 
     def set_scans(self, scans):
@@ -155,8 +161,8 @@ class Schedule(Persistent):
             subscan_number = 1
             #WRITE SCD SCAN HEADER
             scdfile.write(templates.scd_scan_header.substitute(dict(scan_number=scan_number,
-                                                                    target_label=_scan._target.label)))
-            scanlayout = "scanlayout_%d_%s" % (scan_number, _scan._target.label)
+                                                                    target_label=_scan.target.label)))
+            scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
             data_writer = "MANAGEMENT/FitsZilla"
             scdfile.write("%s:%s\t%s\n" %
                           (_scan.backend.name, data_writer, scanlayout,))
@@ -191,25 +197,25 @@ class Schedule(Persistent):
             #WRITE SUBSCANS TO LIS FILE
             subscans_list = list(subscans_set)
             subscans_list.sort(key = lambda x: x.ID) #GET SUBSCANS SORTED BY ID
-            lisfile.write("#%s\n" % (_scan._target.label,))
+            lisfile.write("#%s\n" % (_scan.target.label,))
             for _subscan in subscans_list:
                 lisfile.write(str(_subscan))
                 lisfile.write("\n")
             # WRITE DAT FILE
             _layout = layout.get_layout_params(_scan, subscans_list)
-            datfile.write(templates.format_layout(scanlayout, _layout))
+            #datfile.write(templates.format_layout(scanlayout, _layout))
             # GO TO NEXT SCAN
             scan_number += 1
             #END SCANS LOOP
         scdfile.close()
         lisfile.close()
-        datfile.close()
+        #datfile.close()
         #write to file used procedures
         with open(cfgfilename, "wt") as cfgfile:
             for _p in _used_procedures:
                 cfgfile.write(str(_p))
         #write to file used backends
         with open(bckfilename, "wt") as bckfile:
-        for _b in _used_backends:
-            bckfile.write(str(_b))
+            for _b in _used_backends:
+                bckfile.write(str(_b))
 

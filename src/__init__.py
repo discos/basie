@@ -27,7 +27,8 @@ releases but provide backports for 2.5.
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
-U{http://www.ira.inaf.it/~bartolini/schedulecreator/schedulecreator-0.3.tar.gz}
+TODO: add github link here!!!
+U{http://www.github....
 
 Installation instructions can be reduced to:
 
@@ -205,7 +206,7 @@ def cmd_line():
     import os
     import sys
 
-    import schedule, rich_validator, utils
+    import schedule, rich_validator, utils, target_parser
 
     #Adding command line options
     parser = argparse.ArgumentParser(description="Create schedule files for italian radiotelescopes")
@@ -228,7 +229,7 @@ def cmd_line():
     #parsing command line arguments
     ns = parser.parse_args()
     if ns.show_version:
-        print "schedulecreator version: %s" % (VERSION,)
+        print "basie version: %s" % (VERSION,)
         sys.exit()
     #setting logger level and format
     if ns.debug:
@@ -236,7 +237,7 @@ def cmd_line():
     else:
         logging.basicConfig(format="%(levelname)s: %(message)s",
                             level=logging.INFO)
-    logger = logging.getLogger("schedulecreator")
+    logger = logging.getLogger("basie")
     logger.info("Running with options:")
     for k,v in vars(ns).iteritems():
         logger.info("\t%s:\t%s" % (k, str(v),))
@@ -263,7 +264,10 @@ def cmd_line():
             #setting target file in the same directory as schedule file
             conf['targetsFile'] = os.path.join(src_directory, conf['targetsFile'])
             parsed_targets = target_parser.parse_file(conf['targetsFile'])
-            _schedule = schedule.Schedule(conf)
+            logger.debug("parsed targets: %s" % (parsed_targets,))
+            _schedule = schedule.Schedule(**conf)
+            for _target, _scanmode, _backend, _  in parsed_targets:
+                _schedule.add_scan(_target, _scanmode, _backend)
             _schedule.set_base_dir(dst_directory)
             _schedule._write_schedule_files()
         logger.info('closing gently')

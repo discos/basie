@@ -88,7 +88,8 @@ class Target(Persistent):
 
 class ObservedTarget(Target):
     def __init__(self, label, coord, offset, velocity, repetitions, tsys):
-        Target.__init__(self, label, coord, offset, velocity)
+        Target.__init__(self, label, coord, velocity)
         self.repetitions = repetitions
         self.tsys = tsys
+        self.offset_coord = offset
 

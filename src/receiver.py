@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 from numpy import interp
 from astropy import units
-from persisten import Persistent
+from persistent import Persistent
 
 from valid_angles import VAngle
 from errors import *

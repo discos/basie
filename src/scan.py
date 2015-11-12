@@ -17,7 +17,7 @@ class Scan(Persistent):
                  _target, 
                  _scanmode, 
                  _receiver, 
-                 _frequency=[0.0 * u.MHz],
+                 _frequency,
                  _backend,
                  _repetitions,
                  _tsys,

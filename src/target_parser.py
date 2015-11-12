@@ -100,12 +100,12 @@ def _parse_target_line(line):
                                         option_args.get("offset_lat",
                                                         VAngle(0.0)),
                                                     ),
-                                vel = _target_vel, 
+                                velocity = _target_vel, 
                                 repetitions = option_args.get('repetitions',
                                                               None),
                                 tsys = option_args.get('tsys', None),
                                )
-        return target_args['scanmode'].upper(), target_args['backend'].upper(), obs_target
+        return target_args['scanmode'], target_args['backend'], obs_target
 
 def parse_file(filename, check_values=True):
     """

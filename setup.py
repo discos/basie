@@ -17,5 +17,5 @@ setup(
       package_data = {"basie" : ["schemas/*.ini",
                                  "user_templates/*.txt"]},
       scripts = ["scripts/basie"],
-      requires = ["configobj", "validate", "astropy>=1.0", "zodb", "ZODB"],
+      install_requires = ["configobj", "validate", "astropy>=1.0", "zodb", "ZODB"],
      )

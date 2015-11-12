@@ -204,7 +204,7 @@ def check_onoff(value):
     sequence = check_onoff_sequence(value[4][1:-1]) #strip [ and ]
     return OnOffScan(duration, offset_lon, offset_lat, offset_frame, sequence)
 
-def check_scanmode(value):
+def check_scantype(value):
     logger.info("parsing scan line: %s" % (value,))
     if isinstance(value, list):
         #this is aginst a bug in the validate module
@@ -260,7 +260,7 @@ def check_future_date(value):
 
 valid_types = {
     'frame' : check_frame,
-    'scanmode' : check_scanmode,
+    'scantype' : check_scantype,
     'file' : check_file,
     'filename' : check_filename,
     'date' : check_date,
@@ -283,7 +283,6 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
         v["name"] = k
         conf["backends"][k] = BackendFactory(v)    
     return conf
-
 
 def validate_configuration(filename):
     return validate(filename, os.path.join(utils.SCHEMA_DIR, "schedule.ini"))
