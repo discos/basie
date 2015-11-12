@@ -43,7 +43,7 @@ targetsFile = targets.txt
     # one of XK77 XK03 XK06 XK00 XC00
     configuration = XK77
 
-[scans]
+[scanmodes]
 
     #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
      EqCross1_3 = CROSS EQ 1.0d 3.0
@@ -59,11 +59,14 @@ targetsFile = targets.txt
      GLATMAP2x2TL = OTFMAP GAL LAT TL 2.0d 2.0d 10.0 3
      EQMap1x1 = OTFMAP EQ BOTH TL 1.0d 1.0d 5.0 3
 
-    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION POINTS_PRE_BEAM
+    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION POINTS_PER_BEAM
      HorRasterTL = RASTERMAP HOR LON TL 1.0d 1.0d 10.0 3
      HorRasterTR = RASTERMAP HOR LAT TR 1.0d 1.0d 5.0 3
 
     #ONOFFNAME = ONOFF DURATION OFF_FRAME LON_OFF LAT_OFF [4on,4off,2on_cal,2off_cal .. ]
-     OOSCAN = ONOFF 4.0 EQ 1.0d 1.0d [4on,4off,2off_cal]
-     ONSCAN = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
+     OnOff = ONOFF 4.0 EQ 1.0d 1.0d [4on,4off,2off_cal]
+     AlwaysOn = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
+
+    #NODDING = NODDING FEED_A FEED_B DURATION [4a,4b,4a_cal,4b_cal]
+    Nodding06 = NODDING 0 6 10.0 [2a,2b]
 

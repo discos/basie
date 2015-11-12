@@ -262,6 +262,7 @@ def cmd_line():
             conf = rich_validator.validate_configuration(configuration_file)
             #setting target file in the same directory as schedule file
             conf['targetsFile'] = os.path.join(src_directory, conf['targetsFile'])
+            parsed_targets = target_parser.parse_file(conf['targetsFile'])
             _schedule = schedule.Schedule(conf)
             _schedule.set_base_dir(dst_directory)
             _schedule._write_schedule_files()

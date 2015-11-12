@@ -10,7 +10,7 @@ Each radiotelescope is represented a dictionary containing:
     - receivers: receivers as defined in L{receiver} module
 """
 
-__all__ = ["MED", "SRT", "NOTO"]
+__all__ = ["MED", "SRT", "NOTO", "radiotelescopes"]
 
 import math
 from persistent import Persistent
@@ -77,3 +77,7 @@ SRT.receivers["KM"].has_derotator = True
 SRT.receivers["KM"].feed_extent = VAngle(0.037545204)
 SRT.receivers["KM"].interleave = SRT.receivers["KM"].feed_extent / 3.0
 
+radiotelescopes = dict(
+                       "SRT" = SRT,
+                       "MED" = MED,
+                       "NOTO" = NOTO)

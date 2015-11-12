@@ -33,6 +33,8 @@ from errors import *
 import layout
 from schedulecreator import VERSION, NURAGHE_TAG, ESCS_TAG
 import scan
+import backend
+from radiotelescopes import radiotelescopes
 
 class Schedule(Persistent):
     def __init__(self, *args, **kwargs):
@@ -41,18 +43,33 @@ class Schedule(Persistent):
         self.label = kwargs.get("label") or "testSchedule"
         self.repetitions = kwargs.get("repetitions") or 1
         self.scheduleRuns = kwargs.get("scheduleRuns") or 1
-        self.frequency = kwargs.get("frequency") or []
-        self.scans = kwargs.get("scans") or None
+        self.frequency = kwargs.get("frequency") or [0.0]
+        self.scanmodes = kwargs.get("scanmodes") or None
         self.base_dir = os.path.abspath('.') #default 
+        self.backends = kwargs.get("backends")
+        self.radiotelescope = radiotelescopes[kwargs.get("radiotelescope").upper()]
+        self.receiver = self.radiotelescope.receivers[kwargs.get("receiver").upper()]
+        self.scans = []
+        self._configure_totalpower_sections()
+
+    def _configure_totalpower_sections(self):
+        for b in self.backends:
+            if isinstance(b, backend.TotalPowerBackend):
+                b.set_sections(self.receiver.nfeed, b.bandwidth)
+
+    def add_scan(self, _target, _scanmode, _backend):
+        self.scans.append(
+            Scan(_target,
+                 self.scanmodes[_scanmode],
+                 self.receiver,
+                 self.frequency,
+                 self.backends[_backend],
+                 _target.repetitions or self.repetitions,
+                 _target.tsys or self.tsys,
+        )
 
     def set_scans(self, scans):
         self.scans = scans
-        #Update each target with defaults
-        #for _scan in self.scans:
-        #    if not _scan.target.tsys:
-        #        _scan.target.tsys = self.tsys
-        #    if not _scan.target.repetitions:
-        #        _scan.target.repetitions = self.repetitions
 
         #Get backend configuration
         #TODO: move this into scan

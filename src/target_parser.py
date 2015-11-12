@@ -20,11 +20,11 @@ OPTION_RE = "(?P<opt>\S+)\s*=\s*(?P<val>\S+)\s*"
 
 """
 string pattern identifying a target line.
-The line must be composed of \'label\' \'scantype\' \'frame\' \'longitude\'
+The line must be composed of \'label\' \'scanmode\' \'frame\' \'longitude\'
 \'latitude\' and multiple \'key = value\' optional parameters.
 """
 TARGET_RE = "^(?P<label>\S+)\s+" + \
-            "(?P<scantype>\S+)\s+" + \
+            "(?P<scanmode>\S+)\s+" + \
             "(?P<backend>\S+)\s+" + \
             "(?P<frame>eq|hor|gal)\s+" +\
             "(?P<longitude>\S+)\s+" +\
@@ -105,7 +105,7 @@ def _parse_target_line(line):
                                                               None),
                                 tsys = option_args.get('tsys', None),
                                )
-        return target_args['scantype'], target_args['backend'], obs_target
+        return target_args['scanmode'].upper(), target_args['backend'].upper(), obs_target
 
 def parse_file(filename, check_values=True):
     """
@@ -120,10 +120,10 @@ def parse_file(filename, check_values=True):
     lines = [l for l in lines if ((not l.startswith("#")) and (not l == ""))]
     targets = [] #targets is a list so that it mantains the same ordering as in the file lines
     for l in lines:
-        scantype, target = _parse_target_line(l)
+        scanmode, backend, target = _parse_target_line(l)
         if target: # not None
             if check_values:
                 target.check_consistency()
-            targets.append((target, scantype, l))
+            targets.append((target, scanmode, backend, l))
     return targets
 
