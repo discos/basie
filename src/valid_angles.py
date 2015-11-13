@@ -25,6 +25,9 @@ It enriches the Angle class defined in astropy.coordinates.Angle adding validati
 options to the validate module and conversions from and to string.
 """
 
+import logging
+logger = logging.getLogger(__name__)
+
 from astropy import units as u
 from astropy.coordinates import Angle
 
@@ -42,21 +45,29 @@ CONSTANT. separator used in angle hour and sexagesimal representation
 class VAngle(Angle):
     def __new__(cls, angle, unit=u.deg, wrap_angle=360 * u.deg, **kwargs):
         self = super(VAngle, cls).__new__(cls, angle, unit=unit, **kwargs)
-    #def __init__(self, angle, unit=u.deg, bounds=(-360, 360)):
-        #Angle.__init__(self, angle, unit, bounds)
-        self._original_unit = unit
-        #will the default representation be sexagesimal?
+        self.original_unit = unit
         if unit == u.hour or isinstance(angle, tuple):
-            self._sexa = True
+            self.sexa = True
         else:
-            self._sexa = False
+            self.sexa = False
         return self
 
+    def __init__(self, *args, **kwargs):
+        super(VAngle, self).__init__(*args, **kwargs)
+        logger.debug("new angle: %s %s" % (self, self.original_unit))
+
     def __copy__(self):
-        res = VAngle(self.deg)
-        res._original_unit = self._original_unit
-        res._sexa = self._sexa
-        return res
+        try:
+            res = VAngle(self.deg)
+            logger.debug("original deg: %s" % (self.deg,))
+            logger.debug("original sexa: %s" % (self.sexa,))
+            logger.debug("original unit: %s" % (self.original_unit,))
+            res.original_unit = self.original_unit
+            res.sexa = self.sexa
+            return res
+        except:
+           logger.debug("original: %s" % (self,))
+           raise
 
     def __deepcopy__(self, *args):
         return self.__copy__()
@@ -88,14 +99,14 @@ class VAngle(Angle):
         Return the string representation of the angle according to its original
         format
         """
-        if self._original_unit == u.hour:
+        if self.original_unit == u.hour:
             return self.fmt_hms()
-        elif self._sexa:
+        elif self.sexa:
             return self.fmt_dms()
         else:
             return self.fmt_dec()
 
-ZERO_ANGLE = VAngle(0.0, unit=u.deg)
+ZERO_ANGLE = VAngle(0.0)
 """
 CONSTANT, used in schedule creator to represent the zero angle.
 """

@@ -112,6 +112,8 @@ class OTFSubscan(Subscan):
                  geom, direction, duration, is_tsys=False, is_cal=False):
         """
         Constructor.
+        @type lon2: VAngle
+        @type lat2: VAngle
         """
         Subscan.__init__(self, _target, duration, is_tsys, is_cal)
         self.typename = "OTF"
@@ -201,16 +203,18 @@ def get_cen_otf(_target,
                 scan_frame):
     """
     Get an I{OTF} subscan with description I{CEN}.
+    @type length: VAngle
+    @type offset: VAngle
     @return: an L{OTFSubscan} instance
     """
     __target = copy.deepcopy(_target)
     if const_axis == "LON":
-        __target.offset_coord.lon = VAngle(_target.offset_coord.lon + offset)
+        __target.offset_coord.lon = _target.offset_coord.lon + offset
         logger.debug("offset lon: %f" % (__target.offset_coord.lon.deg,))
         lon2 = VAngle(0.0)
         lat2 = length
     elif const_axis == "LAT":
-        __target.offset_coord.lat = VAngle(_target.offset_coord.lat + offset)
+        __target.offset_coord.lat = _target.offset_coord.lat + offset
         logger.debug("offset lat: %f" % (__target.offset_coord.lat.deg,))
         lon2 = length
         lat2 = VAngle(0.0)
@@ -238,13 +242,15 @@ def get_sidereal(_target, offset_lon, offset_lat, duration=0.0,
     @param _target: the subscan target
     @type _target: target.Target
     @param offset_lon: additionale longitude offset
-    @type offset_lon: angles.Angle
+    @type offset_lon: VAngle
     @param offset_lat: additional latitude offset
-    @type offset_lat: angles.Angle
+    @type offset_lat: VAngle
     """
     __target = copy.deepcopy(_target)
-    __target.offset_coord.lon = VAngle(__target.offset_coord.lon + offset_lon)
-    __target.offset_coord.lat = VAngle(__target.offset_coord.lat + offset_lat)
+    __target.offset_coord.lon = VAngle(__target.offset_coord.lon +
+                                       offset_lon)
+    __target.offset_coord.lat = VAngle(__target.offset_coord.lat +
+                                       offset_lat)
     return SiderealSubscan(__target, duration, is_tsys, is_cal)
 
 def get_tsys(_target, offset_lon, offset_lat, duration=0.0):
@@ -252,6 +258,8 @@ def get_tsys(_target, offset_lon, offset_lat, duration=0.0):
     Get a Tsys subscan.
     This basically returns a SIDEREAL subscan where source name is I{Tsys} and
     duration is I{0.0}
+    @type offset_lon: VAngle
+    @type offset_lat: VAngle
     """
     __target = copy.deepcopy(_target)
     __target.label = "Tsys"
@@ -261,21 +269,24 @@ def get_tsys(_target, offset_lon, offset_lat, duration=0.0):
     return st
 
 def get_cen_otf_tsys(_target, 
-                       duration, 
-                       length, 
-                       offset, 
-                       const_axis, 
-                       direction,
-                       scan_frame, 
-                       beamsize):
+                     duration, 
+                     length, 
+                     offset, 
+                     const_axis, 
+                     direction,
+                     scan_frame, 
+                     beamsize):
     """
     Get a couple composed of a CEN_OTF subscan and its relative SIDEREAL TSYS
     subscan.
     @return: (otf_subscan, tsys_subscan)
+    @type length: VAngle
+    @type offset: VAngle
+    @type beamsize: VAngle
     """
-    logger.debug("get couple subscan offset: %f " % (offset.deg,))
-    negative_offset = VAngle(-1 * (length.deg / 2.0 + beamsize * TSYS_SIGMA))
-    positive_offset = VAngle(length.deg / 2.0 + beamsize * TSYS_SIGMA)
+    logger.debug("get couple subscan offset: %s " % (offset,))
+    negative_offset = VAngle(-1 * (length.deg / 2.0 + beamsize.deg * TSYS_SIGMA))
+    positive_offset = VAngle(length.deg / 2.0 + beamsize.deg * TSYS_SIGMA)
     if const_axis == "LAT":
         _offset_lat = offset
         if direction == "INC":
@@ -306,19 +317,22 @@ def get_sid_tsys(_target,
     @param _target: the source to be observed
     @type _target: L{target.Target}
     @param offset_lon: longitude offset of the subscan
+    @type offset_lon: VAngle
     @param offset_lat: latitude offset of the subscan
+    @type offset_lat: VAngle
     @param extremes: An array containing the offsets of the extremes of the rectangular polygon
     containing the source (i.e. the borders of a raster map) 
     @type extremes: [(x0,y0), (x1,y1), (x2,y2), (x3,y3)]
     @param duration: subscan duration (Sec. ) 
     @type duration: float
     @param beamsize: beam size used to calculated tsys subscan offsets
+    @type beamsize: VAngle
     """
     ss = get_sidereal(_target, offset_lon, offset_lat, duration)
     tsys_offsets = utils.extrude_from_rectangle(offset_lon.deg, 
                                                 offset_lat.deg,
                                                 extremes, 
-                                                beamsize * TSYS_SIGMA)
+                                                beamsize.deg * TSYS_SIGMA)
     _offsets = (VAngle(tsys_offsets[0]),
                 VAngle(tsys_offsets[1]))
     st = get_tsys(_target, _offsets[0], _offsets[1])

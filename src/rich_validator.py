@@ -154,7 +154,7 @@ def check_nodding_sequence(value):
             raise v.ValidateError("not a valid position switch element %s" %
                     (val, ))
         if m.groups()[0]:
-            repetitions = int(m.groups(0))
+            repetitions = int(m.groups()[0])
         else:
             repetitions = 1
         on_feed = m.groups()[1]
@@ -211,6 +211,7 @@ def check_scantype(value):
         #AKA a brutal workaround
         value = ' '.join(value)
     value = string2list(value)
+    logger.debug("got value: %s" % (value,))
     scantype = value[0].upper()
     if scantype == "CROSS":
         return check_cross_scan(value[1:])

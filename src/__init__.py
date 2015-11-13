@@ -206,7 +206,7 @@ def cmd_line():
     import os
     import sys
 
-    import schedule, rich_validator, utils, target_parser
+    import schedule, rich_validator, utils, target_parser, receiver
 
     #Adding command line options
     parser = argparse.ArgumentParser(description="Create schedule files for italian radiotelescopes")

@@ -48,7 +48,7 @@ class Schedule(Persistent):
         self.tsys = kwargs.get("tsys") or 1
         self.scheduleRuns = kwargs.get("scheduleRuns") or 1
         self.frequency = kwargs.get("frequency") or [0.0]
-        self.scanmodes = kwargs.get("scanmodes") or None
+        self.scantypes = kwargs.get("scantypes") or None
         self.base_dir = os.path.abspath('.') #default 
         self.backends = kwargs.get("backends")
         self.radiotelescope = radiotelescopes[kwargs.get("radiotelescope").upper()]
@@ -62,10 +62,10 @@ class Schedule(Persistent):
             if isinstance(b, backend.TotalPowerBackend):
                 b.set_sections(self.receiver.nfeed, b.bandwidth)
 
-    def add_scan(self, _target, _scanmode, _backend):
+    def add_scan(self, _target, _scantype, _backend):
         self.scans.append(
             scan.Scan(_target,
-                 self.scanmodes[_scanmode],
+                 self.scantypes[_scantype],
                  self.receiver,
                  self.frequency,
                  self.backends[_backend],
@@ -158,6 +158,7 @@ class Schedule(Persistent):
         _used_backends = set()
         #BEGIN SCANS LOOP
         for _scan in self.scans:
+            logger.info("wrting %s" % (_scan.scanmode,))
             subscan_number = 1
             #WRITE SCD SCAN HEADER
             scdfile.write(templates.scd_scan_header.substitute(dict(scan_number=scan_number,

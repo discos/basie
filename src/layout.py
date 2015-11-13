@@ -75,8 +75,8 @@ Costants used for cross scans.
 
 def get_wcs_params(_scan):
     params = {}
-    _target = _scan._target
-    if _scan._scanmode.frame == frame.HOR and not _target.coord.frame == frame.HOR:
+    _target = _scan.target
+    if _scan.scanmode.frame == frame.HOR and not _target.coord.frame == frame.HOR:
         native_system = "DESCRIP"
         params['MOVEFRAM'] = 1
     else:
@@ -92,13 +92,13 @@ def get_wcs_params(_scan):
         params['CTYPE'] = 'ALON/ALAT'
         params['BLONGOBJ'] = _target.coord.lon.deg
         params['BLATOBJ'] = _target.coord.lat.deg
-    if _scan._scanmode.frame == frame.EQ:
+    if _scan.scanmode.frame == frame.EQ:
         params['CTYPEN'] = 'RA/DEC'
         params['CTYPEOFF'] = 'RA/DEC'
-    elif _scan._scanmode.frame == frame.GAL:
+    elif _scan.scanmode.frame == frame.GAL:
         params['CTYPEN'] = 'GLON/GLAT'
         params['CTYPEOFF'] = 'GLON/GLAT'
-    elif _scan._scanmode.frame == frame.HOR:
+    elif _scan.scanmode.frame == frame.HOR:
         params['CTYPEN'] = 'ALON/ALAT'
         params['CTYPEOFF'] = 'ALON/ALAT'
     return params
@@ -107,6 +107,6 @@ def get_layout_params(_scan, _subscans):
     params = {}
     params.update(COMMON_CONSTANTS)
     params.update(get_wcs_params(_scan))
-    if isinstance(_scan._scanmode, scanmode.CrossScan):
+    if isinstance(_scan.scanmode, scanmode.CrossScan):
         params.update(CROSS_CONSTANTS)
     return params

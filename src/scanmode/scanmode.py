@@ -43,7 +43,6 @@ class ScanMode(Persistent):
         self.subscans = []
         self.current_target = None
         self.name = "SCAN"
-        #TODO: manca self.frame - devo inserirlo qui?
 
     def __lt__(self, other):
         return self.ID < other.ID

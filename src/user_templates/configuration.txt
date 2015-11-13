@@ -43,7 +43,7 @@ targetsFile = targets.txt
     # one of XK77 XK03 XK06 XK00 XC00
     configuration = XK77
 
-[scanmodes]
+[scantypes]
 
     #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
      EqCross1_3 = CROSS EQ 1.0d 3.0

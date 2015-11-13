@@ -37,7 +37,7 @@ class MapScan(ScanMode):
         self.scans_per_beam = scans_per_beam
 
     def _get_spacing(self, receiver, frequency):
-        self.beamsize = receiver.get_beamsize(frequency)
+        self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
             self.spacing = receiver.feed_extent / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd((self.length_x /
@@ -73,7 +73,7 @@ class MapScan(ScanMode):
             self.offset_x = [i * self.spacing
                              for i in range(-1 * (self.dimension_x // 2), 
                                             (self.dimension_x // 2) + 1)]
-            self.offset_y = [i * self.spacing.deg
+            self.offset_y = [i * self.spacing
                              for i in range(-1 * (self.dimension_y // 2), 
                                             (self.dimension_y // 2) + 1)]
 
@@ -85,13 +85,13 @@ class OTFMapScan(MapScan):
         self.speed = speed
         self.duration_x = length_x.deg / speed * 60
         self.duration_y = length_y.deg / speed * 60
-        if scan_axis == "LON":
-            self.unit_subscans = self.dimension_y
-        elif scan_axis == "LAT":
-            self.unit_subscans = self.dimension_x
     
     def _do_scan(self, _target, _receiver, _frequency):
         self._get_spacing(_receiver, _frequency)
+        if self.scan_axis == "LON":
+            self.unit_subscans = self.dimension_y
+        elif self.scan_axis == "LAT":
+            self.unit_subscans = self.dimension_x
         _subscans = []
         logger.debug("scan axis: %s" % (self.scan_axis,))
 
@@ -161,13 +161,6 @@ class RasterMapScan(MapScan):
         MapScan.__init__(self, frame, start_point, scan_axis,
                   length_x, length_y, spacing)
         self.duration = duration
-        self.extremes = list(itertools.product(
-                                               [self.offset_x[0].deg,
-                                                self.offset_x[-1].deg],
-                                               [self.offset_y[0].deg,
-                                                self.offset_y[-1].deg]
-                                              ))
-        self._offsets = self._get_offsets()
 
     def _get_offsets(self):
         """
@@ -212,16 +205,23 @@ class RasterMapScan(MapScan):
 
     def _do_scan(self, _target, _receiver, _frequency):
         self._get_spacing(_receiver, _frequency)
+        self.extremes = list(itertools.product(
+                                               [self.offset_x[0].deg,
+                                                self.offset_x[-1].deg],
+                                               [self.offset_y[0].deg,
+                                                self.offset_y[-1].deg]
+                                              ))
+        self._offsets = self._get_offsets()
         _subscans = []
         for offset_lon, offset_lat in self._offsets:
             for _x, _y in self._offsets:
                 logger.debug("\toffset\t %f\t%f" % (_x.deg, _y.deg))
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
             _subscans.append(subscan.get_sid_tsys(_target, 
-                                                      offset_lon,
-                                                      offset_lat,
-                                                      self.extremes,
-                                                      self.duration,
-                                                      self.beamsize))
+                                                  offset_lon,
+                                                  offset_lat,
+                                                  self.extremes,
+                                                  self.duration,
+                                                  self.beamsize))
         return _subscans
 

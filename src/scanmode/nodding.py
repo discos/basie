@@ -27,7 +27,7 @@ class NoddingScan(ScanMode):
                                                   self.duration,
                                                   element[2])
                 st = subscan.get_tsys_subscan(_target,
-                                                  offset.lon,
-                                                  offset.lat)
+                                              offset.lon,
+                                              offset.lat)
                 _subscans.append((ss, st))
         return _subscans

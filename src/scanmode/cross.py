@@ -29,7 +29,7 @@ class CrossScan(ScanMode):
         self.unit_subscans = 4
 
     def _do_scan(self, _target, _receiver, _frequency):
-        beamsize = _receiver.get_beamsize(_frequency)
+        beamsize = VAngle(_receiver.get_beamsize(max(_frequency)))
         _subscans = []
         #Fill informations for each OTF subscan in the 4 directions
         #This is a default implementation, maybe one day we could parametrize
@@ -39,11 +39,11 @@ class CrossScan(ScanMode):
                                         ('LAT', 'INC'), 
                                         ('LAT', 'DEC')]:
             _subscans.append(subscan.get_cen_otf_tsys(_target,
-                                                        self.duration,
-                                                        self.length,
-                                                        VAngle(0.0),
-                                                        _const_axis,
-                                                        _direction,
-                                                        self.frame,
-                                                        beamsize))
+                                                      self.duration,
+                                                      self.length,
+                                                      VAngle(0.0),
+                                                      _const_axis,
+                                                      _direction,
+                                                      self.frame,
+                                                      beamsize))
         return _subscans
