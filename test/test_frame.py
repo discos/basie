@@ -5,8 +5,8 @@ import copy
 from astropy.coordinates import Angle
 from astropy import units as u
 
-from schedulecreator import frame
-from schedulecreator import valid_angles as va
+from basie import frame
+from basie import valid_angles as va
 
 class TestFrame(unittest.TestCase):
     def test_equality(self):

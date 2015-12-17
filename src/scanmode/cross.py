@@ -3,7 +3,7 @@ logger = logging.getLogger(__name__)
 
 from scanmode import ScanMode
 import subscan
-from schedulecreator.valid_angles import VAngle
+from basie.valid_angles import VAngle
 
 class CrossScan(ScanMode):
     def __init__(self, 

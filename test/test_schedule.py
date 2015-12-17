@@ -1,8 +1,8 @@
 import unittest
 import os
 import shutil
-from schedulecreator import schedule
-from schedulecreator.rich_validator import validate_configuration
+from basie import schedule
+from basie.rich_validator import validate_configuration
 
 BASE_PATH = "/tmp/sctest"
 shutil.rmtree(BASE_PATH)

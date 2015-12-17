@@ -2,8 +2,8 @@ import logging
 logger = logging.getLogger(__name__)
 import itertools
 
-from schedulecreator import utils, frame
-from schedulecreator.valid_angles import VAngle
+from basie import utils, frame
+from basie.valid_angles import VAngle
 
 from scanmode import ScanMode
 import subscan

@@ -5,7 +5,7 @@ should be imported everywhere as from errors import *
 
 class ScheduleError(Exception):
     """
-    Generic error in schedulecreator package
+    Generic error in basie package
     """
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)

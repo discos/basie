@@ -2,9 +2,9 @@
 
 import unittest
 
-from schedulecreator import frame, target_parser
-from schedulecreator.scanmode import subscan
-from schedulecreator.valid_angles import VAngle
+from basie import frame, target_parser
+from basie.scanmode import subscan
+from basie.valid_angles import VAngle
 
 SCANTYPE, TARGET, = target_parser._parse_target_line("3C386 otfmap1 EQ 1:00:00.0h 10:00:00 offset_frame=eq offset_lon=0.1d offset_lat=0.0d") 
 DELTA = 1e-10 #we tolerate angles rounding errors

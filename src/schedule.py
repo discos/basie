@@ -31,7 +31,7 @@ import procedures
 import utils
 from errors import *
 import layout
-from schedulecreator import VERSION, NURAGHE_TAG, ESCS_TAG
+from basie import VERSION, NURAGHE_TAG, ESCS_TAG
 import scan
 import backend
 from radiotelescopes import radiotelescopes
@@ -137,7 +137,7 @@ class Schedule(Persistent):
         lisfile = open(lisfilename, "wt")
         #datfile = open(datfilename, "wt")
         #WRITE VERSION INFO IN SCD COMMENT
-        scdfile.write("# Generated with schedulecreator version %s\n" % VERSION)
+        scdfile.write("# Generated with basie version %s\n" % VERSION)
         scdfile.write("# compatible nuraghe version: %s\n" % NURAGHE_TAG)
         scdfile.write("# compatible escs version: %s\n" % ESCS_TAG)
         #WRITE SCD HEADER

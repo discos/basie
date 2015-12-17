@@ -1,7 +1,7 @@
 import unittest
 
-from schedulecreator.valid_angles import VAngle
-from schedulecreator import angle_parser
+from basie.valid_angles import VAngle
+from basie import angle_parser
 from astropy import units as u
 
 
@@ -52,8 +52,24 @@ class TestAngles(unittest.TestCase):
     def test_sum(self):
         a = VAngle(10.0)
         b = VAngle(5.0)
-        c = VAngle(a + b)
-        self.assertEqual(c.fmt_dec(), u"15.000d")
+        c = a + b
+        self.assertEqual(c.deg, a.deg + b.deg)
+
+    def test_sum_is_vangle(self):
+        a = VAngle(10.0)
+        b = VAngle(5.0)
+        c = a + b
+        self.assertTrue(isinstance(c, type(a)))
+
+    def test_sum_keeps_attributes(self):
+        a = VAngle(10.0)
+        b = VAngle(5.0)
+        c = a + b
+        self.assertTrue(hasattr(c, "original_unit"))
+        self.assertTrue(hasattr(c, "sexa"))
+        self.assertEqual(a.original_unit, c.original_unit)
+        self.assertEqual(a.sexa, c.sexa)
+
 
 if __name__ == "__main__":
     unittest.main()

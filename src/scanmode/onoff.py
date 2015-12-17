@@ -1,8 +1,8 @@
-from schedulecreator.valid_angles import VAngle
-from schedulecreator.errors import ScheduleError
+from basie.valid_angles import VAngle
+from basie.errors import ScheduleError
 
 from scanmode import ScanMode
-from schedulecreator import frame
+from basie import frame
 import subscan
 
 class OnOffScan(ScanMode):

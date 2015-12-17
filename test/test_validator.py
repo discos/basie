@@ -2,10 +2,10 @@
 
 import unittest
 
-from schedulecreator.rich_validator import *
-from schedulecreator.valid_angles import VAngle
-from schedulecreator import frame
-from schedulecreator import scan
+from basie.rich_validator import *
+from basie.valid_angles import VAngle
+from basie import frame
+from basie import scan
 
 CONF_PATH = "src/user_templates/configuration.txt"
 

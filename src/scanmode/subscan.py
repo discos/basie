@@ -207,6 +207,7 @@ def get_cen_otf(_target,
     @type offset: VAngle
     @return: an L{OTFSubscan} instance
     """
+    import ipdb;ipdb.set_trace()
     __target = copy.deepcopy(_target)
     if const_axis == "LON":
         __target.offset_coord.lon = _target.offset_coord.lon + offset

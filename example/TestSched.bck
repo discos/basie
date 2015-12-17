@@ -1,5 +1,0 @@
-STD:BACKENDS/TotalPower{
-	integration=10
-	setSection=0,*,300.000000,*,*,10.000000,*
-	enable=1
-}

@@ -2,9 +2,9 @@
 
 import unittest
 
-import schedulecreator.rich_validator as rv
-from schedulecreator import frame
-from schedulecreator import scan
+import basie.rich_validator as rv
+from basie import frame
+from basie import scan
 
 class TestRichValidator(unittest.TestCase):
     def test_string2list(self):

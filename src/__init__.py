@@ -143,17 +143,17 @@ Now you can remove the downloaded package or clean build products via:
 USAGE
 =====
 
-Once installed, the package comes with an executable 'schedulecreator'
+Once installed, the package comes with an executable 'basie'
 
->>> schedulecreator --help 
+>>> basie --help 
 
-The schedulecreator takes in input a configuration file formatted according to a
+The basie takes in input a configuration file formatted according to a
 specific syntax and generates 4 files used by antenna control system as the
 schedule.
 
     1. Fetch a precompiled configuration template 
         
-        >>> schedulecreator [-f] -t <destination_directory>
+        >>> basie [-f] -t <destination_directory>
         
         Creates <destination_directory> and copy configuration.txt and targets.txt user
         templates into the folder. If run with -f it will override eventual existing
@@ -162,7 +162,7 @@ schedule.
 
     2. Generate a new schedule
 
-        >>> schedulecreator [-f] -s <input_configuration_file_path> <destination_directory>
+        >>> basie [-f] -s <input_configuration_file_path> <destination_directory>
 
         Generates the schedule files into the destination directory, creating the
         folder if necessary. 

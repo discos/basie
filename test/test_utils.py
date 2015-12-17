@@ -2,7 +2,7 @@
 
 import unittest
 
-from schedulecreator import utils
+from basie import utils
 
 class TestUtils(unittest.TestCase):
     def test_ceil_to_odd(self):
