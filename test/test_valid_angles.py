@@ -55,6 +55,12 @@ class TestAngles(unittest.TestCase):
         c = a + b
         self.assertEqual(c.deg, a.deg + b.deg)
 
+    def test_sum_dec_hms(self):
+        a = VAngle(10.0)
+        b = VAngle(1, unit=u.hour)
+        c = a + b
+        self.assertEqual(c.deg, a.deg + b.deg)
+
     def test_sum_is_vangle(self):
         a = VAngle(10.0)
         b = VAngle(5.0)
@@ -63,12 +69,21 @@ class TestAngles(unittest.TestCase):
 
     def test_sum_keeps_attributes(self):
         a = VAngle(10.0)
-        b = VAngle(5.0)
+        b = VAngle(15.0)
         c = a + b
+        d = VAngle(1, unit=u.hour)
+        e = d + a
         self.assertTrue(hasattr(c, "original_unit"))
         self.assertTrue(hasattr(c, "sexa"))
         self.assertEqual(a.original_unit, c.original_unit)
         self.assertEqual(a.sexa, c.sexa)
+        self.assertTrue(hasattr(e, "original_unit"))
+        self.assertTrue(hasattr(e, "sexa"))
+        self.assertEqual(d.original_unit, e.original_unit)
+        self.assertEqual(d.sexa, e.sexa)
+        self.assertNotEqual(a.original_unit, e.original_unit)
+        self.assertNotEqual(a.sexa, e.sexa)
+
 
 
 if __name__ == "__main__":
