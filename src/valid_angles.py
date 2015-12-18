@@ -70,26 +70,6 @@ class VAngle(Angle):
     def __deepcopy__(self, *args):
         return self.__copy__()
 
-    #def __add__(self, other):
-    #    if not isinstance(other, VAngle):
-    #        _other = VAngle(other)
-    #    else:
-    #        _other = other
-    #    res = VAngle(self.deg + _other.deg)
-    #    res.original_unit = self.original_unit
-    #    res.sexa = self.sexa
-    #    return res
-
-    #def __sub__(self, other):
-    #    if not isinstance(other, VAngle):
-    #        _other = VAngle(other)
-    #    else:
-    #        _other = other
-    #    res = VAngle(self.deg - _other.deg)
-    #    res.original_unit = self.original_unit
-    #    res.sexa = self.sexa
-    #    return res
-
     def __str__(self):
         return self.fmt()
 
