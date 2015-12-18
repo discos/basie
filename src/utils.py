@@ -19,7 +19,8 @@
 #
 
 """
-Utitlity functions.
+Utitlity functions. (This is the classical module where you put random things
+that do not fit anywhere else)
 
 functions:
     - get_user_templates: copy user template files
@@ -28,11 +29,13 @@ functions:
     - extrude_from_rectange: get a point outside of a rectangle, used for tsys 
 """
 
-import math
 import logging
 import os
 import shutil
 logger = logging.getLogger(__name__)
+
+import numpy as np
+from basie.valid_angles import VAngle
 
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
 USER_TEMPLATES_DIR = os.path.join(PACKAGE_DIR, "user_templates/")
@@ -67,21 +70,34 @@ def get_user_templates(dst, force=False):
 
 def ceil_to_odd(dec):
     """
-    @param dec: a floating point number
+    @param dec: a floating point number or angle
+    @type dec: VAngle or float
     @return: the minor integer odd number greater then dec.
     """
-    n = math.ceil(dec)
-    if n % 2 == 0:
-        return int(n + 1)
+    _ceil = np.ceil(dec)
+    #TODO: there must be a better way for broadcasting divmod operations to all
+    #types 
+    if isinstance(dec, VAngle):
+        _is_angle = True
+        _is_even = (_ceil.value % 2 == 0)
     else:
-        return int(n)
+        _is_angle = False
+        _is_even = (_ceil % 2 == 0)
+    if _is_even:
+        if _is_angle:
+            return _ceil + VAngle(1)
+        else:
+            return _ceil + 1
+    else:
+        return _ceil
 
 def ceil_to_half(dec):
     """
-    @param dec: a floating point nunmber
+    @param dec: a floating point number
+    @type dec: float
     @return: the minor half unit bigger then dec
     """
-    _ceil = math.ceil(dec)
+    _ceil = np.ceil(dec)
     if (_ceil - 0.5) >= dec:
         return _ceil - 0.5
     else:

@@ -39,6 +39,7 @@ class MapScan(ScanMode):
     def _get_spacing(self, receiver, frequency):
         self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
+            #we can exploit multifeed derotator optimization 
             self.spacing = receiver.feed_extent / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd((self.length_x /
                                                   self.spacing).value)
@@ -46,9 +47,8 @@ class MapScan(ScanMode):
                                                   self.spacing).value)
             logger.debug("%d dim_x %d dim_y %d" % (self.ID, self.dimension_x,
                                                self.dimension_x))
-            #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
-            logger.info("we are considering derotator extend instead of beamsize")
+            logger.info("we are considering derotator extent instead of beamsize")
             empty_subscans = self.scans_per_beam * receiver.nfeed
             self.offset_x = []
             self.offset_y = []
