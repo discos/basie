@@ -17,6 +17,13 @@ class ReceiverError(ScheduleError):
     def __init__(self, *args, **kwargs):
         ScheduleError.__init__(self, *args, **kwargs)
 
+class ScanError(ScheduleError):
+    """
+    Error in receivers specifications
+    """
+    def __init__(self, *args, **kwargs):
+        ScheduleError.__init__(self, *args, **kwargs)
+
 class CoordinateError(ScheduleError):
     """
     Used when illegal operations are done with coordinates objects
@@ -30,4 +37,5 @@ class ProcedureError(ScheduleError):
     """
     def __init__(self, *args, **kwargs):
         ScheduleError.__init__(self, *args, **kwargs)
+
 

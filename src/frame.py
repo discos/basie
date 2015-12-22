@@ -33,11 +33,12 @@ exported constants:
 
 import logging
 logger = logging.getLogger(__name__)
+import copy
 
 from astropy import coordinates as coord
 
-from valid_angles import VAngle
-from errors import *
+from .valid_angles import VAngle, ZERO_ANGLE
+from .errors import *
 
 class Frame(object):
     """
@@ -168,12 +169,44 @@ class Coord(object):
     def __repr__(self):
         return self.__str__()
 
-    def fmt(self):
+    def __add__(self, other):
+        if not isinstance(other, Coord):
+            raise CoordinateError("cannot sum Coord with object of type: %s" %
+                                  type(other))
+        if self.is_null():
+            return other
+        if other.is_null():
+            return self
+        _other = copy.deepcopy(other)
+        _other.transform(self.frame)
+        return Coord(self.frame, 
+                     self.lon + _other.lon,
+                     self.lat + _other.lat)
+
+    def __sub__(self, other):
+        if not isinstance(other, Coord):
+            raise CoordinateError("cannot sum Coord with object of type: %s" %
+                                  type(other))
+        if self.is_null():
+            return other
+        if other.is_null():
+            return self
+        _other = copy.deepcopy(other)
+        _other.transform(self.frame)
+        return Coord(self.frame, 
+                     self.lon - _other.lon,
+                     self.lat - _other.lat)
+
+    def is_null(self):
         """
-        Returns formatted (lon, lat)
+        Tell if this coordinate pair evaluates to something or not. 
+        @return True: if both coordinates are 0.0 or frame is NULL
+        @return False: otherwise
         """
-        return (self.lon.fmt(),
-                self.lat.fmt())
+        if ((self.frame == NULL) or
+           (self.lat == ZERO_ANGLE and self.lon == ZERO_ANGLE)):
+            return True
+        return False
 
     def transform(self, dest_frame):
         """
@@ -209,3 +242,4 @@ class Coord(object):
             logger.error(msg)
             raise CoordinateError(msg)
 
+NULL_COORD = Coord(NULL, ZERO_ANGLE, ZERO_ANGLE)

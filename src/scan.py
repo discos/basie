@@ -14,24 +14,24 @@ Unites a scanmode with a target and produces subscans
 """
 class Scan(Persistent):
     def __init__(self, 
-                 _target, 
-                 _scanmode, 
-                 _receiver, 
-                 _frequency,
-                 _backend,
-                 _repetitions,
-                 _tsys,
+                 target, 
+                 scanmode, 
+                 receiver, 
+                 frequency,
+                 backend,
+                 repetitions,
+                 tsys,
                 ):
-        self.target = _target
-        self.scanmode = _scanmode
-        self.receiver = _receiver
-        self.backend = _backend
-        self.frequency = _frequency
-        self.repetitions = _repetitions
-        self.tsys = _tsys
-        if self.target.offset_coord.frame == frame.NULL:
+        self.target = target
+        self.scanmode = scanmode
+        self.receiver = receiver
+        self.backend = backend
+        self.frequency = frequency
+        self.repetitions = repetitions
+        self.tsys = tsys
+        if self.target.offset_coord.is_null():
             try:
-                self.target.offset_coord.frame = _scanmode.frame
+                self.target.offset_coord.frame = scanmode.frame
             except: #scanmode does not define a frame
                 self.target.offset_coord.frame = self.target.coord.frame
 
@@ -45,8 +45,8 @@ class Scan(Persistent):
         """
         subscans = []
         base_subscans = self.scanmode._do_scan(self.target, 
-                                                self.receiver, 
-                                                self.frequency)
+                                               self.receiver, 
+                                               self.frequency)
         for rep in xrange(self.repetitions):
             for sn, ss in enumerate(base_subscans):
                 logger.debug("REP: %d SUBSCAN: %d" % (rep, sn))

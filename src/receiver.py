@@ -22,11 +22,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 from numpy import interp
-from astropy import units
+from astropy import units as u 
 from persistent import Persistent
 
 from valid_angles import VAngle
 from errors import *
+
+from frame import Coord, HOR
 
 class Receiver(Persistent):
     """
@@ -36,7 +38,7 @@ class Receiver(Persistent):
                  beamsizetable=[[0.0],[0.0]], 
                  nfeed=1,
                  npols=2, #polarizations per feed
-                 feed_offsets = [(VAngle(0.0), VAngle(0.0))],
+                 feed_offsets = [Coord(HOR, VAngle(0.0), VAngle(0.0))],
                  has_derotator = False):
         """
         Constructor
@@ -54,8 +56,8 @@ class Receiver(Persistent):
         @param has_derotator: True if the receiver can derotate
         """
         self.name = name
-        self.fmin = fmin * units.MHz
-        self.fmax = fmax * units.MHz
+        self.fmin = fmin * u.MHz
+        self.fmax = fmax * u.MHz
         self.nfeed = nfeed
         self.npols = npols
         self.feed_offsets = feed_offsets
@@ -67,13 +69,16 @@ class Receiver(Persistent):
             logger.warning("adding default offset (0.0, 0.0) to receiver %s" %
                            (self.name,))
             for i in range(self.nfeed - len(self.feed_offsets)):
-                self.feed_offsets.append((VAngle(0.0), VAngle(0.0)))
+                self.feed_offsets.append(Coord(HOR, (VAngle(0.0), VAngle(0.0))))
 
     @property
     def nifs(self):
+        """
+        How many IFs out of this receiver (nfeed * npol)
+        """
         return self.nfeed * self.npols
 
-    def set_feed_offsets(self, feed_number, offsets):
+    def set_feed_offsets(self, feed_number, offsets, frame=HOR):
         """
         Set the feed offset for one feed
         @param offsets: (offset_lon, offset_lat)
@@ -82,8 +87,9 @@ class Receiver(Persistent):
         if feed_number > self.nfeed:
             raise ReceiverError("Receiver %s has no feed %d" % (self.name,
                 feed_number))
-        self.feed_offsets[feed_number] = (VAngle(offsets[0]),
-                                          VAngle(offsets[1]))
+        self.feed_offsets[feed_number] = Coord(frame,
+                                              (VAngle(offsets[0]),
+                                               VAngle(offsets[1])))
 
     @property
     def beamsize(self):

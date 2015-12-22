@@ -42,9 +42,9 @@ import copy
 
 from persistent import Persistent
 
-from basie.valid_angles import VAngle
-from basie import templates, frame, utils, procedures
-from basie.errors import ScheduleError
+from ..valid_angles import VAngle
+from .. import templates, frame, utils, procedures
+from ..errors import ScheduleError, ScanError
 
 
 TSYS_SIGMA = 5
@@ -236,24 +236,21 @@ def get_ss_otf(*args, **kwargs):
     """
     raise NotImplementedError("is there any useful case for implementing this?")
 
-def get_sidereal(_target, offset_lon, offset_lat, duration=0.0,
+def get_sidereal(_target, offset=ZERO_COORD, duration=0.0,
         is_tsys=False, is_cal=False):
     """
     @param _target: the subscan target
     @type _target: target.Target
-    @param offset_lon: additionale longitude offset
+    @param offset_lon: additional longitude offset
     @type offset_lon: VAngle
     @param offset_lat: additional latitude offset
     @type offset_lat: VAngle
     """
     __target = copy.deepcopy(_target)
-    __target.offset_coord.lon = VAngle(__target.offset_coord.lon +
-                                       offset_lon)
-    __target.offset_coord.lat = VAngle(__target.offset_coord.lat +
-                                       offset_lat)
+    __target.offset_coord += offset
     return SiderealSubscan(__target, duration, is_tsys, is_cal)
 
-def get_tsys(_target, offset_lon, offset_lat, duration=0.0):
+def get_tsys(_target, offset, duration=0.0):
     """
     Get a Tsys subscan.
     This basically returns a SIDEREAL subscan where source name is I{Tsys} and
@@ -263,7 +260,7 @@ def get_tsys(_target, offset_lon, offset_lat, duration=0.0):
     """
     __target = copy.deepcopy(_target)
     __target.label = "Tsys"
-    st = get_sidereal(__target, offset_lon, offset_lat, duration=0.0,
+    st = get_sidereal(__target, offset, duration=0.0,
                               is_tsys=True)
     st.post_procedure = procedures.TSYS
     return st
@@ -281,7 +278,7 @@ def get_cen_otf_tsys(_target,
     subscan.
     @return: (otf_subscan, tsys_subscan)
     @type length: VAngle
-    @type offset: VAngle
+    @type offset: Coord
     @type beamsize: VAngle
     """
     logger.debug("get couple subscan offset: %s " % (offset,))

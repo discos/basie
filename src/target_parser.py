@@ -10,7 +10,7 @@ import angle_parser
 import rich_validator
 from target import ObservedTarget
 import frame
-from velocity import Velocity
+from velocity import Velocity, ZERO_VELOCITY
 
 """
 string pattern identifying an option.
@@ -84,7 +84,7 @@ def _parse_target_line(line):
                                    option_args['vdef'],
                                    option_args['vref'])
         else:
-            _target_vel = Velocity()
+            _target_vel = ZERO_VELOCITY
         obs_target = ObservedTarget(
                                 label = target_args['label'],
                                 coord = frame.Coord(
@@ -93,6 +93,7 @@ def _parse_target_line(line):
                                         angle_parser.check_angle(target_args['latitude']),
                                                    ),
                                 offset = frame.Coord(
+                                        #TODO: default offset frame NULL
                                         option_args.get("offset_frame",
                                                         frame.EQ),
                                         option_args.get("offset_lon",

@@ -14,6 +14,7 @@ __all__ = ["MED", "SRT", "NOTO", "radiotelescopes"]
 
 import math
 from persistent import Persistent
+from astropy import units as u
 
 from receiver import Receiver
 from valid_angles import VAngle
@@ -76,6 +77,20 @@ SRT.receivers = {
 SRT.receivers["KM"].has_derotator = True
 SRT.receivers["KM"].feed_extent = VAngle(0.037545204)
 SRT.receivers["KM"].interleave = SRT.receivers["KM"].feed_extent / 3.0
+SRT.receivers["KM"].set_feed_offsets(0, (VAngle(0, u.rad), 
+                                         VAngle(0, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(1, (VAngle(0.00033355202, u.rad),
+                                         VAngle(-0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(2, (VAngle(-0.00033355205, u.rad),
+                                         VAngle(-0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(3, (VAngle(-0.00066710365, u.rad),
+                                         VAngle(0, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(4, (VAngle(-0.00033355205, u.rad),
+                                         VAngle(0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(5, (VAngle(0.00033355205, u.rad),
+                                         VAngle(0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(6, (VAngle(0.00066710365, u.rad),
+                                         VAngle(0.0, u.rad)))
 
 radiotelescopes = {
                    "SRT" : SRT,

@@ -31,12 +31,12 @@ logger = logging.getLogger(__name__)
 from persistent import Persistent
 
 from valid_angles import VAngle
-import frame as fr
-import velocity
+from . import frame as fr
+from velocity import ZERO_VELOCITY
 from errors import *
 
 class Target(Persistent):
-    def __init__(self, label, coord, velocity = velocity.Velocity()):
+    def __init__(self, label, coord, velocity = ZERO_VELOCITY):
         """
         Constructor
         @param label: target name
@@ -87,7 +87,14 @@ class Target(Persistent):
                 raise ScheduleError("Latitude must be 0 <= lat <= 90")
 
 class ObservedTarget(Target):
-    def __init__(self, label, coord, offset, velocity, repetitions, tsys):
+    def __init__(self, label, coord, offset, velocity=ZERO_VELOCITY, 
+                 repetitions=1, tsys=1):
+        """
+        basically a target with velocity, tsys and repetitions added
+        @type offset: frame.Coord
+        @type velocity: velocity.Velocity
+        @default velocity: ZERO_VELOCITY
+        """
         Target.__init__(self, label, coord, velocity)
         self.repetitions = repetitions
         self.tsys = tsys

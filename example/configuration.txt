@@ -3,7 +3,7 @@ observer = YourName
 scheduleLabel = TestSched
 # SRT, MED or NOTO 
 radiotelescope = SRT
-receiver = C
+receiver = KM
 # fits or mbfits
 outputFormat = fits
 # default repetitions value for each scan
@@ -42,6 +42,11 @@ targetsFile = targets.txt
     type = XARCOS
     # one of XK77 XK03 XK06 XK00 XC00
     configuration = XK77
+
+[[XK06]]
+    type = XARCOS
+    # one of XK77 XK03 XK06 XK00 XC00
+    configuration = XK06
 
 [scantypes]
 

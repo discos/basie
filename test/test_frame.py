@@ -36,5 +36,14 @@ class TestCoord(unittest.TestCase):
         self.assertEqual(c.lon.deg, Angle(5.0, u.deg).deg)
         self.assertEqual(d.lon.deg, Angle(10.0, u.deg).deg)
 
+    def test_sum(self):
+        c = frame.Coord(frame.EQ, 5.0, 6.0)
+        d = frame.Coord(frame.EQ, 1.0, 1.0)
+        c += d
+        self.assertEqual(c.frame, frame.EQ)
+        self.assertEqual(c.lon, va.VAngle(6.0))
+        self.assertEqual(c.lat, va.VAngle(7.0))
+
+
 if __name__ == "__main__":
     unittest.main()

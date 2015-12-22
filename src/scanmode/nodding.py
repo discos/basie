@@ -1,7 +1,8 @@
 
 from scanmode import ScanMode
-import subscan
-from basie import frame
+from . import subscan
+from .. import frame
+from ..errors import ScanError
 
 class NoddingScan(ScanMode):
     def __init__(self, feeds, duration, sequence):
@@ -14,6 +15,10 @@ class NoddingScan(ScanMode):
         self.frame = frame.NULL
 
     def _do_scan(self, _target, _receiver, _frequency):
+        #import ipdb;ipdb.set_trace()
+        if not _target.offset.is_null():
+            if not _target.offset.frame == frame.HOR:
+                raise ScanError("cannot perform nodding on target with offsets")
         offset_a = _receiver.feed_offsets[self.feed_a]
         offset_b = _receiver.feed_offsets[self.feed_b]
         _subscans = []
@@ -24,12 +29,10 @@ class NoddingScan(ScanMode):
                 else:
                     offset = offset_b
                 ss = subscan.get_sidereal(_target,
-                                          offset[0],
-                                          offset[1],
+                                          offset,
                                           self.duration,
                                           element[2])
                 st = subscan.get_tsys(_target,
-                                      offset[0],
-                                      offset[1])
+                                      offset)
                 _subscans.append((ss, st))
         return _subscans

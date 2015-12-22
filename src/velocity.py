@@ -20,3 +20,4 @@ class Velocity(Persistent):
                                    self.vref,
                                    self.vdef)
 
+ZERO_VELOCITY = Velocity()
