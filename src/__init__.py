@@ -1,4 +1,4 @@
-#coding=utf-8
+##coding=utf-8
 
 """
 Basie is a software package conceived to implement scheduling of

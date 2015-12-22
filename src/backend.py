@@ -63,12 +63,14 @@ class TotalPowerBackend(Backend):
         self.can_activate_switching_mark = True
         self.bandwidth = float(bandwidth)
 
-    def set_sections(self, nfeed, bandwidth):
+    def set_sections(self, nifs, bandwidth=None):
+        if bandwidth is None:
+            bandwidth = self.bandwidth
         if not bandwidth in self.valid_filters:
             msg = "not a valid bandwidth: %f" % (bandwidth,)
             logger.error(msg)
             raise ScheduleError(msg)
-        for i in range(nfeed):
+        for i in range(nifs):
             self.sections.append((i, float(bandwidth)))
 
     def _get_backend_instructions(self):

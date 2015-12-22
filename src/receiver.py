@@ -35,7 +35,7 @@ class Receiver(Persistent):
     def __init__(self, name, fmin, fmax, 
                  beamsizetable=[[0.0],[0.0]], 
                  nfeed=1,
-                 npols=1, #polarizations per feed
+                 npols=2, #polarizations per feed
                  feed_offsets = [(VAngle(0.0), VAngle(0.0))],
                  has_derotator = False):
         """
@@ -68,6 +68,10 @@ class Receiver(Persistent):
                            (self.name,))
             for i in range(self.nfeed - len(self.feed_offsets)):
                 self.feed_offsets.append((VAngle(0.0), VAngle(0.0)))
+
+    @property
+    def nifs(self):
+        return self.nfeed * self.npols
 
     def set_feed_offsets(self, feed_number, offsets):
         """

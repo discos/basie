@@ -58,9 +58,9 @@ class Schedule(Persistent):
         self._configure_totalpower_sections()
 
     def _configure_totalpower_sections(self):
-        for b in self.backends:
-            if isinstance(b, backend.TotalPowerBackend):
-                b.set_sections(self.receiver.nfeed, b.bandwidth)
+        for name, bck in self.backends.iteritems():
+            if isinstance(bck, backend.TotalPowerBackend):
+                bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):
         self.scans.append(

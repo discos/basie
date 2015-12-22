@@ -94,7 +94,7 @@ def _parse_target_line(line):
                                                    ),
                                 offset = frame.Coord(
                                         option_args.get("offset_frame",
-                                                        frame.NULL),
+                                                        frame.EQ),
                                         option_args.get("offset_lon",
                                                         VAngle(0.0)),
                                         option_args.get("offset_lat",
