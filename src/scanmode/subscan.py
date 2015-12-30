@@ -45,7 +45,7 @@ from persistent import Persistent
 from ..valid_angles import VAngle
 from .. import templates, frame, utils, procedures
 from ..errors import ScheduleError, ScanError
-from ..frame import NULL_COORD
+from ..frame import NULL_COORD, Coord, EQ, GAL, HOR, NULL
 
 
 TSYS_SIGMA = 5
@@ -143,16 +143,12 @@ class OTFSubscan(Subscan):
         self.direction = direction
 
     def __str__(self):
-        #_lon1, _lat1 = self.target.coord.fmt()
-        _lon1 = self.target.coord.lon.fmt()
-        _lat1 = self.target.coord.lat.fmt()
-        _offset_lon, _offset_lat = self.target.offset_coord.fmt()
         return templates.otf_subscan.substitute(
                     dict(
                          ID = self.ID,
                          target = self.target.label,
-                         lon1 = _lon1,
-                         lat1 = _lat1,
+                         lon1 = self.target.coord.lon.fmt(),
+                         lat1 = self.target.coord.lat.fmt(),
                          lon2 = self.lon2.fmt(),
                          lat2 = self.lat2.fmt(),
                          frame = self.target.coord.frame.name,
@@ -162,8 +158,8 @@ class OTFSubscan(Subscan):
                          direction = self.direction,
                          duration = str(self.duration),
                          offset_frame = self.target.offset_coord.frame.offset_name,
-                         offset_lon = _offset_lon,
-                         offset_lat = _offset_lat,
+                         offset_lon = self.target.offset_coord.lon.fmt(),
+                         offset_lat = self.target.offset_coord.lat.fmt(),
                          vel = str(self.target.velocity),
                     )
                 )
@@ -174,8 +170,6 @@ class SiderealSubscan(Subscan):
         self.typename = "SID"
 
     def __str__(self):
-        _lon, _lat = self.target.coord.fmt()
-        _offset_lon, _offset_lat = self.target.offset_coord.fmt()
         if self.target.coord.frame == frame.EQ:
             _epoch = str(self.target.coord.epoch) + '\t'
         else:
@@ -185,12 +179,12 @@ class SiderealSubscan(Subscan):
                  ID = self.ID,
                  target = self.target.label,
                  frame = self.target.coord.frame.name,
-                 longitude = _lon,
-                 latitude = _lat,
+                 longitude = self.target.coord.lon.fmt(),
+                 latitude = self.target.coord.lat.fmt(),
                  epoch = _epoch,
                  offset_frame = self.target.offset_coord.frame.offset_name,
-                 offset_lon = _offset_lon,
-                 offset_lat = _offset_lat,
+                 offset_lon = self.target.offset_coord.lon.fmt(),
+                 offset_lat = self.target.offset_coord.lat.fmt(),
                  vel = str(self.target.velocity),
             )
         )
@@ -297,9 +291,10 @@ def get_cen_otf_tsys(_target,
             _offset_lat = negative_offset
         elif direction == "DEC":
             _offset_lat = positive_offset
+    _offset = Coord(NULL, _offset_lon, _offset_lat)
     ss = get_cen_otf(_target, duration, length, offset, const_axis, direction,
                     scan_frame)
-    st = get_tsys(_target, _offset_lon, _offset_lat)
+    st = get_tsys(_target, _offset)
     return ss, st
 
 def get_sid_tsys(_target, 
@@ -326,13 +321,14 @@ def get_sid_tsys(_target,
     @param beamsize: beam size used to calculated tsys subscan offsets
     @type beamsize: VAngle
     """
-    ss = get_sidereal(_target, offset_lon, offset_lat, duration)
+    ss = get_sidereal(_target, Coord(NULL, offset_lon, offset_lat), duration)
     tsys_offsets = utils.extrude_from_rectangle(offset_lon.deg, 
                                                 offset_lat.deg,
                                                 extremes, 
                                                 beamsize.deg * TSYS_SIGMA)
-    _offsets = (VAngle(tsys_offsets[0]),
-                VAngle(tsys_offsets[1]))
-    st = get_tsys(_target, _offsets[0], _offsets[1])
+    _offsets = Coord(NULL,
+                     VAngle(tsys_offsets[0]),
+                     VAngle(tsys_offsets[1]))
+    st = get_tsys(_target, _offsets)
     return ss, st
 

@@ -104,19 +104,19 @@ class Receiver(Persistent):
         Read from beamsize_table the nearest frequency value.
         If freq is None defauls to self.fmin
         @param freq: frequency (MHz)
-        @type freq: float
+        @type freq: Quantity
         @return: beamsize at given frequency
         """
         if not freq:
             logger.warning("RECEIVER %s using default beamsize at min frequency" %
                            (self.name,))
             freq = self.fmin.value
-        if not self.fmin.value <= freq <= self.fmax.value:
+        if not self.fmin <= freq <= self.fmax:
             logger.warning("RECEIVER %s beamsize at frequency %f out of range" %
-                           (self.name, freq,))
+                           (self.name, freq.value,))
         logger.debug("Getting beamsize\nfreq: %s\nt0: %s\nt1: %s" % \
-                     (freq, self.beamsize_table[0], self.beamsize_table[1]))
-        return interp(freq,
+                     (freq.value, self.beamsize_table[0], self.beamsize_table[1]))
+        return interp(freq.value,
                       self.beamsize_table[0],
                       self.beamsize_table[1])
 

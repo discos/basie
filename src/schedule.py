@@ -23,7 +23,7 @@ __all__ = ['Schedule']
 import logging
 logger = logging.getLogger(__name__)
 import os
-from astropy import units
+from astropy import units as u
 from persistent import Persistent
 
 import templates
@@ -59,7 +59,6 @@ class Schedule(Persistent):
         self.repetitions = repetitions
         self.tsys = tsys
         self.runs = scheduleRuns,
-        self.restFrequency = restFrequency
         self.scantypes = scantypes
         self.backends = backends
         self.radiotelescope = radiotelescopes[radiotelescope.upper()]
@@ -72,6 +71,10 @@ class Schedule(Persistent):
                 (self.radiotelescope.name, self.receiver.name))
         self.targetsFile = targetsFile
         self.outputFormat = outputFormat
+        if isinstance(restFrequency, (list, tuple)):
+            self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
+        else:
+            self.restFrequency = [float(restFrequency) * u.MHz]
 
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():
@@ -79,16 +82,42 @@ class Schedule(Persistent):
                 bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):
-        self.scans.append(
-            scan.Scan(_target,
-                 self.scantypes[_scantype],
-                 self.receiver,
-                 self.frequency,
-                 self.backends[_backend],
-                 _target.repetitions or self.repetitions,
-                 _target.tsys or self.tsys,
+        if _scantype in self.scantypes:
+            self.scans.append(
+                scan.Scan(_target,
+                     self.scantypes[_scantype],
+                     self.receiver,
+                     self.restFrequency,
+                     self.backends[_backend],
+                     _target.repetitions or self.repetitions,
+                     _target.tsys or self.tsys,
+                    )
+            )
+        else:
+            if((_scantype + "_lon" in self.scantypes) and 
+               (_scantype + "_lat" in self.scantypes)):
+                self.scans.append(
+                    scan.Scan(_target,
+                         self.scantypes[_scantype + "_lon"],
+                         self.receiver,
+                         self.restFrequency,
+                         self.backends[_backend],
+                         _target.repetitions or self.repetitions,
+                         _target.tsys or self.tsys,
+                        )
                 )
-        )
+                self.scans.append(
+                    scan.Scan(_target,
+                         self.scantypes[_scantype + "_lat"],
+                         self.receiver,
+                         self.restFrequency,
+                         self.backends[_backend],
+                         _target.repetitions or self.repetitions,
+                         _target.tsys or self.tsys,
+                        )
+                )
+            else:
+                raise ScheduleError("cannot find scantype %s" % (_scantype,))
 
         #explode 'BOTH' scans into 2 separate scans
         #for _scan_name, _scan_definition in self.scan_definitions.iteritems():
@@ -102,13 +131,13 @@ class Schedule(Persistent):
         #           raise ScheduleError("Cannot explode scan %s in separate subscans" % (_scan_name,))
         #       self.scan_definitions[_scan_name + "_lon"] = _scan_definition[0]
         #       self.scan_definitions[_scan_name + "_lat"] = _scan_definition[1]
-        #       #explode 'BOTH' targets into 2 separate targets
+        #       #explode 'both' targets into 2 separate targets
         #       while _scan_name in [_target_scan_name 
         #                            for (_, _target_scan_name, _)
         #                            in self.targets]:
         #           index = [_tsn for (_, _tsn, _) in self.targets].index(_scan_name)
         #           _target, _scan_name, _line = self.targets[index]
-        #           logger.info("Exploding target %s in two separate targets" % (_target.label,))
+        #           logger.info("exploding target %s in two separate targets" % (_target.label,))
         #           self.targets[index] = (_target,
         #                                  _scan_name + "_lat",
         #                                  _line)

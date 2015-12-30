@@ -282,7 +282,16 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
         raise v.ValidateError("Could not validate %s vs %s" % (filename, specfilename))
     for k,v in conf["backends"].iteritems():
         v["name"] = k
-        conf["backends"][k] = BackendFactory(v)    
+        conf["backends"][k] = BackendFactory(v)
+    for k,v in conf["scantypes"].iteritems():
+        if isinstance(v, tuple):
+            logger.info("exploding scan %s in 2 separate scans" % (v,))
+            conf["scantypes"].pop(k)
+            if ((k + "_lon" in conf["scantypes"]) or 
+                (k + "_lat" in conf["scantypes"])):
+               raise ScheduleError("Cannot explode scan %s in separate subscans" % (k,))
+            conf["scantypes"][k + "_lon"] = v[0]
+            conf["scantypes"][k + "_lat"] = v[1]
     return conf
 
 def validate_configuration(filename):

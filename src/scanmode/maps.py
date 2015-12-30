@@ -71,11 +71,11 @@ class MapScan(ScanMode):
             logger.debug("%d dim_x %d dim_y %d" % (self.ID, self.dimension_x,
                                                self.dimension_x))
             self.offset_x = [i * self.spacing
-                             for i in range(-1 * (self.dimension_x // 2), 
-                                            (self.dimension_x // 2) + 1)]
+                             for i in range(int(-1 * (self.dimension_x // 2)), 
+                                            int((self.dimension_x // 2) + 1))]
             self.offset_y = [i * self.spacing
-                             for i in range(-1 * (self.dimension_y // 2), 
-                                            (self.dimension_y // 2) + 1)]
+                             for i in range(int(-1 * (self.dimension_y // 2)), 
+                                            int((self.dimension_y // 2) + 1))]
 
 class OTFMapScan(MapScan):
     def __init__(self, frame, start_point, scan_axis, 
@@ -214,8 +214,6 @@ class RasterMapScan(MapScan):
         self._offsets = self._get_offsets()
         _subscans = []
         for offset_lon, offset_lat in self._offsets:
-            for _x, _y in self._offsets:
-                logger.debug("\toffset\t %f\t%f" % (_x.deg, _y.deg))
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
             _subscans.append(subscan.get_sid_tsys(_target, 
                                                   offset_lon,
