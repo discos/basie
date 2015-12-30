@@ -69,7 +69,7 @@ class Receiver(Persistent):
             logger.warning("adding default offset (0.0, 0.0) to receiver %s" %
                            (self.name,))
             for i in range(self.nfeed - len(self.feed_offsets)):
-                self.feed_offsets.append(Coord(HOR, (VAngle(0.0), VAngle(0.0))))
+                self.feed_offsets.append(Coord(HOR, VAngle(0.0), VAngle(0.0)))
 
     @property
     def nifs(self):
@@ -88,8 +88,8 @@ class Receiver(Persistent):
             raise ReceiverError("Receiver %s has no feed %d" % (self.name,
                 feed_number))
         self.feed_offsets[feed_number] = Coord(frame,
-                                              (VAngle(offsets[0]),
-                                               VAngle(offsets[1])))
+                                               VAngle(offsets[0]),
+                                               VAngle(offsets[1]))
 
     @property
     def beamsize(self):

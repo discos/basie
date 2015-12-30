@@ -3,6 +3,7 @@ ZConfig==3.0.4
 ZODB==4.2.0
 astropy>=1.0.1
 configobj==4.7.2
+validate
 persistent==4.1.1
 transaction==1.4.4
 zodbpickle==0.6.0

@@ -4,8 +4,8 @@ import shutil
 from basie import schedule
 from basie.rich_validator import validate_configuration
 
-BASE_PATH = "/tmp/sctest"
-shutil.rmtree(BASE_PATH)
+BASE_PATH = "/tmp/basie_test"
+shutil.rmtree(BASE_PATH, True) #ignores errors
 os.mkdir(BASE_PATH)
 
 class TestSchedule(unittest.TestCase):

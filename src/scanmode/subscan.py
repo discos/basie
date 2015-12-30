@@ -45,6 +45,7 @@ from persistent import Persistent
 from ..valid_angles import VAngle
 from .. import templates, frame, utils, procedures
 from ..errors import ScheduleError, ScanError
+from ..frame import NULL_COORD
 
 
 TSYS_SIGMA = 5
@@ -236,7 +237,7 @@ def get_ss_otf(*args, **kwargs):
     """
     raise NotImplementedError("is there any useful case for implementing this?")
 
-def get_sidereal(_target, offset=ZERO_COORD, duration=0.0,
+def get_sidereal(_target, offset=NULL_COORD, duration=0.0,
         is_tsys=False, is_cal=False):
     """
     @param _target: the subscan target
