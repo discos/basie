@@ -5,7 +5,7 @@ scheduleLabel = TestSched
 radiotelescope = SRT
 receiver = C
 # fits or mbfits
-outputFormat = fits
+#outputFormat = fits
 # default repetitions value for each scan
 repetitions = 1
 # default tsys value for each scan

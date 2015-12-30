@@ -20,8 +20,8 @@ OPTION_RE = "(?P<opt>\S+)\s*=\s*(?P<val>\S+)\s*"
 
 """
 string pattern identifying a target line.
-The line must be composed of \'label\' \'scanmode\' \'frame\' \'longitude\'
-\'latitude\' and multiple \'key = value\' optional parameters.
+The line must be composed of \'label\' \'scanmode\'  \'backend\' \'frame\' 
+\'longitude\' \'latitude\' and multiple \'key = value\' optional parameters.
 """
 TARGET_RE = "^(?P<label>\S+)\s+" + \
             "(?P<scanmode>\S+)\s+" + \

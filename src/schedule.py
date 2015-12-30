@@ -26,39 +26,40 @@ import os
 from astropy import units
 from persistent import Persistent
 
-import .templates
-import .procedures
-import .utils
+import templates
+import procedures
+import utils
 from .errors import *
-import .layout
-from basie import VERSION, NURAGHE_TAG, ESCS_TAG
-import .scan
-import .backend
+import layout
+from . import VERSION, NURAGHE_TAG, ESCS_TAG
+import scan
+import backend
 from .radiotelescopes import radiotelescopes
 
 class Schedule(Persistent):
     def __init__(self,
                  projectID = "defaultProject",
                  observer = "defaultObserver",
-                 label = "defaultSchedule",
+                 scheduleLabel = "defaultSchedule",
                  repetitions = 1,
                  tsys = 1,
                  scheduleRuns = 1,
-                 frequency = [0.0],
+                 restFrequency = [0.0],
                  scantypes = {},
                  backends = {},
                  radiotelescope = "SRT", #should we change this?
                  receiver = "C", #should we change this?
-                 )
-
+                 outputFormat = "fits",
+                 targetsFile = "targets.txt",
+                 ):
         logger.debug("creating schedule")
         self.projectID = projectID
         self.observer = observer
-        self.label = label
+        self.label = scheduleLabel
         self.repetitions = repetitions
         self.tsys = tsys
-        self.scheduleRuns = scheduleRuns,
-        self.frequency = frequency
+        self.runs = scheduleRuns,
+        self.restFrequency = restFrequency
         self.scantypes = scantypes
         self.backends = backends
         self.radiotelescope = radiotelescopes[radiotelescope.upper()]
@@ -69,6 +70,8 @@ class Schedule(Persistent):
         self._configure_totalpower_sections()
         logger.info("Scheduling %s radiotelescope using receiver %s" %
                 (self.radiotelescope.name, self.receiver.name))
+        self.targetsFile = targetsFile
+        self.outputFormat = outputFormat
 
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():

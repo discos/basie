@@ -12,7 +12,7 @@ class TestSchedule(unittest.TestCase):
     def test_schedule_generation(self):
         conf = validate_configuration("src/user_templates/configuration.txt")
         conf['targetsFile'] = "src/user_templates/targets.txt"
-        sched = schedule.Schedule(conf)
+        sched = schedule.Schedule(**conf)
         self.assertEqual(sched.projectID, conf['projectID'])
         sched.set_base_dir(BASE_PATH)
         sched._write_schedule_files()
