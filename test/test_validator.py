@@ -27,11 +27,11 @@ class TestValidator(unittest.TestCase):
         conf = validate_configuration(CONF_PATH)
         self.assertNotEqual(conf, {})
         self.assertEqual(conf['projectID'], "ProjectName")
-        self.assertNotEqual(conf['scans'], [])
+        self.assertNotEqual(conf['scantypes'], [])
         #Here we also test scans creation
-        cross_scan = conf['scans']['EqCross1_3']
+        cross_scan = conf['scantypes']['EqCross1_3']
         self.assertEqual(cross_scan.length, VAngle(1.0))
-        onoff_scan = conf['scans']['OOSCAN']
+        onoff_scan = conf['scantypes']['OnOff']
         self.assertIsInstance(onoff_scan, ScanMode)
         self.assertIsInstance(onoff_scan, OnOffScan)
         self.assertEqual(onoff_scan.unit_subscans, 10)
