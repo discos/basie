@@ -26,36 +26,49 @@ import os
 from astropy import units
 from persistent import Persistent
 
-import templates
-import procedures
-import utils
-from errors import *
-import layout
+import .templates
+import .procedures
+import .utils
+from .errors import *
+import .layout
 from basie import VERSION, NURAGHE_TAG, ESCS_TAG
-import scan
-import backend
-from radiotelescopes import radiotelescopes
+import .scan
+import .backend
+from .radiotelescopes import radiotelescopes
 
 class Schedule(Persistent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,
+                 projectID = "defaultProject",
+                 observer = "defaultObserver",
+                 label = "defaultSchedule",
+                 repetitions = 1,
+                 tsys = 1,
+                 scheduleRuns = 1,
+                 frequency = [0.0],
+                 scantypes = {},
+                 backends = {},
+                 radiotelescope = "SRT", #should we change this?
+                 receiver = "C", #should we change this?
+                 )
+
         logger.debug("creating schedule")
-        logger.debug("got kwargs: %s" % (kwargs,))
-        logger.debug("got args: %s" % (args,))
-        self.projectID = kwargs.get("projectID") or "testProject"
-        self.observer = kwargs.get("observer") or "testObserver"
-        self.label = kwargs.get("label") or "testSchedule"
-        self.repetitions = kwargs.get("repetitions") or 1
-        self.tsys = kwargs.get("tsys") or 1
-        self.scheduleRuns = kwargs.get("scheduleRuns") or 1
-        self.frequency = kwargs.get("frequency") or [0.0]
-        self.scantypes = kwargs.get("scantypes") or None
-        self.base_dir = os.path.abspath('.') #default 
-        self.backends = kwargs.get("backends")
-        self.radiotelescope = radiotelescopes[kwargs.get("radiotelescope").upper()]
+        self.projectID = projectID
+        self.observer = observer
+        self.label = label
+        self.repetitions = repetitions
+        self.tsys = tsys
+        self.scheduleRuns = scheduleRuns,
+        self.frequency = frequency
+        self.scantypes = scantypes
+        self.backends = backends
+        self.radiotelescope = radiotelescopes[radiotelescope.upper()]
         logger.debug("GOT RADIOTELESCOPE: %s" % (self.radiotelescope,))
-        self.receiver = self.radiotelescope.receivers[kwargs.get("receiver").upper()]
+        self.receiver = self.radiotelescope.receivers[receiver.upper()]
+        self.base_dir = os.path.abspath('.') #default 
         self.scans = []
         self._configure_totalpower_sections()
+        logger.info("Scheduling %s radiotelescope using receiver %s" %
+                (self.radiotelescope.name, self.receiver.name))
 
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():
@@ -74,12 +87,6 @@ class Schedule(Persistent):
                 )
         )
 
-    def set_scans(self, scans):
-        self.scans = scans
-
-        #Get backend configuration
-        #TODO: move this into scan
-        #self.backend.set_sections(self.receiver.nfeed, conf['backend']['bandwidth'])
         #explode 'BOTH' scans into 2 separate scans
         #for _scan_name, _scan_definition in self.scan_definitions.iteritems():
         #   logger.debug("examinating %s || %s" % (_scan_name,
