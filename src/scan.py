@@ -53,6 +53,7 @@ class Scan(Persistent):
                 subscan_number = rep * self.scanmode.unit_subscans + sn
                 logger.debug("subscan_number %d" % (subscan_number,))
                 yield_tsys = False
+                #should we add a TSYS subscan?
                 if subscan_number == 0 and self.tsys >= 0:
                     yield_tsys = True
                 elif self.tsys > 0 and not(subscan_number % self.tsys):

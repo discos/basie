@@ -180,6 +180,17 @@ class Schedule(Persistent):
         scdfile.write("# compatible nuraghe version: %s\n" % NURAGHE_TAG)
         scdfile.write("# compatible escs version: %s\n" % ESCS_TAG)
         #WRITE SCD HEADER
+        init_procedure = procedures.INIT
+        restFrequency = False
+        for f in self.restFrequency:
+            if not f == 0:
+                restFrequency = True
+        if restFrequency:
+            freqstring = ";".join(map(lambda(x):str(x.value),
+                                      self.restFrequency))
+            rst_procedure = procedures.Procedure("restFrequency", 0,
+                    "\trestFrequency=%s\n" % freqstring, True)
+            init_procedure = init_procedure + rst_procedure
         scdfile.write(templates.scd_header.substitute(
                               dict(
                                 projectID = self.projectID,
@@ -187,13 +198,13 @@ class Schedule(Persistent):
                                 lisfilename = os.path.basename(lisfilename),
                                 cfgfilename = os.path.basename(cfgfilename),
                                 bckfilename = os.path.basename(bckfilename),
-                                initproc = procedures.INIT.execute(),
+                                initproc = init_procedure.execute(),
                                   )))
 
         #WRITE SCAN AND SUBSCANS INFORMATIONS SEQUENTIALLY
         scan_number = 1
         _used_procedures = set() #stores every used procedure without repetitions
-        _used_procedures.add(procedures.INIT) #default procedure
+        _used_procedures.add(init_procedure) #default procedure
         _used_backends = set()
         #BEGIN SCANS LOOP
         for _scan in self.scans:
@@ -203,7 +214,7 @@ class Schedule(Persistent):
             scdfile.write(templates.scd_scan_header.substitute(dict(scan_number=scan_number,
                                                                     target_label=_scan.target.label)))
             scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
-            data_writer = "MANAGEMENT/FitsZilla"
+            data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
             scdfile.write("%s:%s\t%s\n" %
                           (_scan.backend.name, data_writer, scanlayout,))
             _used_backends.add(_scan.backend)
@@ -211,6 +222,15 @@ class Schedule(Persistent):
             subscans_set = set() #all subscans in this scan
             for _subscan in _scan.subscans:
                 _subscan.SEQ_ID = subscan_number
+                #PRE SCAN procedures
+                if subscan_number == 1: 
+                    if not _scan.target.velocity.is_zero():
+                        if isinstance(_scan.backend, backend.XBackend):
+                            _subscan.pre_procedure = (_subscan.pre_procedure +
+                                                      procedures.FTRACK)("ALL")
+                        else:
+                            _subscan.pre_procedure = (_subscan.pre_procedure +
+                                                      procedures.FTRACK)("LO")
                 #if isinstance(_subscan, OTFSubscan):
                     #ADD WAIT post subscan proceudure
                     #wait_time = ((_scan._scanmode.speed / 60.0) /
@@ -242,7 +262,7 @@ class Schedule(Persistent):
                 lisfile.write(str(_subscan))
                 lisfile.write("\n")
             # WRITE DAT FILE
-            _layout = layout.get_layout_params(_scan, subscans_list)
+            #_layout = layout.get_layout_params(_scan, subscans_list)
             #datfile.write(templates.format_layout(scanlayout, _layout))
             # GO TO NEXT SCAN
             scan_number += 1

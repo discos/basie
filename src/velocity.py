@@ -15,6 +15,9 @@ class Velocity(Persistent):
         self.vref = vref.upper()
         self.val = val
 
+    def is_zero(self):
+        return self.val == 0
+
     def __str__(self):
         return "-VRAD %f %s %s" % (self.val, 
                                    self.vref,

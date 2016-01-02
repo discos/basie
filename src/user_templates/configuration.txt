@@ -3,7 +3,7 @@ observer = YourName
 scheduleLabel = TestSched
 # SRT, MED or NOTO 
 radiotelescope = SRT
-receiver = C
+receiver = K
 # fits or mbfits
 #outputFormat = fits
 # default repetitions value for each scan

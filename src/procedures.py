@@ -87,6 +87,9 @@ class Procedure(object):
             res = res[:-1]
         return res
 
+    def is_null(self):
+        return ((self.nparams == 0) and (self.body == ""))
+
     def __str__(self):
         """
         Used for getting the procedure definition as it must be added to the
@@ -101,8 +104,10 @@ class Procedure(object):
         return res
 
     def __add__(self, other):
-        if other.name == "NULL": #caso degenere
+        if other.is_null(): #caso degenere
             return self
+        if self.is_null():
+            return other
         res_name = "%s_%s" % (self.name, other.name)
         res_nparams = self.nparams + other.nparams
         if self.nparams > 0 and other.nparams > 0:
@@ -138,6 +143,11 @@ class Procedure(object):
 FTRACK = Procedure("FTRACK", 1, "\tftrack=$1\n", True)
 """
 Standard B{ftrack} procedure
+"""
+
+RSTFREQ = Procedure("restFrequency", 1, "\trestFrequency=$1\n", True)
+"""
+Standard B{restFrequency} procedure
 """
 
 DEROTATOR = Procedure("DEROTATOR", 1, "\tderotatorSetConfiguration=$1\n", True)

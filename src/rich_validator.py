@@ -38,6 +38,7 @@ import angle_parser
 import frame
 from scanmode import *
 import utils
+import velocity
 from backend import BackendFactory
 
 valid_list_element = re.compile("\[.+\]|[^\s,]+")
