@@ -35,6 +35,7 @@ from . import VERSION, NURAGHE_TAG, ESCS_TAG
 import scan
 import backend
 from .radiotelescopes import radiotelescopes
+from scanmode import OnOffScan, NoddingScan, MapScan
 
 class Schedule(Persistent):
     def __init__(self,
@@ -231,6 +232,13 @@ class Schedule(Persistent):
                         else:
                             _subscan.pre_procedure = (_subscan.pre_procedure +
                                                       procedures.FTRACK)("LO")
+                    if ((isinstance(_scan.scanmode, OnOffScan) or
+                         isinstance(_scan.scanmode, NoddingScan)) and
+                         _scan.receiver.has_derotator):
+                        _subscan.pre_procedure = procedures.DEROTATORFIXED
+                    if (isinstance(_scan.scanmode, MapScan) and
+                         _scan.receiver.has_derotator):
+                        _subscan.pre_procedure += procedures.DEROTATORBSC
                 #if isinstance(_subscan, OTFSubscan):
                     #ADD WAIT post subscan proceudure
                     #wait_time = ((_scan._scanmode.speed / 60.0) /

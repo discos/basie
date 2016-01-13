@@ -1,5 +1,5 @@
 
-Schedulecreator is a software package conceived to implement scheduling of
+Basie is a software package conceived to implement scheduling of
 italian radiotelescopes via the creation of schedule files.
 
 INDEX

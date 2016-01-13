@@ -155,6 +155,10 @@ DEROTATOR = Procedure("DEROTATOR", 1, "\tderotatorSetConfiguration=$1\n", True)
 Standard B{derotator} procedure for configuration setup
 """
 
+#TODO: correct procedure sum and remove these two
+DEROTATORFIXED = Procedure("DEROTATORFIXED", 0, "\tderotatorSetConfiguration=FIXED\n", True)
+DEROTATORBSC = Procedure("DEROTATORBSC", 0, "\tderotatorSetConfiguration=BSC\n", True)
+
 WAIT = Procedure("WAIT", 1, "\twait=$1\n", True)
 """
 Standard B{wait} procedure

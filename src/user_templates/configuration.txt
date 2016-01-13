@@ -3,6 +3,10 @@ observer = YourName
 scheduleLabel = TestSched
 # SRT, MED or NOTO 
 radiotelescope = SRT
+# for Medicina receivers can be:
+# C, CL, X, K
+# for SRT receivers can be:
+# P, L, C, K, KM
 receiver = K
 # fits or mbfits
 #outputFormat = fits
