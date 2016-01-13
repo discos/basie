@@ -47,6 +47,11 @@ targetsFile = targets.txt
     # one of XK77 XK03 XK06 XK00 XC00
     configuration = XK77
 
+[[ROACHRK00]]
+    type = ROACH
+    # one of RK00 RK77 RC00 RL00 RP00
+    configuration = RK00
+
 [scantypes]
 
     #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
@@ -72,5 +77,5 @@ targetsFile = targets.txt
      AlwaysOn = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
 
     #NODDING = NODDING FEED_A FEED_B DURATION [4a,4b,4a_cal,4b_cal]
-    Nodding06 = NODDING 0 6 10.0 [2a,2b]
+     Nodding06 = NODDING 0 6 10.0 [2a,2b]
 

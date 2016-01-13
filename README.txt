@@ -19,13 +19,12 @@ INDEX
 INSTALLATION INSTRUCTIONS
 =========================
 
-Schedule creator can run on python  versions >= 2.4 but it has some dependencies on
-external modules, and some modules which got into standard python in later
-releases but provide backports for 2.4. 
+Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
+python >= 2.6.5
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
-U{http://www.ira.inaf.it/~bartolini/schedulecreator/schedulecreator-0.3.tar.gz}
+U{http://github.com/flyingfrog81/basie/}
 
 Installation instructions can be reduced to:
 
@@ -84,11 +83,8 @@ INSTALL PACKAGE DEPENDENCIES
 The package depends on other python packages which can be installed manually
 or via distutils.
 
-Required packages are:
-    - U{configobj<https://pypi.python.org/pypi/configobj/>}
-    - U{validate<https://pypi.python.org/pypi/validate/>}
-    - U{astropy<http://www.astropy.org>}
-
+Required packages are listed in "requirements.txt" file fourinished along with
+these sources
 You can install every dependecy via (note that you may need to be root): 
 
 >>> make dep
@@ -103,10 +99,13 @@ dependencies using pip from the command line for each individual package
 >>> pip install configobj
 >>> pip install validate
 >>> pip install astropy
+>>> pip install zodbpickle
+>>> pip install ZODB
+...
 
 or every package at once:
 
->>> pip install configobj validate astropy
+>>> pip install configobj validate astropy ZODB ...
 
 INSTALL
 -------
@@ -127,9 +126,9 @@ Now you can remove the downloaded package or clean build products via:
 USAGE
 =====
 
-Once installed, the package comes with an executable 'schedulecreator'
+Once installed, the package comes with an executable called 'basie'
 
->>> schedulecreator --help 
+>>> basie --help 
 
 The schedulecreator takes in input a configuration file formatted according to a
 specific syntax and generates 4 files used by antenna control system as the
@@ -137,7 +136,7 @@ schedule.
 
     1. Fetch a precompiled configuration template 
         
-        >>> schedulecreator [-f] -t <destination_directory>
+        >>> basie [-f] -t <destination_directory>
         
         Creates <destination_directory> and copy configuration.txt and targets.txt user
         templates into the folder. If run with -f it will override eventual existing
@@ -146,7 +145,7 @@ schedule.
 
     2. Generate a new schedule
 
-        >>> schedulecreator [-f] -s <input_configuration_file_path> <destination_directory>
+        >>> basie [-f] -s <input_configuration_file_path> <destination_directory>
 
         Generates the schedule files into the destination directory, creating the
         folder if necessary. 
@@ -154,13 +153,6 @@ schedule.
         and modified from user template in step 1.
         if run with -f overrides eventual existing files.
 
-SC-WIZ
-======
-
-On linux you get accesso to a I{B{sc-wiz}} (Schedule Creator Wizard) command which will guide you through
-a serie of graphical dialogs to the creation of a schedule.
-sc-wiz is built with U{zenity<https://help.gnome.org/users/zenity/stable/>} so
-make sure you have it installed for your distro.
 
 BUILD DOCUMENTATION
 ===================

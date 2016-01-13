@@ -52,6 +52,15 @@ class XBackend(Backend):
         res = "\tinitialize=%s\n" % (self.configuration,)
         return res
 
+class RoachBackend(Backend):
+    def __init__(self, name, configuration):
+        Backend.__init__(self, name, "RoachBackend")
+        self.configuration = configuration
+        self.can_activate_switching_mark = False
+
+    def _get_backend_instructions(self):
+        res = "\tinitialize=%s\n" % (self.configuration,)
+        return res
 
 class TotalPowerBackend(Backend):
     def __init__(self, name, integration, samplingInterval, bandwidth):
@@ -94,6 +103,8 @@ def BackendFactory(configuration_dict):
         return TotalPowerBackend(**configuration_dict)
     elif _type == 'XARCOS':
         return XBackend(**configuration_dict)
+    elif _type == 'ROACH':
+        return RoachBackend(**configuration_dict)
     else:
         raise ScheduleError("invalid Backend type: %s" % (_type,))
 
