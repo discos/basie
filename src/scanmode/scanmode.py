@@ -51,7 +51,7 @@ class ScanMode(Persistent):
         return self.ID == other.ID
 
     def __str__(self):
-        return "Scan %d type %s" % (self.ID, str(self.__class__))
+        return "Scan {0:d}: {1}".format(self.ID, self.__class__.__name__)
 
     def do_scan(self, _target, _receiver, _frequency):
         """

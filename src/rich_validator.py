@@ -286,7 +286,8 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
         conf["backends"][k] = BackendFactory(v)
     for k,v in conf["scantypes"].iteritems():
         if isinstance(v, tuple):
-            logger.info("exploding scan %s in 2 separate scans" % (v,))
+            logger.info(("exploding scanmode {0} in 2 separate scans: {0}_lon" + \
+                        " and {0}_lat").format(k,))
             conf["scantypes"].pop(k)
             if ((k + "_lon" in conf["scantypes"]) or 
                 (k + "_lat" in conf["scantypes"])):

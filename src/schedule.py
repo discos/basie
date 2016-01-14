@@ -209,7 +209,8 @@ class Schedule(Persistent):
         _used_backends = set()
         #BEGIN SCANS LOOP
         for _scan in self.scans:
-            logger.info("wrting %s" % (_scan.scanmode,))
+            logger.info("writing {0} on {1}".format(_scan.scanmode,
+                                                    _scan.target.label))
             subscan_number = 1
             #WRITE SCD SCAN HEADER
             scdfile.write(templates.scd_scan_header.substitute(dict(scan_number=scan_number,
