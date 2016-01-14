@@ -16,8 +16,8 @@ class NoddingScan(ScanMode):
 
     def _do_scan(self, _target, _receiver, _frequency):
         #import ipdb;ipdb.set_trace()
-        if not _target.offset.is_null():
-            if not _target.offset.frame == frame.HOR:
+        if not _target.offset_coord.is_null():
+            if not _target.offset_coord.frame == frame.HOR:
                 raise ScanError("cannot perform nodding on target with offsets")
         offset_a = _receiver.feed_offsets[self.feed_a]
         offset_b = _receiver.feed_offsets[self.feed_b]
