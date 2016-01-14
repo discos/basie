@@ -66,7 +66,7 @@ class Receiver(Persistent):
         self.feed_extent = 0
         self.interleave = 0
         if len(self.feed_offsets) < self.nfeed:
-            logger.warning("adding default offset (0.0, 0.0) to receiver %s" %
+            logger.debug("adding default offset (0.0, 0.0) to receiver %s" %
                            (self.name,))
             for i in range(self.nfeed - len(self.feed_offsets)):
                 self.feed_offsets.append(Coord(HOR, VAngle(0.0), VAngle(0.0)))
