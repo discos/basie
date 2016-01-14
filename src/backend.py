@@ -54,7 +54,7 @@ class XBackend(Backend):
 
 class RoachBackend(Backend):
     def __init__(self, name, configuration):
-        Backend.__init__(self, name, "RoachBackend")
+        Backend.__init__(self, name, "Roach")
         self.configuration = configuration
         self.can_activate_switching_mark = False
 
