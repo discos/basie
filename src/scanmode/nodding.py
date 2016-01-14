@@ -19,6 +19,8 @@ class NoddingScan(ScanMode):
         if not _target.offset_coord.is_null():
             if not _target.offset_coord.frame == frame.HOR:
                 raise ScanError("cannot perform nodding on target with offsets")
+        if not _receiver.is_multifeed():
+            raise ScanError("cannot execute nodding scan with single feed receiver")
         offset_a = _receiver.feed_offsets[self.feed_a]
         offset_b = _receiver.feed_offsets[self.feed_b]
         _subscans = []
@@ -31,7 +33,7 @@ class NoddingScan(ScanMode):
                 ss = subscan.get_sidereal(_target,
                                           offset,
                                           self.duration,
-                                          element[2])
+                                          is_cal=element[2])
                 st = subscan.get_tsys(_target,
                                       offset)
                 _subscans.append((ss, st))
