@@ -49,7 +49,7 @@ class MapScan(ScanMode):
                                                   self.spacing).value)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
-            empty_subscans = self.scans_per_beam * receiver.nfeed
+            #empty_subscans = self.scans_per_beam * receiver.nfeed
             self.offset_x = []
             self.offset_y = []
             offset_x = -1 * self.dimension_x // 2 * self.spacing
@@ -68,7 +68,7 @@ class MapScan(ScanMode):
             self.spacing = self.beamsize / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
             self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
-            logger.debug("%d dim_x %d dim_y %d" % (self.ID, self.dimension_x,
+            logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
             self.offset_x = [i * self.spacing
                              for i in range(int(-1 * (self.dimension_x // 2)), 
