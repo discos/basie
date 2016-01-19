@@ -12,7 +12,7 @@ python >= 2.6.5
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
-U{http://github.com/flyingfrog81/basie/}
+http://github.com/discos/basie/
 
 Installation instructions can be reduced to:
 
@@ -92,8 +92,7 @@ $ pip install -r requirements.txt
 ```
 
 Or you can download and install individual packages from
-U{B{pypi}<https://pypi.python.org/pypi>}
-or using the package manager of your OS.
+pypi at https://pypi.python.org/pypi or using the package manager of your OS.
 
 If you don't have access to make command (i.e. on Windows) you can also install
 dependencies using pip from the command line for each individual package:

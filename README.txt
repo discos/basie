@@ -24,7 +24,7 @@ python >= 2.6.5
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
-U{http://github.com/flyingfrog81/basie/}
+U{http://github.com/discos/basie/}
 
 Installation instructions can be reduced to:
 
