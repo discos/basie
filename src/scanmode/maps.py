@@ -42,8 +42,10 @@ class MapScan(ScanMode):
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
             #logger.info("we are considering derotator extent instead of beamsize")
-            self.beamsize = receiver.feed_extent
-            self.spacing = receiver.feed_extent / self.scans_per_beam
+            self.beamsize = receiver.feed_extent * 2
+            #self.spacing = receiver.feed_extent / self.scans_per_beam
+            # calculate the separation between each subscan
+            self.spacing = receiver.interleave / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd((self.length_x /
                                                   self.spacing).value)
             self.dimension_y = utils.ceil_to_odd((self.length_y /
@@ -53,18 +55,21 @@ class MapScan(ScanMode):
             #empty_subscans = self.scans_per_beam * receiver.nfeed
             self.offset_x = []
             self.offset_y = []
-            offset_x = -1 * self.dimension_x // 2 * self.spacing
+            #offset_x = -1 * self.dimension_x // 2 * self.spacing + receiver.feed_extent
+            offset_x = -1 * ((self.length_x / 2.0) - receiver.feed_extent)
             while (offset_x < ((self.length_x / 2.0) 
-                                + receiver.feed_extent)):
+                                - receiver.feed_extent)):
                 for i in range(self.scans_per_beam): 
                     self.offset_x.append(offset_x + i * self.spacing)
-                offset_x = offset_x + receiver.nfeed * receiver.feed_extent
-            offset_y = -1 * self.dimension_y // 2 * self.spacing
+                #offset_x = offset_x + receiver.nfeed * receiver.feed_extent
+                offset_x = offset_x + 2 * receiver.feed_extent
+            #offset_y = -1 * self.dimension_y // 2 * self.spacing + receiver.feed_extent
+            offset_y = -1 * ((self.length_y / 2.0) - receiver.feed_extent)
             while (offset_y < ((self.length_y / 2.0) 
-                               + receiver.feed_extent)):
+                               - receiver.feed_extent)):
                 for i in range(self.scans_per_beam): 
                     self.offset_y.append(offset_y + i * self.spacing)
-                offset_y = offset_y + receiver.nfeed * receiver.feed_extent
+                offset_y = offset_y + 2 * receiver.feed_extent
         else:
             self.spacing = self.beamsize / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)

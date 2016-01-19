@@ -76,7 +76,15 @@ SRT.receivers = {
       }
 SRT.receivers["KM"].has_derotator = True
 SRT.receivers["KM"].feed_extent = VAngle(0.037545204)
+"""
+Feed extent represents the Y-distance between the central feed and the most
+distant lateral feed in BSC configuration
+"""
 SRT.receivers["KM"].interleave = SRT.receivers["KM"].feed_extent / 3.0
+"""
+Receiver interleave represents the Y-spacing between each feed in the BSC
+configuration
+"""
 SRT.receivers["KM"].set_feed_offsets(0, (VAngle(0, u.rad), 
                                          VAngle(0, u.rad)))
 SRT.receivers["KM"].set_feed_offsets(1, (VAngle(0.00033355202, u.rad),
