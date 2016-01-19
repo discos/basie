@@ -1,8 +1,8 @@
 basie Package
-=======================
+=============
 
 :mod:`basie` Package
-------------------------------
+--------------------
 
 .. automodule:: basie.__init__
     :members:
@@ -28,7 +28,7 @@ basie Package
 :mod:`errors` Module
 --------------------
 
-.. automodule:: schedulecreator.errors
+.. automodule:: basie.errors
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,7 +36,7 @@ basie Package
 :mod:`frame` Module
 -------------------
 
-.. automodule:: schedulecreator.frame
+.. automodule:: basie.frame
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,7 +44,7 @@ basie Package
 :mod:`layout` Module
 --------------------
 
-.. automodule:: schedulecreator.layout
+.. automodule:: basie.layout
     :members:
     :undoc-members:
     :show-inheritance:
@@ -52,7 +52,7 @@ basie Package
 :mod:`procedures` Module
 ------------------------
 
-.. automodule:: schedulecreator.procedures
+.. automodule:: basie.procedures
     :members:
     :undoc-members:
     :show-inheritance:
@@ -60,7 +60,7 @@ basie Package
 :mod:`radiotelescopes` Module
 -----------------------------
 
-.. automodule:: schedulecreator.radiotelescopes
+.. automodule:: basie.radiotelescopes
     :members:
     :undoc-members:
     :show-inheritance:
@@ -68,7 +68,7 @@ basie Package
 :mod:`receiver` Module
 ----------------------
 
-.. automodule:: schedulecreator.receiver
+.. automodule:: basie.receiver
     :members:
     :undoc-members:
     :show-inheritance:
@@ -76,7 +76,7 @@ basie Package
 :mod:`rich_validator` Module
 ----------------------------
 
-.. automodule:: schedulecreator.rich_validator
+.. automodule:: basie.rich_validator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -84,7 +84,7 @@ basie Package
 :mod:`schedule` Module
 ----------------------
 
-.. automodule:: schedulecreator.schedule
+.. automodule:: basie.schedule
     :members:
     :undoc-members:
     :show-inheritance:
@@ -92,7 +92,7 @@ basie Package
 :mod:`target` Module
 --------------------
 
-.. automodule:: schedulecreator.target
+.. automodule:: basie.target
     :members:
     :undoc-members:
     :show-inheritance:
@@ -100,7 +100,7 @@ basie Package
 :mod:`target_parser` Module
 ---------------------------
 
-.. automodule:: schedulecreator.target_parser
+.. automodule:: basie.target_parser
     :members:
     :undoc-members:
     :show-inheritance:
@@ -108,7 +108,7 @@ basie Package
 :mod:`templates` Module
 -----------------------
 
-.. automodule:: schedulecreator.templates
+.. automodule:: basie.templates
     :members:
     :undoc-members:
     :show-inheritance:
@@ -116,7 +116,7 @@ basie Package
 :mod:`utils` Module
 -------------------
 
-.. automodule:: schedulecreator.utils
+.. automodule:: basie.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -124,7 +124,7 @@ basie Package
 :mod:`valid_angles` Module
 --------------------------
 
-.. automodule:: schedulecreator.valid_angles
+.. automodule:: basie.valid_angles
     :members:
     :undoc-members:
     :show-inheritance:
@@ -132,7 +132,7 @@ basie Package
 :mod:`velocity` Module
 ----------------------
 
-.. automodule:: schedulecreator.velocity
+.. automodule:: basie.velocity
     :members:
     :undoc-members:
     :show-inheritance:
@@ -142,5 +142,5 @@ Subpackages
 
 .. toctree::
 
-    schedulecreator.scan
+    basie.scanmode
 

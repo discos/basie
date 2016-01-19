@@ -1,7 +1,7 @@
-ScheduleCreator
-===============
+Basie
+=====
 
 .. toctree::
    :maxdepth: 4
 
-   schedulecreator
+   basie

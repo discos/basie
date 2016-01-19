@@ -1,10 +1,10 @@
 scan Package
 ============
 
-:mod:`scan` Package
--------------------
+:mod:`scanmode` Package
+-----------------------
 
-.. automodule:: schedulecreator.scan
+.. automodule:: basie.scanmode
     :members:
     :undoc-members:
     :show-inheritance:
@@ -12,7 +12,7 @@ scan Package
 :mod:`cross` Module
 -------------------
 
-.. automodule:: schedulecreator.scan.cross
+.. automodule:: basie.scanmode.cross
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,7 +20,7 @@ scan Package
 :mod:`maps` Module
 ------------------
 
-.. automodule:: schedulecreator.scan.maps
+.. automodule:: basie.scanmode.maps
     :members:
     :undoc-members:
     :show-inheritance:
@@ -28,7 +28,7 @@ scan Package
 :mod:`nodding` Module
 ---------------------
 
-.. automodule:: schedulecreator.scan.nodding
+.. automodule:: basie.scanmode.nodding
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,7 +36,7 @@ scan Package
 :mod:`onoff` Module
 -------------------
 
-.. automodule:: schedulecreator.scan.onoff
+.. automodule:: basie.scanmode.onoff
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,7 +44,7 @@ scan Package
 :mod:`scanmode` Module
 ----------------------
 
-.. automodule:: schedulecreator.scan.scanmode
+.. automodule:: basie.scanmode.scanmode
     :members:
     :undoc-members:
     :show-inheritance:
@@ -52,7 +52,7 @@ scan Package
 :mod:`subscan` Module
 ---------------------
 
-.. automodule:: schedulecreator.scan.subscan
+.. automodule::basie.scanmode.subscan
     :members:
     :undoc-members:
     :show-inheritance:
