@@ -58,18 +58,18 @@ class MapScan(ScanMode):
             #offset_x = -1 * self.dimension_x // 2 * self.spacing + receiver.feed_extent
             offset_x = -1 * ((self.length_x / 2.0) - receiver.feed_extent)
             while (offset_x < ((self.length_x / 2.0) 
-                                - receiver.feed_extent)):
+                                + receiver.feed_extent)):
                 for i in range(self.scans_per_beam): 
                     self.offset_x.append(offset_x + i * self.spacing)
                 #offset_x = offset_x + receiver.nfeed * receiver.feed_extent
-                offset_x = offset_x + 2 * receiver.feed_extent
+                offset_x = offset_x + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
             #offset_y = -1 * self.dimension_y // 2 * self.spacing + receiver.feed_extent
             offset_y = -1 * ((self.length_y / 2.0) - receiver.feed_extent)
             while (offset_y < ((self.length_y / 2.0) 
-                               - receiver.feed_extent)):
+                               + receiver.feed_extent)):
                 for i in range(self.scans_per_beam): 
                     self.offset_y.append(offset_y + i * self.spacing)
-                offset_y = offset_y + 2 * receiver.feed_extent
+                offset_y = offset_y + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
         else:
             self.spacing = self.beamsize / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
