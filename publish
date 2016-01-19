@@ -1,2 +1,0 @@
-#!/bin/bash
-scp doc/html/* bartolini@gaia.ira.inaf.it:~/public_html/basie/doc/
