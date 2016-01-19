@@ -242,6 +242,7 @@ def get_sidereal(_target, offset=NULL_COORD, duration=0.0,
     @type offset_lat: VAngle
     """
     __target = copy.deepcopy(_target)
+    #import ipdb;ipdb.set_trace()
     __target.offset_coord += offset
     return SiderealSubscan(__target, duration, is_tsys, is_cal)
 

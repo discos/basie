@@ -42,6 +42,7 @@ class MapScan(ScanMode):
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
             #logger.info("we are considering derotator extent instead of beamsize")
+            self.beamsize = receiver.feed_extent
             self.spacing = receiver.feed_extent / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd((self.length_x /
                                                   self.spacing).value)

@@ -178,8 +178,13 @@ class Coord(object):
         if other.is_null():
             return self
         _other = copy.deepcopy(other)
-        _other.transform(self.frame)
-        return Coord(self.frame, 
+        if self.frame == NULL:
+            dest_frame = other.frame
+        else:
+            dest_frame = self.frame
+            if not _other.frame == NULL:
+                _other.transform(self.frame)
+        return Coord(dest_frame, 
                      self.lon + _other.lon,
                      self.lat + _other.lat)
 
@@ -192,8 +197,13 @@ class Coord(object):
         if other.is_null():
             return self
         _other = copy.deepcopy(other)
-        _other.transform(self.frame)
-        return Coord(self.frame, 
+        if self.frame == NULL:
+            dest_frame = other.frame
+        else:
+            dest_frame = self.frame
+            if not _other.frame == NULL:
+                _other.transform(self.frame)
+        return Coord(dest_frame, 
                      self.lon - _other.lon,
                      self.lat - _other.lat)
 
@@ -203,8 +213,9 @@ class Coord(object):
         @return True: if both coordinates are 0.0 or frame is NULL
         @return False: otherwise
         """
-        if ((self.frame == NULL) or
-           (self.lat == ZERO_ANGLE and self.lon == ZERO_ANGLE)):
+        if ((self.frame == NULL) and
+            (self.lat == ZERO_ANGLE) and 
+            (self.lon == ZERO_ANGLE)):
             return True
         return False
 
