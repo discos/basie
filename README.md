@@ -5,19 +5,6 @@
 Basie is a software package conceived to implement scheduling of
 italian radiotelescopes via the creation of schedule files.
 
-## INDEX
-
-- installation instructions
-    - easy_install and pip 
-        - distutils on windows
-        - distutils on linux
-    - install package dependencies
-    - install
-- usage
-- sc-wiz
-- build documentation
-
-
 ## INSTALLATION INSTRUCTIONS
 
 Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
@@ -189,10 +176,3 @@ $make doc
 
 You will find the doc under doc/html/ 
 
-@version: 0.5
-@status: beta (pre-release)
-@authors: Marco Bartolini, Simona Righini
-@organization: INAF -IRA
-@copyright: INAF - IRA (c) 2015
-@license: gpl v3.0
-@contact: bartolini@ira.inaf.it
