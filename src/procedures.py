@@ -157,7 +157,7 @@ Standard B{derotator} procedure for configuration setup
 
 #TODO: correct procedure sum and remove these two
 #TODO: should we set derotator position to 0?
-DEROTATORFIXED = Procedure("DEROTATORFIXED", 0, "\tderotatorSetConfiguration=FIXED\n", True)
+DEROTATORFIXED = Procedure("DEROTATORFIXED", 0, "\tderotatorSetPosition=0d\n\tderotatorSetConfiguration=FIXED\n", True)
 DEROTATORBSC = Procedure("DEROTATORBSC", 0, "\tderotatorSetConfiguration=BSC\n", True)
 
 WAIT = Procedure("WAIT", 1, "\twait=$1\n", True)
