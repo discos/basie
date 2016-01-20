@@ -84,7 +84,7 @@ class TotalPowerBackend(Backend):
             self.sections.append((i, float(bandwidth)))
 
     def _get_backend_instructions(self):
-        res = "\tintegration=%d\n" % (self.integration,)
+        res = ""
         enable_string = "\tenable="
         for i, (_id, _bw) in enumerate(self.sections):
             res += "\tsetSection=%d,*,%f,*,*,%f,*\n" % (_id, _bw,
@@ -95,6 +95,7 @@ class TotalPowerBackend(Backend):
         for i in range(self._empty_sections):
             enable_string += ";0"
         enable_string += "\n"
+        res += "\tintegration=%d\n" % (self.integration,)
         res += enable_string
         return res
             
