@@ -80,6 +80,10 @@ class Schedule(Persistent):
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():
             if isinstance(bck, backend.TotalPowerBackend):
+                if ((self.radiotelescope is radiotelescopes["SRT"]) and
+                   (self.receiver is radiotelescopes["SRT"].receivers["K"])):
+                    logger.debug("adding empty sections to the backend")
+                    bck._empty_sections = 12
                 bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):

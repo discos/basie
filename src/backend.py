@@ -71,6 +71,7 @@ class TotalPowerBackend(Backend):
         self.valid_filters = [300.0, 730.0, 1250.0, 2000.0]
         self.can_activate_switching_mark = True
         self.bandwidth = float(bandwidth)
+        self._empty_sections = 0
 
     def set_sections(self, nifs, bandwidth=None):
         if bandwidth is None:
@@ -91,6 +92,8 @@ class TotalPowerBackend(Backend):
             if i > 0:
                 enable_string += ";"
             enable_string += "1"
+        for i in range(self._empty_sections):
+            enable_string += ";0"
         enable_string += "\n"
         res += enable_string
         return res
