@@ -8,7 +8,7 @@ italian radiotelescopes via the creation of schedule files.
 ## INSTALLATION INSTRUCTIONS
 
 Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
-python >= 2.6.5
+python >= 2.6.5  If you have multiple 2.x python version, please make sure to use the same one for install basie and its deps.
 The package is not tested on any python 3.x version.
 Before installing the package make sure you download and extract the package
 archive at
