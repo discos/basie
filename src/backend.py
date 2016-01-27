@@ -88,7 +88,9 @@ class TotalPowerBackend(Backend):
         enable_string = "\tenable="
         for i, (_id, _bw) in enumerate(self.sections):
             res += "\tsetSection=%d,*,%f,*,*,%f,*\n" % (_id, _bw,
-                                                        self.samplingInterval,)
+                                                        (1.0 /
+                                                        (self.samplingInterval
+                                                            * 1000.0)),)
             if i > 0:
                 enable_string += ";"
             enable_string += "1"
