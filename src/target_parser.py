@@ -85,22 +85,21 @@ def _parse_target_line(line):
                                    option_args['vref'])
         else:
             _target_vel = ZERO_VELOCITY
+        obs_coord = frame.Coord(
+                        rich_validator.check_frame(target_args['frame']),
+                        angle_parser.check_angle(target_args['longitude']),
+                        angle_parser.check_angle(target_args['latitude']))
+        obs_offset_coord = frame.Coord(
+                        option_args.get("offset_frame",
+                                        obs_coord.frame),
+                        option_args.get("offset_lon",
+                                        VAngle(0.0)),
+                        option_args.get("offset_lat",
+                                        VAngle(0.0)))
         obs_target = ObservedTarget(
                                 label = target_args['label'],
-                                coord = frame.Coord(
-                                        rich_validator.check_frame(target_args['frame']),
-                                        angle_parser.check_angle(target_args['longitude']),
-                                        angle_parser.check_angle(target_args['latitude']),
-                                                   ),
-                                offset = frame.Coord(
-                                        #TODO: default offset frame NULL
-                                        option_args.get("offset_frame",
-                                                        frame.EQ),
-                                        option_args.get("offset_lon",
-                                                        VAngle(0.0)),
-                                        option_args.get("offset_lat",
-                                                        VAngle(0.0)),
-                                                    ),
+                                coord = obs_coord,
+                                offset = obs_offset_coord,
                                 velocity = _target_vel, 
                                 repetitions = option_args.get('repetitions',
                                                               None),

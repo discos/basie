@@ -292,7 +292,7 @@ def get_cen_otf_tsys(_target,
             _offset_lat = negative_offset
         elif direction == "DEC":
             _offset_lat = positive_offset
-    _offset = Coord(NULL, _offset_lon, _offset_lat)
+    _offset = Coord(scan_frame, _offset_lon, _offset_lat)
     ss = get_cen_otf(_target, duration, length, offset, const_axis, direction,
                     scan_frame)
     st = get_tsys(_target, _offset)
