@@ -144,6 +144,8 @@ FTRACK = Procedure("FTRACK", 1, "\tftrack=$1\n", True)
 """
 Standard B{ftrack} procedure
 """
+FTRACKLO = Procedure("FTRACKLO", 0, "\tftrack=LO\n", True)
+FTRACKALL = Procedure("FTRACKALL", 0, "\tftrack=ALL\n", True)
 
 RSTFREQ = Procedure("restFrequency", 1, "\trestFrequency=$1\n", True)
 """

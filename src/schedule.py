@@ -235,15 +235,13 @@ class Schedule(Persistent):
                 if subscan_number == 1: 
                     if not _scan.target.velocity.is_zero():
                         if isinstance(_scan.backend, backend.XBackend):
-                            _subscan.pre_procedure = (_subscan.pre_procedure +
-                                                      procedures.FTRACK)("ALL")
+                            _subscan.pre_procedure += procedures.FTRACKALL
                         else:
-                            _subscan.pre_procedure = (_subscan.pre_procedure +
-                                                      procedures.FTRACK)("LO")
+                            _subscan.pre_procedure += procedures.FTRACKLO
                     if ((isinstance(_scan.scanmode, OnOffScan) or
                          isinstance(_scan.scanmode, NoddingScan)) and
                          _scan.receiver.has_derotator):
-                        _subscan.pre_procedure = procedures.DEROTATORFIXED
+                        _subscan.pre_procedure += procedures.DEROTATORFIXED
                     if (isinstance(_scan.scanmode, MapScan) and
                          _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORBSC
