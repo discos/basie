@@ -1,6 +1,6 @@
 # Comment lines to exclude them from the schedule computation
 #
-# Obligatroy params:
+# Mandatory params:
 # LABEL SCANTYPE BACKEND TARGET_FRAME LONGITUDE LATITUDE     
 # where:
 # SCANTYPE is defined in configuration file
@@ -9,8 +9,9 @@
 #
 # Optional params:
 # [tsys, repetitions, offset_lon, offset_lat, offset_frame, vref, vdef,
-# svel]
-# vref = ["BARI", "LSRK", "LSRD", "GALCEN", "TOPCEN"]
+# rvel]
+# where:
+# vref = ["BARY", "LSRK", "LSRD", "GALCEN", "TOPCEN"]
 # vdef = ["OP", "RD", "Z"]
 
 Alpha   EqCross1_3  TP EQ  12:00:00h +45:00:00  

@@ -57,8 +57,8 @@ def _parse_options(line):
             options['vref'] = rich_validator.check_vref(val)
         elif key == 'vdef':
             options['vdef'] = rich_validator.check_vdef(val)
-        elif key == 'svel':
-            options['svel'] = float(val)
+        elif key == 'rvel':
+            options['rvel'] = float(val)
         elif key == ['derot']:
             options['derot'] = rich_validator.check_angle(val)
     return options
@@ -79,8 +79,8 @@ def _parse_target_line(line):
         option_args = (_parse_options(option_string))
         if 'vdef' in option_args \
            and 'vref' in option_args \
-           and 'svel' in option_args:
-            _target_vel = Velocity(option_args['svel'],
+           and 'rvel' in option_args:
+            _target_vel = Velocity(option_args['rvel'],
                                    option_args['vdef'],
                                    option_args['vref'])
         else:
