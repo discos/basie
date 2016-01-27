@@ -27,14 +27,14 @@ import string
 import logging
 logger = logging.getLogger(__name__)
 
-scd_header = string.Template("PROJECT: ${projectID}\n" +
-                            "OBSERVER: ${observer}\n" +
-                            "SCANLIST: ${lisfilename}\n" +
-                            "PROCEDURELIST: ${cfgfilename}\n" +
-                            "BACKENDLIST: ${bckfilename}\n" +
-                            "MODE: SEQ\n" +
-                            "SCANTAG: 1\n" +
-                            "INITPROC: ${initproc}\n")
+scd_header = string.Template("PROJECT:\t${projectID}\n" +
+                             "OBSERVER:\t${observer}\n" +
+                             "SCANLIST:\t${lisfilename}\n" +
+                             "PROCEDURELIST:\t${cfgfilename}\n" +
+                             "BACKENDLIST:\t${bckfilename}\n" +
+                             "MODE:\tSEQ\n" +
+                             "SCANTAG:\t1\n" +
+                             "INITPROC:\t${initproc}\n")
 """
 Used to convert a L{schedule.Schedule} instance into its representation in the .scd
 file header
