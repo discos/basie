@@ -175,12 +175,12 @@ INIT = Procedure("INIT", 0, "\tnop\n")
 Standard B{init} procedure
 """
 
-CALON = Procedure("CALON", 0, "\tcalon\n")
+CALON = Procedure("CALON", 0, "\tcalOn\n")
 """
 Standard B{calon} procedure
 """
 
-CALOFF = Procedure("CALOFF", 0, "\tcaloff\n")
+CALOFF = Procedure("CALOFF", 0, "\tcalOff\n")
 """
 Standard B{caloff} procedure
 """
