@@ -8,8 +8,6 @@ radiotelescope = SRT
 # for SRT receivers can be:
 # P, L, C, K, KM
 receiver = K
-# fits or mbfits
-#outputFormat = fits
 # default repetitions value for each scan
 repetitions = 1
 # default tsys value for each scan
