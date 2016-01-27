@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 from persistent import Persistent
 
-VREFS = ["BARI", "LSRK", "LSRD", "GALCEN", "TOPCEN"]
+VREFS = ["BARY", "LSRK", "LSRD", "GALCEN", "TOPCEN"]
 VDEFS = ["OP", "RD", "Z"]
 
 class Velocity(Persistent):
@@ -19,7 +19,7 @@ class Velocity(Persistent):
         return self.val == 0
 
     def __str__(self):
-        return "-VRAD %f %s %s" % (self.val, 
+        return "-RVEL\t%f\t%s\t%s" % (self.val, 
                                    self.vref,
                                    self.vdef)
 

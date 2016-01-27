@@ -221,8 +221,11 @@ class Schedule(Persistent):
                                                                     target_label=_scan.target.label)))
             scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
             data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
-            scdfile.write("%s:%s\t%s\n" %
-                          (_scan.backend.name, data_writer, scanlayout,))
+            #TODO: add back scnlayout when passing to mbfits
+            #scdfile.write("%s:%s\t%s\n" %
+            #              (_scan.backend.name, data_writer, scanlayout,))
+            scdfile.write("%s:%s\n" %
+                          (_scan.backend.name, data_writer,))
             _used_backends.add(_scan.backend)
             #BEGIN SUBSCANS LOOP
             subscans_set = set() #all subscans in this scan
