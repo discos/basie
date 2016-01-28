@@ -235,7 +235,9 @@ class Schedule(Persistent):
                 if subscan_number == 1: 
                     if not _scan.target.velocity.is_zero():
                         if isinstance(_scan.backend, backend.XBackend):
-                            _subscan.pre_procedure += procedures.FTRACKALL
+                            #TODO: we need to test FTRACKALL before using it
+                            #_subscan.pre_procedure += procedures.FTRACKALL
+                            _subscan.pre_procedure += procedures.FTRACKLO
                         else:
                             _subscan.pre_procedure += procedures.FTRACKLO
                     if ((isinstance(_scan.scanmode, OnOffScan) or
