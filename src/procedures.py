@@ -140,12 +140,12 @@ class Procedure(object):
         else:
             raise ProcedureError("Procedure %s cannot be specialized" % self.name)
 
-FTRACK = Procedure("FTRACK", 1, "\tftrack=$1\n", True)
+FTRACK = Procedure("FTRACK", 1, "\tfTrack=$1\n", True)
 """
 Standard B{ftrack} procedure
 """
-FTRACKLO = Procedure("FTRACKLO", 0, "\tftrack=LO\n", True)
-FTRACKALL = Procedure("FTRACKALL", 0, "\tftrack=ALL\n", True)
+FTRACKLO = Procedure("FTRACKLO", 0, "\tfTrack=LO\n", True)
+FTRACKALL = Procedure("FTRACKALL", 0, "\tfTrack=ALL\n", True)
 
 RSTFREQ = Procedure("restFrequency", 1, "\trestFrequency=$1\n", True)
 """
