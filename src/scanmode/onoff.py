@@ -10,7 +10,7 @@ class OnOffScan(ScanMode):
         ScanMode.__init__(self)
         self.offset_lon = offset_lon
         self.offset_lat = offset_lat
-        if not offset_frame:
+        if (not offset_frame) or offset_frame == NULL:
             self.offset_frame = self.frame
         else:
             self.offset_frame = offset_frame
@@ -26,7 +26,7 @@ class OnOffScan(ScanMode):
                 if element[1] == "on": #ON SOURCE
                     ss = subscan.get_sidereal(
                             _target, 
-                            Coord(NULL,
+                            Coord(self.offset_frame,
                                   VAngle(0.0),
                                   VAngle(0.0)),
                             self.duration,
@@ -34,7 +34,7 @@ class OnOffScan(ScanMode):
                 elif element[1] == "off": #OFF SOURCE
                     ss = subscan.get_sidereal(
                             _target, 
-                            Coord(NULL,
+                            Coord(self.offset_frame,
                                   self.offset_lon,
                                   self.offset_lat),
                             self.duration,
@@ -43,7 +43,7 @@ class OnOffScan(ScanMode):
                     raise ScheduleError("unknown onoff position: %s" % (element[1],))
                 #TSYS is calculated at off position
                 st = subscan.get_tsys(_target,
-                        Coord(NULL,
+                        Coord(self.offset_frame,
                               self.offset_lon,
                               self.offset_lat))
                 _subscans.append((ss, st))
