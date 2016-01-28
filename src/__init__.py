@@ -178,16 +178,16 @@ $make doc
 
 You will find the doc under doc/html/ 
 
-@version: 0.6-beta
+@version: 0.6
 @status: stable
 @authors: Marco Bartolini, Simona Righini
 @organization: INAF -IRA
-@copyright: INAF - IRA (c) 2015
+@copyright: INAF - IRA (c) 2016
 @license: gpl v3.0
 @contact: bartolini@ira.inaf.it
 """
 
-VERSION = "0.6-beta"
+VERSION = "0.6"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
 

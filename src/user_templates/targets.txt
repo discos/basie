@@ -28,4 +28,4 @@ Epsilon GLATMAP2x2TL TP GAL 275.0d -12.0d  tsys=10
 #Zeta    HorRasterTL TP EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
 Zeta    OnOff TP EQ  12:00:00h +45:00:00
 Zeta    OnOff XK77 EQ  12:00:00h +45:00:00
-Zeta    Nodding06 XC00 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
+#Zeta    Nodding06 XC00 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
