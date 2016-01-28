@@ -210,10 +210,10 @@ class Coord(object):
     def is_null(self):
         """
         Tell if this coordinate pair evaluates to something or not. 
-        @return True: if both coordinates are 0.0 or frame is NULL
+        @return True: if both coordinates are 0.0 
         @return False: otherwise
         """
-        if ((self.frame == NULL) and
+        if (
             (self.lat == ZERO_ANGLE) and 
             (self.lon == ZERO_ANGLE)):
             return True
