@@ -13,8 +13,7 @@ new possibilities and giving users and developers a major flexibility.
 ## USER MANUAL
 
 You can 
-[http://github.com/discos/basie/raw/master/Basie_user_manual.pdf](download the
-user manual) directly from this repository.
+[download the user manual](http://github.com/discos/basie/raw/master/Basie_user_manual.pdf) directly from this repository.
 
 ## INSTALLATION INSTRUCTIONS
 
