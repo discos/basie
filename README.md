@@ -10,6 +10,12 @@ which translated instructions into telescope schedules, *basie* consists
 of a complete Object Oriented model of the radiotelescope operations, opening
 new possibilities and giving users and developers a major flexibility. 
 
+## USER MANUAL
+
+You can 
+[http://github.com/discos/basie/raw/master/Basie_user_manual.pdf](download the
+user manual) directly from this repository.
+
 ## INSTALLATION INSTRUCTIONS
 
 Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
