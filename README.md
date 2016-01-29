@@ -1,6 +1,7 @@
 # Basie
 
 [![astropy](http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat)](http://www.astropy.org/)
+[![Build Status](https://travis-ci.org/discos/basie.svg?branch=master)](https://travis-ci.org/discos/basie)
 
 Basie is a software package conceived to implement scheduling of
 italian radiotelescopes via the creation of schedule files.
