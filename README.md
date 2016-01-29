@@ -5,6 +5,13 @@
 Basie is a software package conceived to implement scheduling of
 italian radiotelescopes via the creation of schedule files.
 
+While previous ScheduleCreator software was conceived as a simple compiler
+which translated instructions into telescope schedules, *basie* consists
+of a complete Object Oriented model of the radiotelescope operations, opening
+new possibilities and giving users and developers a major flexibility. Basie
+is eventually the first step towards the realization of a web application for
+telescope scheduling.
+
 ## INSTALLATION INSTRUCTIONS
 
 Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
