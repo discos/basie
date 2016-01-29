@@ -44,7 +44,7 @@ class Backend(Persistent):
 
 class XBackend(Backend):
     def __init__(self, name, configuration):
-        Backend.__init__(self, name, "XBackend")
+        Backend.__init__(self, name, "XBackends")
         self.configuration = configuration
         self.can_activate_switching_mark = False
 
@@ -100,7 +100,8 @@ class TotalPowerBackend(Backend):
         res += "\tintegration=%d\n" % (self.integration,)
         res += enable_string
         return res
-            
+
+
 def BackendFactory(configuration_dict):
     if not "type" in configuration_dict:
         raise ScheduleError("missing Backend type")
