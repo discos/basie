@@ -5,8 +5,6 @@ python:
 
 cache:
   directories:
-    - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages/numpy
-    - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages/astropy
     - $HOME/.cache/pip
 
 install:
