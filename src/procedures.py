@@ -43,7 +43,7 @@ def inc_arguments(expr, inc=1):
     #a little criptic but effective, just believe it ;)
     return re.subn("\$\d+", lambda x: "$" + str(int(x.group()[1:]) + inc), expr)[0]
 
-#TODO: merge pull request from branch here
+
 class Procedure(object):
     """Class representing a procedure template.
     Remeber that the module already defines some standard procedures!
