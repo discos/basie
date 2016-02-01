@@ -1,5 +1,8 @@
 # Basie
 
+
+
+[![DOI](https://zenodo.org/badge/19074/discos/basie.svg)](https://zenodo.org/badge/latestdoi/19074/discos/basie)
 [![astropy](http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat)](http://www.astropy.org/)
 [![Build Status](https://travis-ci.org/discos/basie.svg?branch=master)](https://travis-ci.org/discos/basie)
 
