@@ -5,12 +5,13 @@ python:
 
 cache:
   directories:
+    - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages/numpy
+    - $HOME/virtualenv/python2.7.9/lib/python2.7/site-packages/astropy
     - $HOME/.cache/pip
-    - $HOME/virtualenv/python$TRAVIS_PYTHON_VERSION/lib/python$TRAVIS_PYTHON_VERSION/site-packages/numpy
-    - $HOME/virtualenv/python$TRAVIS_PYTHON_VERSION/lib/python$TRAVIS_PYTHON_VERSION/site-packages/astropy
 
 install:
   - pip install -r requirements.txt
+  - pip install -r requirements-test.txt
   - python setup.py install
 
 script: nosetests -v
