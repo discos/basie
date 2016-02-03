@@ -36,12 +36,12 @@ class TestProcedures(unittest.TestCase):
         self.assertEqual(str(sum_procedure),
                          "PROCEDURE_SIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n")
  
-    #def test_sum_simple_one_param_execution(self):
-        #sum_procedure = self.simple_procedure + \
-        #                self.one_param_procedure("test")
-        #self.assertEqual(str(sum_procedure),
-        #                 "PROCEDURE_SIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n")
-        #self.assertEqual(sum_procedure.execute(),
-        #                 "PROCEDURE_SIMPLE_ONE_PARAM=test")
+    def test_sum_simple_one_param_execution(self):
+        sum_procedure = self.simple_procedure + \
+                        self.one_param_procedure("test")
+        self.assertEqual(str(sum_procedure),
+                         "PROCEDURE_SIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n")
+        self.assertEqual(sum_procedure.execute(),
+                         "PROCEDURE_SIMPLE_ONE_PARAM=test")
 
 
