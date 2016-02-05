@@ -3,6 +3,7 @@ logger = logging.getLogger(__name__)
 
 from scanmode import ScanMode
 import subscan
+from .. import procedures
 from basie.valid_angles import VAngle
 
 class CrossScan(ScanMode):
@@ -71,4 +72,6 @@ class PointScan(CrossScan):
                                                       _direction,
                                                       self.frame,
                                                       beamsize))
+        _subscans[0][0].pre_procedure += procedures.ZEROOFF
+        #_subscans[0][1].pre_procedures += procedures.ZEROOFF
         return _subscans
