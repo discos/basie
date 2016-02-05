@@ -26,10 +26,10 @@ class TestTarget(unittest.TestCase):
         self.assertEqual(t_zero.label, "Alpha")
         self.assertEqual(scan_zero, "EqCross1_3")
         self.assertEqual(t_zero.coord.lon.fmt(), "12:00:00.000h")
-        t_gamma, _, _, _= targets[4]
+        t_gamma, _, _, _= targets[5]
         self.assertEqual(t_gamma.tsys, 2)
         self.assertEqual(t_gamma.repetitions, 4)
-        t_offset, _, _, _ = targets[5]
+        t_offset, _, _, _ = targets[6]
         self.assertEqual(t_offset.offset_coord.lon, VAngle(-0.5))
 
 if __name__ == "__main__":
