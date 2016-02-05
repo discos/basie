@@ -141,7 +141,7 @@ class Procedure(object):
         else:
             raise ProcedureError("Procedure %s cannot be specialized" % self.name)
 
-ZEROOFF = Procedure("ZEROOFF", 0, "\tazelOffsets=0.0d,0.0d\n\tradecOffsets=0.0d,0.0d\nlonlatOffsets=0.0d,0.0d\n", True)
+ZEROOFF = Procedure("ZEROOFF", 0, "\tazelOffsets=0.0d,0.0d\n\tradecOffsets=0.0d,0.0d\n\tlonlatOffsets=0.0d,0.0d\n", True)
 """
 Standard procedure used to put offsets to zero
 """
