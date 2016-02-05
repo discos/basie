@@ -1,5 +1,5 @@
 from scanmode import ScanMode
-from cross import CrossScan
+from cross import CrossScan, PointScan
 from maps import MapScan, OTFMapScan, RasterMapScan
 from nodding import NoddingScan
 from onoff import OnOffScan
@@ -14,4 +14,4 @@ BR = Bottom Right
 """
 
 __all__ = ["ScanMode", "CrossScan", "MapScan", "OTFMapScan", "RasterMapScan",
-           "NoddingScan", "OnOffScan", "START_POINTS"]
+           "NoddingScan", "OnOffScan", "START_POINTS", "PointScan"]

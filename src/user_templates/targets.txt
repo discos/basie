@@ -18,6 +18,7 @@ Alpha   EqCross1_3  TP EQ  12:00:00h +45:00:00
 Alpha   EqCross1_3  TP EQ  180:00:00 +45:00:00
 Alpha   EqCross1_3  TP EQ  180.0d  +45.0d
 Beta    HorCross1_3 TP HOR 124.5d  38.2d
+Beta    HorPoint TP HOR 124.5d  38.2d
 Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  tsys=2  repetitions=4
 Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  offset_lon=-0.5d
 Delta   RAMAP1x1BL  TP EQ  12:00:00h +45:00:00

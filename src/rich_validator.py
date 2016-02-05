@@ -102,6 +102,14 @@ def check_cross_scan(value):
     speed = v.is_float(value[2])
     return CrossScan(_frame, length, speed)
 
+def check_point_scan(value):
+    if not isinstance(value, list):
+        raise v.ValidateError("expected list, found  %s" % (value,))
+    _frame = check_frame(value[0])
+    length = angle_parser.check_angle(value[1])
+    speed = v.is_float(value[2])
+    return PointScan(_frame, length, speed)
+
 def check_otf_map(value):
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
@@ -216,6 +224,8 @@ def check_scantype(value):
     scantype = value[0].upper()
     if scantype == "CROSS":
         return check_cross_scan(value[1:])
+    elif scantype == "POINT":
+        return check_point_scan(value[1:])
     elif scantype == "OTFMAP":
         return check_otf_map(value[1:])
     elif scantype == "RASTERMAP":

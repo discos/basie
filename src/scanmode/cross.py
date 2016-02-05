@@ -47,3 +47,28 @@ class CrossScan(ScanMode):
                                                       self.frame,
                                                       beamsize))
         return _subscans
+
+class PointScan(CrossScan):
+    def __init__(self, 
+                 frame, 
+                 length, 
+                 speed):
+        super(PointScan, self).__init__(frame, length, speed)
+        
+    def _do_scan(self, _target, _receiver, _frequency):
+        beamsize = VAngle(_receiver.get_beamsize(max(_frequency)))
+        _subscans = []
+        #Fill informations for each OTF subscan in the 4 directions
+        #This is a default implementation, maybe one day we could parametrize
+        #this if needed
+        for _const_axis, _direction in [('LON', 'INC'), 
+                                        ('LAT', 'INC')]:
+            _subscans.append(subscan.get_cen_otf_tsys(_target,
+                                                      self.duration,
+                                                      self.length,
+                                                      VAngle(0.0),
+                                                      _const_axis,
+                                                      _direction,
+                                                      self.frame,
+                                                      beamsize))
+        return _subscans

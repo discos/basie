@@ -178,7 +178,7 @@ $make doc
 
 You will find the doc under doc/html/ 
 
-@version: 0.6
+@version: 0.6.1
 @status: stable
 @authors: Marco Bartolini, Simona Righini
 @organization: INAF -IRA
@@ -187,7 +187,7 @@ You will find the doc under doc/html/
 @contact: bartolini@ira.inaf.it
 """
 
-VERSION = "0.6"
+VERSION = "0.6.1"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
 

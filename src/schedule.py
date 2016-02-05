@@ -35,7 +35,7 @@ from . import VERSION, NURAGHE_TAG, ESCS_TAG
 import scan
 import backend
 from .radiotelescopes import radiotelescopes
-from scanmode import OnOffScan, NoddingScan, MapScan
+from scanmode import OnOffScan, NoddingScan, MapScan, PointScan
 
 class Schedule(Persistent):
     def __init__(self,
@@ -220,7 +220,10 @@ class Schedule(Persistent):
             scdfile.write(templates.scd_scan_header.substitute(dict(scan_number=scan_number,
                                                                     target_label=_scan.target.label)))
             scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
-            data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
+            if(isinstance(_scan.scanmode, PointScan)):
+                data_writer = "MANAGEMENT/Point"
+            else:
+                data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
             #TODO: add back scnlayout when passing to mbfits
             #scdfile.write("%s:%s\t%s\n" %
             #              (_scan.backend.name, data_writer, scanlayout,))
