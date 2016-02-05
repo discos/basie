@@ -59,7 +59,8 @@ class RoachBackend(Backend):
         self.can_activate_switching_mark = False
 
     def _get_backend_instructions(self):
-        res = "\tinitialize=%s\n" % (self.configuration,)
+        #res = "\t#initialize=%s\n" % (self.configuration,)
+        res = "\tnop\n"
         return res
 
 class TotalPowerBackend(Backend):
