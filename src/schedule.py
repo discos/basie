@@ -250,6 +250,8 @@ class Schedule(Persistent):
                     if (isinstance(_scan.scanmode, MapScan) and
                          _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORBSC
+                    if(isinstance(_scan.scanmode, PointScan)):
+                        _subscan.pre_procedure += procedures.ZEROOFF
                 #if isinstance(_subscan, OTFSubscan):
                     #ADD WAIT post subscan proceudure
                     #wait_time = ((_scan._scanmode.speed / 60.0) /

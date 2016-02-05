@@ -72,6 +72,4 @@ class PointScan(CrossScan):
                                                       _direction,
                                                       self.frame,
                                                       beamsize))
-        _subscans[0][0].pre_procedure += procedures.ZEROOFF
-        #_subscans[0][1].pre_procedures += procedures.ZEROOFF
         return _subscans
