@@ -221,7 +221,8 @@ class Schedule(Persistent):
                                                                     target_label=_scan.target.label)))
             scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
             if(isinstance(_scan.scanmode, PointScan)):
-                data_writer = "MANAGEMENT/Point"
+                #data_writer = "MANAGEMENT/Point"
+                data_writer = "MANAGEMENT/CalibrationTool"
             else:
                 data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
             #TODO: add back scnlayout when passing to mbfits
