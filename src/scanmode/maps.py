@@ -1,6 +1,7 @@
 import logging
 logger = logging.getLogger(__name__)
 import itertools
+from numpy import ceil, floor
 
 from basie import utils, frame
 from basie.valid_angles import VAngle
@@ -13,7 +14,7 @@ class MapScan(ScanMode):
     MapScan superclass used for OTF and RASTER maps
     """
     def __init__(self, frame, start_point, scan_axis,
-              length_x, length_y, scans_per_beam):
+              length_x, length_y, spacing):
         """
         Constructor
         @param frame: scan frame
@@ -25,8 +26,8 @@ class MapScan(ScanMode):
         @type length_x: VAngle
         @param length_y: map height in degrees
         @type length_y: VAngle
-        @param scans_per_beam: number of subscans per beamsize
-        @type scans_per_beam: int
+        @param spacing: separation between subsequent subscans
+        @type spacing: VAngle
         """
         ScanMode.__init__(self)
         self.frame = frame
@@ -34,7 +35,7 @@ class MapScan(ScanMode):
         self.scan_axis = scan_axis
         self.length_x = length_x
         self.length_y = length_y
-        self.scans_per_beam = scans_per_beam
+        self.spacing = spacing
 
     def _get_spacing(self, receiver, frequency):
         self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
@@ -45,7 +46,8 @@ class MapScan(ScanMode):
             self.beamsize = receiver.feed_extent * 2
             #self.spacing = receiver.feed_extent / self.scans_per_beam
             # calculate the separation between each subscan
-            self.spacing = receiver.interleave / self.scans_per_beam
+            #self.spacing = receiver.interleave / self.scans_per_beam
+            scans_per_beam = floor(receiver.interleave / self.spacing)
             self.dimension_x = utils.ceil_to_odd((self.length_x /
                                                   self.spacing).value)
             self.dimension_y = utils.ceil_to_odd((self.length_y /
@@ -59,19 +61,19 @@ class MapScan(ScanMode):
             offset_x = -1 * ((self.length_x / 2.0) - receiver.feed_extent)
             while (offset_x < ((self.length_x / 2.0) 
                                 + receiver.feed_extent)):
-                for i in range(self.scans_per_beam): 
+                for i in range(scans_per_beam): 
                     self.offset_x.append(offset_x + i * self.spacing)
                 #offset_x = offset_x + receiver.nfeed * receiver.feed_extent
-                offset_x = offset_x + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
+                offset_x = offset_x + 2 * receiver.feed_extent + scans_per_beam * self.spacing
             #offset_y = -1 * self.dimension_y // 2 * self.spacing + receiver.feed_extent
             offset_y = -1 * ((self.length_y / 2.0) - receiver.feed_extent)
             while (offset_y < ((self.length_y / 2.0) 
                                + receiver.feed_extent)):
-                for i in range(self.scans_per_beam): 
+                for i in range(scans_per_beam): 
                     self.offset_y.append(offset_y + i * self.spacing)
-                offset_y = offset_y + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
+                offset_y = offset_y + 2 * receiver.feed_extent + scans_per_beam * self.spacing
         else:
-            self.spacing = self.beamsize / self.scans_per_beam
+            #self.spacing = self.beamsize / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
             self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
