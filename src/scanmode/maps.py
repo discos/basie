@@ -42,38 +42,27 @@ class MapScan(ScanMode):
         if receiver.is_multifeed() and receiver.has_derotator:
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
-            #logger.info("we are considering derotator extent instead of beamsize")
             self.beamsize = receiver.feed_extent * 2
-            #self.spacing = receiver.feed_extent / self.scans_per_beam
-            # calculate the separation between each subscan
-            #self.spacing = receiver.interleave / self.scans_per_beam
             scans_per_beam = floor(receiver.interleave / self.spacing)
-            self.dimension_x = utils.ceil_to_odd((self.length_x /
-                                                  self.spacing).value)
-            self.dimension_y = utils.ceil_to_odd((self.length_y /
-                                                  self.spacing).value)
+            major_dimension_x = utils.ceil_to_odd(self.length_x.deg /
+                                                  self.beamsize.deg)
+            major_dimension_y = utils.ceil_to_odd(self.length_y.deg /
+                                                  self.beamsize.deg)
+            self.dimension_x = major_dimension_x * scans_per_beam
+            self.dimension_y = major_dimension_y * scans_per_beam
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
-            #empty_subscans = self.scans_per_beam * receiver.nfeed
             self.offset_x = []
             self.offset_y = []
-            #offset_x = -1 * self.dimension_x // 2 * self.spacing + receiver.feed_extent
-            offset_x = -1 * ((self.length_x / 2.0) - receiver.feed_extent)
-            while (offset_x < ((self.length_x / 2.0) 
-                                + receiver.feed_extent)):
-                for i in range(scans_per_beam): 
-                    self.offset_x.append(offset_x + i * self.spacing)
-                #offset_x = offset_x + receiver.nfeed * receiver.feed_extent
-                offset_x = offset_x + 2 * receiver.feed_extent + scans_per_beam * self.spacing
-            #offset_y = -1 * self.dimension_y // 2 * self.spacing + receiver.feed_extent
-            offset_y = -1 * ((self.length_y / 2.0) - receiver.feed_extent)
-            while (offset_y < ((self.length_y / 2.0) 
-                               + receiver.feed_extent)):
-                for i in range(scans_per_beam): 
-                    self.offset_y.append(offset_y + i * self.spacing)
-                offset_y = offset_y + 2 * receiver.feed_extent + scans_per_beam * self.spacing
+            for i in range(int(-1 * (major_dimension_x // 2)), 
+                           int((major_dimension_x // 2) + 1)):
+                for j in range(scans_per_beam):
+                    self.offset_x.append(i * self.beamsize + j * self.spacing)
+            for i in range(int(-1 * (major_dimension_y // 2)), 
+                           int((major_dimension_y // 2) + 1)):
+                for j in range(scans_per_beam):
+                    self.offset_y.append(i * self.beamsize + j * self.spacing)
         else:
-            #self.spacing = self.beamsize / self.scans_per_beam
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
             self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
@@ -84,6 +73,7 @@ class MapScan(ScanMode):
             self.offset_y = [i * self.spacing
                              for i in range(int(-1 * (self.dimension_y // 2)), 
                                             int((self.dimension_y // 2) + 1))]
+
 
 class OTFMapScan(MapScan):
     def __init__(self, frame, start_point, scan_axis, 

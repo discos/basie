@@ -128,9 +128,9 @@ def check_otf_map(value):
     if scan_axis == "BOTH":
         logger.debug("exploding into separate scans")
         return (OTFMapScan(_frame, start_point, _frame.lon_name, length_x, length_y,
-                           scans_per_beam, speed),
+                           spacing, speed),
                 OTFMapScan(_frame, start_point, _frame.lat_name, length_x, length_y,
-                           scans_per_beam, speed))
+                           spacing, speed))
     else:
         logger.debug("got otf map")
         return OTFMapScan(_frame, start_point, scan_axis, length_x, length_y,
