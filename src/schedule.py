@@ -23,6 +23,7 @@ __all__ = ['Schedule']
 import logging
 logger = logging.getLogger(__name__)
 import os
+from copy import copy
 from astropy import units as u
 from persistent import Persistent
 
@@ -59,7 +60,7 @@ class Schedule(Persistent):
         self.label = scheduleLabel
         self.repetitions = repetitions
         self.tsys = tsys
-        self.runs = scheduleRuns,
+        self.runs = scheduleRuns
         self.scantypes = scantypes
         self.backends = backends
         self.radiotelescope = radiotelescopes[radiotelescope.upper()]
@@ -221,8 +222,10 @@ class Schedule(Persistent):
                                                                     target_label=_scan.target.label)))
             scanlayout = "scanlayout_%d_%s" % (scan_number, _scan.target.label)
             if(isinstance(_scan.scanmode, PointScan)):
-                #data_writer = "MANAGEMENT/Point"
                 data_writer = "MANAGEMENT/CalibrationTool"
+                #create a new backend configuration with different name
+                _scan.backend = copy(_scan.backend)
+                _scan.backend.name += "CT"
             else:
                 data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
             #TODO: add back scnlayout when passing to mbfits
