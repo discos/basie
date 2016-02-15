@@ -29,7 +29,7 @@ TSYS_WAIT_TIME = 2
 Time to wait before issuing a tsys command (sec.)
 """
 
-PROC_PREFIX = "PROCEDURE_"
+PROC_PREFIX = "PROC_"
 """
 Prefix for procedures name
 """
