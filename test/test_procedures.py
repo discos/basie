@@ -2,7 +2,7 @@
 
 import unittest
 
-from basie.procedures import Procedure
+from basie.procedures import Procedure, PROC_PREFIX
 
 class TestProcedures(unittest.TestCase):
     def setUp(self):
@@ -12,29 +12,35 @@ class TestProcedures(unittest.TestCase):
                                              True)
 
     def test_simple_procedure_definition(self):
-        self.assertEqual(str(self.simple_procedure), "PROCEDURE_SIMPLE{\n\tnop\n}\n")
-        self.assertEqual(self.simple_procedure.execute(), "PROCEDURE_SIMPLE")
+        self.assertEqual(str(self.simple_procedure),
+                         "%sSIMPLE{\n\tnop\n}\n" % (PROC_PREFIX,))
+        self.assertEqual(self.simple_procedure.execute(),
+                         "%sSIMPLE" % (PROC_PREFIX,))
 
     def test_simple_procedure_sum(self):
         sum_procedure = self.simple_procedure + self.simple_procedure_two
         self.assertEqual(str(sum_procedure),
-                         "PROCEDURE_SIMPLE_SIMPLE_TWO{\n\tnop\n\tnop_two\n}\n")
-        self.assertEqual(sum_procedure.execute(), "PROCEDURE_SIMPLE_SIMPLE_TWO")
+                         "%sSIMPLE_SIMPLE_TWO{\n\tnop\n\tnop_two\n}\n" %
+                         (PROC_PREFIX,))
+        self.assertEqual(sum_procedure.execute(),
+                         "%sSIMPLE_SIMPLE_TWO" % (PROC_PREFIX,))
 
     def test_one_param_procedure_definition(self):
         self.assertEqual(str(self.one_param_procedure),
-                         "PROCEDURE_ONE_PARAM(1){\n\tparam=$1\n}\n")
+                         "%sONE_PARAM(1){\n\tparam=$1\n}\n" % (PROC_PREFIX,))
 
     def test_one_param_procedure_execution(self):
         one_param = self.one_param_procedure("test")
         self.assertEqual(str(one_param),
-                         "PROCEDURE_ONE_PARAM(1){\n\tparam=$1\n}\n")
-        self.assertEqual(one_param.execute(), "PROCEDURE_ONE_PARAM=test")
+                         "%sONE_PARAM(1){\n\tparam=$1\n}\n" % (PROC_PREFIX,))
+        self.assertEqual(one_param.execute(),
+                         "%sONE_PARAM=test" % (PROC_PREFIX,))
 
     def test_sum_simple_one_param_definition(self):
         sum_procedure = self.simple_procedure + self.one_param_procedure
         self.assertEqual(str(sum_procedure),
-                         "PROCEDURE_SIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n")
+                         "%sSIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n" %
+                         (PROC_PREFIX,))
  
     def test_sum_simple_one_param_execution(self):
         # i want this to work eventually
@@ -43,8 +49,9 @@ class TestProcedures(unittest.TestCase):
         sum_procedure = (self.simple_procedure + \
                         self.one_param_procedure)("test")
         self.assertEqual(str(sum_procedure),
-                         "PROCEDURE_SIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n")
+                         "%sSIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n" %
+                         (PROC_PREFIX,))
         self.assertEqual(sum_procedure.execute(),
-                         "PROCEDURE_SIMPLE_ONE_PARAM=test")
+                         "%sSIMPLE_ONE_PARAM=test" % (PROC_PREFIX,))
 
 
