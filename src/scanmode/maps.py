@@ -7,6 +7,7 @@ from basie import utils, frame
 from basie.valid_angles import VAngle
 
 from scanmode import ScanMode
+from ..frame import Coord
 import subscan
 
 class MapScan(ScanMode):
@@ -42,8 +43,13 @@ class MapScan(ScanMode):
         if receiver.is_multifeed() and receiver.has_derotator:
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
+            if not isinstance(self.spacing, VAngle):
+                self.spacing = receiver.interleave / self.spacing
             self.beamsize = receiver.feed_extent * 2
             scans_per_beam = floor(receiver.interleave / self.spacing)
+            if scans_per_beam == 0:
+                logger.warning("Spacing is too high for this recevier")
+                scans_per_beam = 1
             major_dimension_x = utils.ceil_to_odd(self.length_x.deg /
                                                   self.beamsize.deg)
             major_dimension_y = utils.ceil_to_odd(self.length_y.deg /
@@ -63,6 +69,8 @@ class MapScan(ScanMode):
                 for j in range(scans_per_beam):
                     self.offset_y.append(i * self.beamsize + j * self.spacing)
         else:
+            if not isinstance(self.spacing, VAngle):
+                self.spacing = self.beamsize / self.spacing
             self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
             self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
@@ -213,9 +221,9 @@ class RasterMapScan(MapScan):
         _subscans = []
         for offset_lon, offset_lat in self._offsets:
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
+            _offset = Coord(self.frame, offset_lon, offset_lat)
             _subscans.append(subscan.get_sid_tsys(_target, 
-                                                  offset_lon,
-                                                  offset_lat,
+                                                  _offset,
                                                   self.extremes,
                                                   self.duration,
                                                   self.beamsize))

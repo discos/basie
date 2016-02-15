@@ -124,7 +124,11 @@ def check_otf_map(value):
     length_x = angle_parser.check_angle(value[3])
     length_y = angle_parser.check_angle(value[4])
     speed = v.is_float(value[5], min=0)
-    spacing = angle_parser.check_angle(value[6])
+    try:
+        spacing = angle_parser.check_angle(value[6])
+    except:
+        logger.debug("OTF map specify scans per beam")
+        spacing = v.is_float(value[6], min=1)
     if scan_axis == "BOTH":
         logger.debug("exploding into separate scans")
         return (OTFMapScan(_frame, start_point, _frame.lon_name, length_x, length_y,
@@ -149,7 +153,11 @@ def check_raster_map(value):
     length_x = angle_parser.check_angle(value[3])
     length_y = angle_parser.check_angle(value[4])
     duration = v.is_float(value[5], min=0)
-    spacing = angle_parser.check_angle(value[6])
+    try:
+        spacing = angle_parser.check_angle(value[6])
+    except:
+        logger.debug("RASTER map specify scans per beam")
+        spacing = v.is_float(value[6], min=1)
     return RasterMapScan(_frame, start_point, scan_axis, length_x, length_y,
                        spacing, duration)
 
