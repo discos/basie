@@ -56,25 +56,25 @@ class MapScan(ScanMode):
             #    scans_per_beam = 2
             #    self.spacing = receiver.interleave / scans_per_beam
             if scans_per_beam == 0:
-                logger.warning("Spacing is too high for this recevier")
+                logger.warning("Spacing is too high for this receiver")
                 scans_per_beam = 1
                 self.spacing = 0
-            major_spacing = recevier.feed_extent * 2 + receiver.interleave + self.spacing
+            major_spacing = receiver.feed_extent * 2 + receiver.interleave + self.spacing
             _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
             self.dimension_x = 0
             self.offset_x = []
-            while (_offset_x + receiver.feed_extent) <= (self.length_x / 2):
+            while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
                 for i in range(scans_per_beam):
                     self.offset_x.append(_offset_x + i * self.spacing)
-                _offset_x += major_spacing
+                _offset_x = _offset_x + major_spacing
             self.dimension_x = len(self.offset_x)
             _offset_y = (-1 * (self.length_y / 2)) + receiver.feed_extent
             self.dimension_y = 0
             self.offset_y = []
-            while (_offset_y + recevier.feed_extent) <= (self.length_y / 2):
+            while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
                 for i in range(scans_per_beam):
                     self.offset_y.append(_offset_y + i * self.spacing)
-                _offset_y += major_spacing
+                _offset_y = _offset_y + major_spacing
             self.dimension_y = len(self.offset_y)
         else:
             if not isinstance(self.spacing, VAngle):
