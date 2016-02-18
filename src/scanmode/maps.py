@@ -44,30 +44,38 @@ class MapScan(ScanMode):
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
             if not isinstance(self.spacing, VAngle):
-                self.spacing = receiver.interleave / self.spacing
+                approx_spacing = self.beamsize / self.spacing
+                scans_per_beam = ceil(receiver.interleave / approx_spacing)
+                self.spacing = receiver.interleave / scans_per_beam
+            else:
+                scans_per_beam = floor(receiver.interleave / self.spacing)
+            #this is necessary for tsys and offsets
             self.beamsize = receiver.feed_extent * 2
-            scans_per_beam = floor(receiver.interleave / self.spacing)
+            #if scans_per_beam == 1:
+            #    logger.warning("Rounding to two scans between each feed")
+            #    scans_per_beam = 2
+            #    self.spacing = receiver.interleave / scans_per_beam
             if scans_per_beam == 0:
                 logger.warning("Spacing is too high for this recevier")
                 scans_per_beam = 1
-            major_dimension_x = utils.ceil_to_odd(self.length_x.deg /
-                                                  self.beamsize.deg)
-            major_dimension_y = utils.ceil_to_odd(self.length_y.deg /
-                                                  self.beamsize.deg)
-            self.dimension_x = major_dimension_x * scans_per_beam
-            self.dimension_y = major_dimension_y * scans_per_beam
-            logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
-                                               self.dimension_x))
+                self.spacing = 0
+            major_spacing = recevier.feed_extent * 2 + receiver.interleave + self.spacing
+            _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
+            self.dimension_x = 0
             self.offset_x = []
+            while (_offset_x + receiver.feed_extent) <= (self.length_x / 2):
+                for i in range(scans_per_beam):
+                    self.offset_x.append(_offset_x + i * self.spacing)
+                _offset_x += major_spacing
+            self.dimension_x = len(self.offset_x)
+            _offset_y = (-1 * (self.length_y / 2)) + receiver.feed_extent
+            self.dimension_y = 0
             self.offset_y = []
-            for i in range(int(-1 * (major_dimension_x // 2)), 
-                           int((major_dimension_x // 2) + 1)):
-                for j in range(scans_per_beam):
-                    self.offset_x.append(i * self.beamsize + j * self.spacing)
-            for i in range(int(-1 * (major_dimension_y // 2)), 
-                           int((major_dimension_y // 2) + 1)):
-                for j in range(scans_per_beam):
-                    self.offset_y.append(i * self.beamsize + j * self.spacing)
+            while (_offset_y + recevier.feed_extent) <= (self.length_y / 2):
+                for i in range(scans_per_beam):
+                    self.offset_y.append(_offset_y + i * self.spacing)
+                _offset_y += major_spacing
+            self.dimension_y = len(self.offset_y)
         else:
             if not isinstance(self.spacing, VAngle):
                 self.spacing = self.beamsize / self.spacing
