@@ -9,10 +9,10 @@ from astropy import units as u
 import frame
 import copy
 
-"""
-Unites a scanmode with a target and produces subscans
-"""
 class Scan(Persistent):
+    """
+    Unites a scanmode with a target and produces subscans
+    """
     def __init__(self, 
                  target, 
                  scanmode, 

@@ -50,6 +50,8 @@ class MapScan(ScanMode):
                     logger.warning("Rounding to {0} scans per beam".format(scans_per_beam))
                 self.spacing = receiver.interleave / scans_per_beam
             else:
+                if (self.spacing > receiver.interleave / 2):
+                    logger.warning("Spacing is too high,map will be undersampled")
                 scans_per_beam = floor(receiver.interleave / self.spacing)
             #this is necessary for tsys and offsets
             self.beamsize = receiver.feed_extent * 2

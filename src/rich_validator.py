@@ -311,7 +311,11 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
                 (k + "_lat" in conf["scantypes"])):
                raise ScheduleError("Cannot explode scan %s in separate subscans" % (k,))
             conf["scantypes"][k + "_lon"] = v[0]
+            v[0].name = k + "_lon"
             conf["scantypes"][k + "_lat"] = v[1]
+            v[1].name = k + "_lat"
+        else:
+            v.name = k
     return conf
 
 def validate_configuration(filename):

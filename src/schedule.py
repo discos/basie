@@ -214,7 +214,7 @@ class Schedule(Persistent):
         _used_backends = set()
         #BEGIN SCANS LOOP
         for _scan in self.scans:
-            logger.info("writing {0} on {1}".format(_scan.scanmode,
+            logger.info("writing {0} on {1}".format(_scan.scanmode.name,
                                                     _scan.target.label))
             subscan_number = 1
             #WRITE SCD SCAN HEADER

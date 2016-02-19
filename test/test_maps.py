@@ -14,7 +14,7 @@ class TestMapScan(unittest.TestCase):
     def setUp(self):
         self._length_x = VAngle(0.4)
         self._length_y = VAngle(0.4)
-        self._spacing = VAngle(0.06)
+        self._spacing = VAngle(0.006)
         self._scans_per_beam = 3
         self._scan_fixed = maps.MapScan(EQ, "TL", "LON",
                                         self._length_x,
@@ -34,13 +34,13 @@ class TestMapScan(unittest.TestCase):
         self.assertGreaterEqual(scan_length_x, self._length_x)
         self.assertGreaterEqual(scan_length_y, self._length_y)
         for i in range(len(self._scan_fixed.offset_x) - 1):
-            self.assertAlmostEqual(self._spacing, 
-                                   self._scan_fixed.offset_x[i+1] -\
-                                   self._scan_fixed.offset_x[i]) 
+            self.assertAlmostEqual(self._spacing.deg, 
+                                   self._scan_fixed.offset_x[i+1].deg -\
+                                   self._scan_fixed.offset_x[i].deg) 
         for i in range(len(self._scan_fixed.offset_y) - 1):
-            self.assertAlmostEqual(self._spacing, 
-                                   self._scan_fixed.offset_y[i+1] -\
-                                   self._scan_fixed.offset_y[i]) 
+            self.assertAlmostEqual(self._spacing.deg, 
+                                   self._scan_fixed.offset_y[i+1].deg -\
+                                   self._scan_fixed.offset_y[i].deg) 
 
     def test_multi_feed_fixed_spacing(self):
         rec = SRT.receivers["KM"]
