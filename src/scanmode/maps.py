@@ -46,6 +46,8 @@ class MapScan(ScanMode):
             if not isinstance(self.spacing, VAngle):
                 approx_spacing = self.beamsize / self.spacing
                 scans_per_beam = ceil(receiver.interleave / approx_spacing)
+                if not scans_per_beam == self.spacing:
+                    logger.warning("Rounding to {0} scans per beam".format(scans_per_beam))
                 self.spacing = receiver.interleave / scans_per_beam
             else:
                 scans_per_beam = floor(receiver.interleave / self.spacing)
