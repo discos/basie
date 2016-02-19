@@ -30,7 +30,7 @@ class TestValidator(unittest.TestCase):
         self.assertNotEqual(conf['scantypes'], [])
         #Here we also test scans creation
         cross_scan = conf['scantypes']['EqCross1_3']
-        self.assertEqual(cross_scan.length, VAngle(1.0))
+        self.assertEqual(cross_scan.length, VAngle(0.4))
         onoff_scan = conf['scantypes']['OnOff']
         self.assertIsInstance(onoff_scan, ScanMode)
         self.assertIsInstance(onoff_scan, OnOffScan)
