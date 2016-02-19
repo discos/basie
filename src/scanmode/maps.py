@@ -45,30 +45,28 @@ class MapScan(ScanMode):
             logger.info("applying multifeed derotator optimization for map generation")
             if not isinstance(self.spacing, VAngle):
                 approx_spacing = self.beamsize / self.spacing
-                scans_per_beam = ceil(receiver.interleave / approx_spacing)
-                if not scans_per_beam == self.spacing:
-                    logger.warning("Rounding to {0} scans per beam".format(scans_per_beam))
-                self.spacing = receiver.interleave / scans_per_beam
+                scans_per_interleave = ceil(receiver.interleave / approx_spacing)
+                if not scans_per_interleave == self.spacing:
+                    #logger.warning("Rounding to {0} scans per interleave".format(scans_per_interleave))
+                    pass
+                self.spacing = receiver.interleave / scans_per_interleave
+                logger.info("Spacing subscans by {0}".format(self.spacing))
             else:
-                if (self.spacing > receiver.interleave / 2):
-                    logger.warning("Spacing is too high,map will be undersampled")
-                scans_per_beam = floor(receiver.interleave / self.spacing)
+                if (self.spacing > (receiver.interleave / 2)):
+                    logger.warning("Spacing is too high, map will be undersampled")
+                scans_per_interleave = floor(receiver.interleave / self.spacing)
             #this is necessary for tsys and offsets
             self.beamsize = receiver.feed_extent * 2
-            #if scans_per_beam == 1:
-            #    logger.warning("Rounding to two scans between each feed")
-            #    scans_per_beam = 2
-            #    self.spacing = receiver.interleave / scans_per_beam
-            if scans_per_beam == 0:
+            if scans_per_interleave == 0:
                 logger.warning("Spacing is too high for this receiver")
-                scans_per_beam = 1
+                scans_per_interleave = 1
                 self.spacing = 0
             major_spacing = receiver.feed_extent * 2 + receiver.interleave + self.spacing
             _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
             self.dimension_x = 0
             self.offset_x = []
             while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
-                for i in range(scans_per_beam):
+                for i in range(scans_per_interleave):
                     self.offset_x.append(_offset_x + i * self.spacing)
                 _offset_x = _offset_x + major_spacing
             self.dimension_x = len(self.offset_x)
@@ -76,7 +74,7 @@ class MapScan(ScanMode):
             self.dimension_y = 0
             self.offset_y = []
             while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
-                for i in range(scans_per_beam):
+                for i in range(scans_per_interleave):
                     self.offset_y.append(_offset_y + i * self.spacing)
                 _offset_y = _offset_y + major_spacing
             self.dimension_y = len(self.offset_y)
