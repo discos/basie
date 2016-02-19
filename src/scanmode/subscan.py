@@ -299,8 +299,7 @@ def get_cen_otf_tsys(_target,
     return ss, st
 
 def get_sid_tsys(_target, 
-                 offset_lon, 
-                 offset_lat, 
+                 offset,
                  extremes, 
                  duration,
                  beamsize):
@@ -322,12 +321,12 @@ def get_sid_tsys(_target,
     @param beamsize: beam size used to calculated tsys subscan offsets
     @type beamsize: VAngle
     """
-    ss = get_sidereal(_target, Coord(NULL, offset_lon, offset_lat), duration)
-    tsys_offsets = utils.extrude_from_rectangle(offset_lon.deg, 
-                                                offset_lat.deg,
+    ss = get_sidereal(_target, offset, duration)
+    tsys_offsets = utils.extrude_from_rectangle(offset.lon.deg, 
+                                                offset.lat.deg,
                                                 extremes, 
                                                 beamsize.deg * TSYS_SIGMA)
-    _offsets = Coord(NULL,
+    _offsets = Coord(offset.frame,
                      VAngle(tsys_offsets[0]),
                      VAngle(tsys_offsets[1]))
     st = get_tsys(_target, _offsets)

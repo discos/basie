@@ -1,11 +1,13 @@
 import logging
 logger = logging.getLogger(__name__)
 import itertools
+from numpy import ceil, floor
 
 from basie import utils, frame
 from basie.valid_angles import VAngle
 
 from scanmode import ScanMode
+from ..frame import Coord
 import subscan
 
 class MapScan(ScanMode):
@@ -13,7 +15,7 @@ class MapScan(ScanMode):
     MapScan superclass used for OTF and RASTER maps
     """
     def __init__(self, frame, start_point, scan_axis,
-              length_x, length_y, scans_per_beam):
+              length_x, length_y, spacing):
         """
         Constructor
         @param frame: scan frame
@@ -25,8 +27,8 @@ class MapScan(ScanMode):
         @type length_x: VAngle
         @param length_y: map height in degrees
         @type length_y: VAngle
-        @param scans_per_beam: number of subscans per beamsize
-        @type scans_per_beam: int
+        @param spacing: separation between subsequent subscans
+        @type spacing: VAngle
         """
         ScanMode.__init__(self)
         self.frame = frame
@@ -34,46 +36,55 @@ class MapScan(ScanMode):
         self.scan_axis = scan_axis
         self.length_x = length_x
         self.length_y = length_y
-        self.scans_per_beam = scans_per_beam
+        self.spacing = spacing
 
     def _get_spacing(self, receiver, frequency):
         self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
-            #logger.info("we are considering derotator extent instead of beamsize")
+            if not isinstance(self.spacing, VAngle):
+                approx_spacing = self.beamsize / self.spacing
+                scans_per_beam = ceil(receiver.interleave / approx_spacing)
+                if not scans_per_beam == self.spacing:
+                    logger.warning("Rounding to {0} scans per beam".format(scans_per_beam))
+                self.spacing = receiver.interleave / scans_per_beam
+            else:
+                scans_per_beam = floor(receiver.interleave / self.spacing)
+            #this is necessary for tsys and offsets
             self.beamsize = receiver.feed_extent * 2
-            #self.spacing = receiver.feed_extent / self.scans_per_beam
-            # calculate the separation between each subscan
-            self.spacing = receiver.interleave / self.scans_per_beam
-            self.dimension_x = utils.ceil_to_odd((self.length_x /
-                                                  self.spacing).value)
-            self.dimension_y = utils.ceil_to_odd((self.length_y /
-                                                  self.spacing).value)
-            logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
-                                               self.dimension_x))
-            #empty_subscans = self.scans_per_beam * receiver.nfeed
+            #if scans_per_beam == 1:
+            #    logger.warning("Rounding to two scans between each feed")
+            #    scans_per_beam = 2
+            #    self.spacing = receiver.interleave / scans_per_beam
+            if scans_per_beam == 0:
+                logger.warning("Spacing is too high for this receiver")
+                scans_per_beam = 1
+                self.spacing = 0
+            major_spacing = receiver.feed_extent * 2 + receiver.interleave + self.spacing
+            _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
+            self.dimension_x = 0
             self.offset_x = []
+            while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
+                for i in range(scans_per_beam):
+                    self.offset_x.append(_offset_x + i * self.spacing)
+                _offset_x = _offset_x + major_spacing
+            self.dimension_x = len(self.offset_x)
+            _offset_y = (-1 * (self.length_y / 2)) + receiver.feed_extent
+            self.dimension_y = 0
             self.offset_y = []
-            #offset_x = -1 * self.dimension_x // 2 * self.spacing + receiver.feed_extent
-            offset_x = -1 * ((self.length_x / 2.0) - receiver.feed_extent)
-            while (offset_x < ((self.length_x / 2.0) 
-                                + receiver.feed_extent)):
-                for i in range(self.scans_per_beam): 
-                    self.offset_x.append(offset_x + i * self.spacing)
-                #offset_x = offset_x + receiver.nfeed * receiver.feed_extent
-                offset_x = offset_x + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
-            #offset_y = -1 * self.dimension_y // 2 * self.spacing + receiver.feed_extent
-            offset_y = -1 * ((self.length_y / 2.0) - receiver.feed_extent)
-            while (offset_y < ((self.length_y / 2.0) 
-                               + receiver.feed_extent)):
-                for i in range(self.scans_per_beam): 
-                    self.offset_y.append(offset_y + i * self.spacing)
-                offset_y = offset_y + 2 * receiver.feed_extent + self.scans_per_beam * self.spacing
+            while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
+                for i in range(scans_per_beam):
+                    self.offset_y.append(_offset_y + i * self.spacing)
+                _offset_y = _offset_y + major_spacing
+            self.dimension_y = len(self.offset_y)
         else:
-            self.spacing = self.beamsize / self.scans_per_beam
-            self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
-            self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
+            if not isinstance(self.spacing, VAngle):
+                self.spacing = self.beamsize / self.spacing
+            self.dimension_x = utils.ceil_to_odd(self.length_x.deg /
+                                                 self.spacing.deg + 1)
+            self.dimension_y = utils.ceil_to_odd(self.length_y.deg /
+                                                 self.spacing.deg + 1)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
             self.offset_x = [i * self.spacing
@@ -82,6 +93,7 @@ class MapScan(ScanMode):
             self.offset_y = [i * self.spacing
                              for i in range(int(-1 * (self.dimension_y // 2)), 
                                             int((self.dimension_y // 2) + 1))]
+
 
 class OTFMapScan(MapScan):
     def __init__(self, frame, start_point, scan_axis, 
@@ -221,9 +233,9 @@ class RasterMapScan(MapScan):
         _subscans = []
         for offset_lon, offset_lat in self._offsets:
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
+            _offset = Coord(self.frame, offset_lon, offset_lat)
             _subscans.append(subscan.get_sid_tsys(_target, 
-                                                  offset_lon,
-                                                  offset_lat,
+                                                  _offset,
                                                   self.extremes,
                                                   self.duration,
                                                   self.beamsize))

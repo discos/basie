@@ -124,17 +124,21 @@ def check_otf_map(value):
     length_x = angle_parser.check_angle(value[3])
     length_y = angle_parser.check_angle(value[4])
     speed = v.is_float(value[5], min=0)
-    scans_per_beam = v.is_integer(value[6], min=1)
+    try:
+        spacing = angle_parser.check_angle(value[6])
+    except:
+        logger.debug("OTF map specify scans per beam")
+        spacing = v.is_float(value[6], min=1)
     if scan_axis == "BOTH":
         logger.debug("exploding into separate scans")
         return (OTFMapScan(_frame, start_point, _frame.lon_name, length_x, length_y,
-                           scans_per_beam, speed),
+                           spacing, speed),
                 OTFMapScan(_frame, start_point, _frame.lat_name, length_x, length_y,
-                           scans_per_beam, speed))
+                           spacing, speed))
     else:
         logger.debug("got otf map")
         return OTFMapScan(_frame, start_point, scan_axis, length_x, length_y,
-                           scans_per_beam, speed)
+                           spacing, speed)
 
 def check_raster_map(value):
     if not isinstance(value, list):
@@ -149,9 +153,13 @@ def check_raster_map(value):
     length_x = angle_parser.check_angle(value[3])
     length_y = angle_parser.check_angle(value[4])
     duration = v.is_float(value[5], min=0)
-    points_per_beam = v.is_integer(value[6], min=1)
+    try:
+        spacing = angle_parser.check_angle(value[6])
+    except:
+        logger.debug("RASTER map specify scans per beam")
+        spacing = v.is_float(value[6], min=1)
     return RasterMapScan(_frame, start_point, scan_axis, length_x, length_y,
-                       points_per_beam, duration)
+                       spacing, duration)
 
 def check_nodding_sequence(value):
     if not isinstance(value, list):
