@@ -79,8 +79,10 @@ class MapScan(ScanMode):
         else:
             if not isinstance(self.spacing, VAngle):
                 self.spacing = self.beamsize / self.spacing
-            self.dimension_x = utils.ceil_to_odd(self.length_x.deg / self.spacing.deg)
-            self.dimension_y = utils.ceil_to_odd(self.length_y.deg / self.spacing.deg)
+            self.dimension_x = utils.ceil_to_odd(self.length_x.deg /
+                                                 self.spacing.deg + 1)
+            self.dimension_y = utils.ceil_to_odd(self.length_y.deg /
+                                                 self.spacing.deg + 1)
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
             self.offset_x = [i * self.spacing
