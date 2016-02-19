@@ -75,13 +75,13 @@ SRT.receivers = {
                       7, 2),
        #This is so ugly but it's resulting really useful
        'TEST': Receiver("TEST", 0, 100,
-                     [[0.0, 100.0], [5.0, 5.0]],
+                     [[0.0, 100.0], [0.5, 0.5]],
                      nfeed = 7,
                      npols = 2,
                      has_derotator = True)
       }
-SRT.receivers["TEST"].feed_extent = VAngle(30)
-SRT.receivers["TEST"].interleave = VAngle(10)
+SRT.receivers["TEST"].feed_extent = VAngle(3)
+SRT.receivers["TEST"].interleave = VAngle(1)
 SRT.receivers["KM"].has_derotator = True
 SRT.receivers["KM"].feed_extent = VAngle(0.037545204)
 """
