@@ -11,7 +11,7 @@ os.mkdir(BASE_PATH)
 class TestSchedule(unittest.TestCase):
     def test_schedule_generation(self):
         conf = validate_configuration("src/user_templates/configuration.txt")
-        conf['targetsFile'] = "src/user_templates/targets.txt"
+        conf.pop("targetsFile")
         sched = schedule.Schedule(**conf)
         self.assertEqual(sched.projectID, conf['projectID'])
         sched.set_base_dir(BASE_PATH)

@@ -52,7 +52,6 @@ class Schedule(Persistent):
                  radiotelescope = "SRT", #should we change this?
                  receiver = "C", #should we change this?
                  outputFormat = "fits",
-                 targetsFile = "targets.txt",
                  ):
         logger.debug("creating schedule")
         self.projectID = projectID
@@ -71,7 +70,6 @@ class Schedule(Persistent):
         self._configure_totalpower_sections()
         logger.info("Scheduling %s radiotelescope using receiver %s" %
                 (self.radiotelescope.name, self.receiver.name))
-        self.targetsFile = targetsFile
         self.outputFormat = outputFormat
         if isinstance(restFrequency, (list, tuple)):
             self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
@@ -124,32 +122,6 @@ class Schedule(Persistent):
                 )
             else:
                 raise ScheduleError("cannot find scantype %s" % (_scantype,))
-
-        #explode 'BOTH' scans into 2 separate scans
-        #for _scan_name, _scan_definition in self.scan_definitions.iteritems():
-        #   logger.debug("examinating %s || %s" % (_scan_name,
-        #                                          type(_scan_definition)))
-        #   if isinstance(_scan_definition, tuple): #only BOTH scans return a tuple
-        #       logger.info("exploding scan %s in 2 separate scans" % (_scan_name,))
-        #       self.scan_definitions.pop(_scan_name)
-        #       if ((_scan_name + "_lon" in self.scan_definitions) or 
-        #           (_scan_name + "_lat" in self.scan_definitions)):
-        #           raise ScheduleError("Cannot explode scan %s in separate subscans" % (_scan_name,))
-        #       self.scan_definitions[_scan_name + "_lon"] = _scan_definition[0]
-        #       self.scan_definitions[_scan_name + "_lat"] = _scan_definition[1]
-        #       #explode 'both' targets into 2 separate targets
-        #       while _scan_name in [_target_scan_name 
-        #                            for (_, _target_scan_name, _)
-        #                            in self.targets]:
-        #           index = [_tsn for (_, _tsn, _) in self.targets].index(_scan_name)
-        #           _target, _scan_name, _line = self.targets[index]
-        #           logger.info("exploding target %s in two separate targets" % (_target.label,))
-        #           self.targets[index] = (_target,
-        #                                  _scan_name + "_lat",
-        #                                  _line)
-        #           self.targets.insert(index, (_target, 
-        #                                       _scan_name + "_lon",
-        #                                       _line))
 
 
     def set_base_dir(self, base_path):

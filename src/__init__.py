@@ -178,7 +178,7 @@ $make doc
 
 You will find the doc under doc/html/ 
 
-@version: 0.6.2
+@version: 0.7.0
 @status: stable
 @authors: Marco Bartolini, Simona Righini
 @organization: INAF -IRA
@@ -187,7 +187,7 @@ You will find the doc under doc/html/
 @contact: bartolini@ira.inaf.it
 """
 
-VERSION = "0.6.2"
+VERSION = "0.7.0"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
 
@@ -255,8 +255,8 @@ def cmd_line():
             dst_directory = os.path.abspath(ns.directory)
             conf = rich_validator.validate_configuration(configuration_file)
             #setting target file in the same directory as schedule file
-            conf['targetsFile'] = os.path.join(src_directory, conf['targetsFile'])
-            parsed_targets = target_parser.parse_file(conf['targetsFile'])
+            targetsFile = os.path.join(src_directory, conf.pop('targetsFile'))
+            parsed_targets = target_parser.parse_file(targetsFile)
             logger.debug("parsed targets: %s" % (parsed_targets,))
             _schedule = schedule.Schedule(**conf)
             for _target, _scanmode, _backend, _  in parsed_targets:
