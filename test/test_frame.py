@@ -1,6 +1,6 @@
 #coding=utf-8
 
-import unittest
+import unittest2 as unittest
 import copy
 from astropy.coordinates import Angle
 from astropy import units as u

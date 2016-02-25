@@ -1,4 +1,4 @@
-import unittest
+import unittest2 as unittest
 
 from basie.valid_angles import VAngle
 from basie import angle_parser

@@ -2,10 +2,7 @@ language: python
 
 python:
   - "2.7"
-
-cache:
-  directories:
-    - $HOME/.cache/pip
+  - "2.6"
 
 install:
   - pip install -r requirements.txt

@@ -1,6 +1,6 @@
 #coding=utf-8
 
-import unittest
+import unittest2 as unittest
 
 from basie.frame import EQ, HOR
 from astropy.units import MHz
