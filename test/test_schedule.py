@@ -2,6 +2,7 @@ import unittest2 as unittest
 import os
 import shutil
 from basie import schedule
+from basie.radiotelescopes import radiotelescopes
 from basie.rich_validator import validate_configuration
 
 BASE_PATH = "/tmp/basie_test"
@@ -12,7 +13,13 @@ class TestSchedule(unittest.TestCase):
     def test_schedule_generation(self):
         conf = validate_configuration("src/user_templates/configuration.txt")
         conf.pop("targetsFile")
+        backends = conf.pop("backends")
+        scantypes = conf.pop("scantypes")
+        conf["radiotelescope"] = radiotelescopes[conf["radiotelescope"]]
+        conf["receiver"] = conf["radiotelescope"].receivers[conf["receiver"]]
         sched = schedule.Schedule(**conf)
+        sched.backends = backends
+        sched.scantypes = scantypes
         self.assertEqual(sched.projectID, conf['projectID'])
         sched.set_base_dir(BASE_PATH)
         sched._write_schedule_files()

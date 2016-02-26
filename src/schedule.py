@@ -33,6 +33,8 @@ import utils
 from .errors import *
 import layout
 from . import VERSION, NURAGHE_TAG, ESCS_TAG
+import datetime 
+
 import scan
 import backend
 from .radiotelescopes import radiotelescopes
@@ -47,10 +49,8 @@ class Schedule(Persistent):
                  tsys = 1,
                  scheduleRuns = 1,
                  restFrequency = [0.0],
-                 scantypes = {},
-                 backends = {},
-                 radiotelescope = "SRT", #should we change this?
-                 receiver = "C", #should we change this?
+                 radiotelescope = radiotelescopes["SRT"], #should we change this?
+                 receiver = radiotelescopes["SRT"].receivers["C"], #should we change this?
                  outputFormat = "fits",
                  ):
         logger.debug("creating schedule")
@@ -60,11 +60,12 @@ class Schedule(Persistent):
         self.repetitions = repetitions
         self.tsys = tsys
         self.runs = scheduleRuns
-        self.scantypes = scantypes
-        self.backends = backends
-        self.radiotelescope = radiotelescopes[radiotelescope.upper()]
-        logger.debug("GOT RADIOTELESCOPE: %s" % (self.radiotelescope,))
-        self.receiver = self.radiotelescope.receivers[receiver.upper()]
+        self.scantypes = {}
+        self.backends = {}
+        self.radiotelescope = radiotelescope
+        if not receiver in radiotelescope.receivers.values():
+            raise ScheduleError("receiver does not belong to telescope")
+        self.receiver = receiver
         self.base_dir = os.path.abspath('.') #default 
         self.scans = []
         self._configure_totalpower_sections()
@@ -75,6 +76,8 @@ class Schedule(Persistent):
             self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
         else:
             self.restFrequency = [float(restFrequency) * u.MHz]
+        self.creation_date = datetime.datetime.now()
+        self.last_modified = self.creation_date
 
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():
@@ -122,7 +125,7 @@ class Schedule(Persistent):
                 )
             else:
                 raise ScheduleError("cannot find scantype %s" % (_scantype,))
-
+            self.last_modified = datetime.datetime.now()
 
     def set_base_dir(self, base_path):
         """

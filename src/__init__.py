@@ -234,6 +234,7 @@ def cmd_line():
 
     #imports are here as logging has already been configured
     import schedule, rich_validator, utils, target_parser, receiver
+    from radiotelescope import radiotelescopes
 
     try:
         if ns.get_templates:
@@ -258,7 +259,21 @@ def cmd_line():
             targetsFile = os.path.join(src_directory, conf.pop('targetsFile'))
             parsed_targets = target_parser.parse_file(targetsFile)
             logger.debug("parsed targets: %s" % (parsed_targets,))
-            _schedule = schedule.Schedule(**conf)
+            #prepare Schedule contructor arguments
+            schedule_params = conf
+            radiotelescope = radiotelescopes[conf.radiotelescope]
+            try:
+                receiver = radiotelescope.receivers["conf.receiver"]
+            except:
+                raise ScheduleError("radiotelescope does not have specified receiver")
+            schedule_params.radiotelescope = radiotelescope
+            schedule_params.receiver = receiver
+            backends = schedule_params.pop("backends")
+            scantypes = schedule_params.pop("scantypes")
+            logger.debug(schedule_params)
+            _schedule = schedule.Schedule(**schedule_params)
+            _schedule.backends = backends
+            _schedule.scantypes = scantypes
             for _target, _scanmode, _backend, _  in parsed_targets:
                 _schedule.add_scan(_target, _scanmode, _backend)
             _schedule.set_base_dir(dst_directory)
