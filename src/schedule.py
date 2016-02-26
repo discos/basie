@@ -49,8 +49,8 @@ class Schedule(Persistent):
                  tsys = 1,
                  scheduleRuns = 1,
                  restFrequency = [0.0],
-                 radiotelescope = radiotelescopes["SRT"], #should we change this?
-                 receiver = radiotelescopes["SRT"].receivers["C"], #should we change this?
+                 radiotelescope = "SRT", #should we change this?
+                 receiver = "C", #should we change this?
                  outputFormat = "fits",
                  ):
         logger.debug("creating schedule")
@@ -62,10 +62,10 @@ class Schedule(Persistent):
         self.runs = scheduleRuns
         self.scantypes = {}
         self.backends = {}
-        self.radiotelescope = radiotelescope
-        if not receiver in radiotelescope.receivers.values():
+        self.radiotelescope = radiotelescopes[radiotelescope]
+        if not receiver in self.radiotelescope.receivers.keys():
             raise ScheduleError("receiver does not belong to telescope")
-        self.receiver = receiver
+        self.receiver = self.radiotelescope.receivers[receiver]
         self.base_dir = os.path.abspath('.') #default 
         self.scans = []
         self._configure_totalpower_sections()

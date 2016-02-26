@@ -15,8 +15,6 @@ class TestSchedule(unittest.TestCase):
         conf.pop("targetsFile")
         backends = conf.pop("backends")
         scantypes = conf.pop("scantypes")
-        conf["radiotelescope"] = radiotelescopes[conf["radiotelescope"]]
-        conf["receiver"] = conf["radiotelescope"].receivers[conf["receiver"]]
         sched = schedule.Schedule(**conf)
         sched.backends = backends
         sched.scantypes = scantypes
