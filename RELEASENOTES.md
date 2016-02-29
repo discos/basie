@@ -1,5 +1,10 @@
 # RELEASE NOTES
 
+## v0.7.0
+
+  - [x] Angles now rounded to the 4th decimal point.
+  - [x] *nop* instruction removed from roach backend configuration.
+
 ## v0.6.2
 
 Release notes:
