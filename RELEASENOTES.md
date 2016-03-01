@@ -22,7 +22,9 @@ configuration file.
 **Note on raster maps**: Raster maps now include a new parameter called
 **offset_interleave**. If **offset_interleave** is differrent from zero this
 will tell basie to add one subscan outside the map after **offset_interleave**
-subscans inside the map. 
+subscans inside the map. By default the offset position is taken 5 beamsizes
+outside the map perimeter for single feed receivers, while it is take 5 receiver
+extents for multifeed receivers.
 
 ## v0.6.2
 
