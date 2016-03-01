@@ -158,8 +158,9 @@ def check_raster_map(value):
     except:
         logger.debug("RASTER map specify scans per beam")
         spacing = v.is_float(value[6], min=1)
+    offset = v.is_integer(value[7], min=0)
     return RasterMapScan(_frame, start_point, scan_axis, length_x, length_y,
-                       spacing, duration)
+                       spacing, duration, offset)
 
 def check_nodding_sequence(value):
     if not isinstance(value, list):

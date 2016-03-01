@@ -175,10 +175,11 @@ class OTFMapScan(MapScan):
 
 class RasterMapScan(MapScan):
     def __init__(self, frame, start_point, scan_axis, 
-                 length_x, length_y, spacing, duration):
+                 length_x, length_y, spacing, duration, offset=0):
         MapScan.__init__(self, frame, start_point, scan_axis,
                   length_x, length_y, spacing)
         self.duration = duration
+        self.offset_interleave = offset
 
     def _get_offsets(self):
         """
@@ -231,7 +232,7 @@ class RasterMapScan(MapScan):
                                               ))
         self._offsets = self._get_offsets()
         _subscans = []
-        for offset_lon, offset_lat in self._offsets:
+        for i, (offset_lon, offset_lat) in enumerate(self._offsets):
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
             _offset = Coord(self.frame, offset_lon, offset_lat)
             _subscans.append(subscan.get_sid_tsys(_target, 
@@ -239,5 +240,13 @@ class RasterMapScan(MapScan):
                                                   self.extremes,
                                                   self.duration,
                                                   self.beamsize))
+            if not self.offset_interleave == 0:
+                if i % self.offset_interleave == 0:
+                    _subscans.append(subscan.get_off_tsys(_target,
+                                                          _offset,
+                                                          self.extremes,
+                                                          self.duration,
+                                                          self.beamsize))
         return _subscans
+
 
