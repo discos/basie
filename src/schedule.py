@@ -52,6 +52,7 @@ class Schedule(Persistent):
                  radiotelescope = "SRT", #should we change this?
                  receiver = "C", #should we change this?
                  outputFormat = "fits",
+                 ftrack = False,
                  ):
         logger.debug("creating schedule")
         self.projectID = projectID
@@ -76,6 +77,7 @@ class Schedule(Persistent):
             self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
         else:
             self.restFrequency = [float(restFrequency) * u.MHz]
+        self.ftrack = ftrack
         self.creation_date = datetime.datetime.now()
         self.last_modified = self.creation_date
 
@@ -166,7 +168,7 @@ class Schedule(Persistent):
         for f in self.restFrequency:
             if not f == 0:
                 restFrequency = True
-        if restFrequency:
+        if restFrequency and self.ftrack:
             freqstring = ";".join(map(lambda(x):str(x.value),
                                       self.restFrequency))
             rst_procedure = procedures.Procedure("restFrequency", 0,
@@ -215,7 +217,7 @@ class Schedule(Persistent):
                 _subscan.SEQ_ID = subscan_number
                 #PRE SCAN procedures
                 if subscan_number == 1: 
-                    if not _scan.target.velocity.is_zero():
+                    if self.ftrack:
                         if isinstance(_scan.backend, backend.XBackend):
                             #TODO: we need to test FTRACKALL before using it
                             #_subscan.pre_procedure += procedures.FTRACKALL

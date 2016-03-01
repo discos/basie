@@ -15,6 +15,7 @@ tsys = 0
 #optional restFrequency in Mhz, can be a list 
 #restFrequency = 22345.18,22410.10
 #restFrequency = 22000
+#ftrack = True
 
 # File name of the target specs in this same directory
 targetsFile = targets.txt

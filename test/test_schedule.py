@@ -6,7 +6,7 @@ from basie.radiotelescopes import radiotelescopes
 from basie.rich_validator import validate_configuration
 from basie import target_parser
 
-BASE_PATH = "~/.basie_test"
+BASE_PATH = ".basie_test"
 
 class TestSchedule(unittest.TestCase):
     def setUp(self):
