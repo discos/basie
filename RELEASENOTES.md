@@ -1,9 +1,28 @@
 # RELEASE NOTES
 
-## v0.7.0
+## v0.6.3
 
+Release notes:
   - [x] Angles now rounded to the 4th decimal point.
-  - [x] *nop* instruction removed from roach backend configuration.
+  - [x] **nop** instruction removed from roach backend configuration.
+  - [x] added explicit **ftrack** parameter in configuration file.
+  - [x] added **offset interleave** parameter in raster map scans.
+
+**Note on ftrack**: in order to use ftrack procedures the user now must specify
+```python
+restFrequency = something_different_from_zero
+ftrack = True
+```
+in the configuration file. Note that this will activate ftrack procedures even
+when  the target velocity is null. On the contrary, setting a *restFrequency*
+value and a target *velocity* will not automatically trigger the *ftrack*
+procedure if not explicitly specified by the *ftrack* parameter in the
+configuration file.
+
+**Note on raster maps**: Raster maps now include a new parameter called
+**offset_interleave**. If **offset_interleave** is differrent from zero this
+will tell basie to add one subscan outside the map after **offset_interleave**
+subscans inside the map. 
 
 ## v0.6.2
 
