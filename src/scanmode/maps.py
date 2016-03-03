@@ -181,6 +181,62 @@ class RasterMapScan(MapScan):
         self.duration = duration
         self.offset_interleave = offset
 
+    def _get_spacing(self, receiver, frequency):
+        if receiver.is_multifeed() and receiver.has_derotator:
+            #we can exploit multifeed derotator optimization 
+            logger.info("applying multifeed derotator optimization for map generation")
+            if not isinstance(self.spacing, VAngle):
+                approx_spacing = self.beamsize / self.spacing
+                scans_per_interleave = ceil(receiver.interleave / approx_spacing)
+                if not scans_per_interleave == self.spacing:
+                    #logger.warning("Rounding to {0} scans per interleave".format(scans_per_interleave))
+                    pass
+                self.spacing = receiver.interleave / scans_per_interleave
+                logger.info("Spacing subscans by {0}".format(self.spacing))
+            else:
+                if (self.spacing > (receiver.interleave / 2)):
+                    logger.warning("Spacing is too high, map will be undersampled")
+                scans_per_interleave = floor(receiver.interleave / self.spacing)
+            #this is necessary for tsys and offsets
+            self.beamsize = receiver.feed_extent * 2
+            if scans_per_interleave == 0:
+                logger.warning("Spacing is too high for this receiver")
+                scans_per_interleave = 1
+                self.spacing = 0
+            major_spacing = receiver.feed_extent * 2 #+ self.spacing
+            self.dimension_x = 0
+            self.offset_x = []
+            self.dimension_y = 0
+            self.offset_y = []
+            if self.scan_axis == "LON":
+                _offset_x = (-1 * (self.length_x / 2)) - receiver.feed_extent
+                while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
+                    self.offset_x.append(_offset_x)
+                    _offset_x = _offset_x + self.spacing
+                _offset_y = (-1 * (self.length_y / 2)) + receiver.feed_extent
+                while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
+                    for i in range(scans_per_interleave):
+                        self.offset_y.append(_offset_y)
+                        _offset_y = _offset_y + self.spacing
+                        #self.offset_y.append(_offset_y + i * self.spacing)
+                    _offset_y = _offset_y + major_spacing
+            else: #self.scan_axis == "LAT"
+                _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
+                while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
+                    for i in range(scans_per_interleave):
+                        self.offset_x.append(_offset_x)
+                        _offset_x = _offset_x + self.spacing
+                        #self.offset_x.append(_offset_x + i * self.spacing)
+                    _offset_x = _offset_x + major_spacing
+                _offset_y = (-1 * (self.length_y / 2)) - receiver.feed_extent
+                while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
+                    self.offset_y.append(_offset_y)
+                    _offset_y = _offset_y + self.spacing
+            self.dimension_x = len(self.offset_x)
+            self.dimension_y = len(self.offset_y)
+        else:
+            super(RasterMapScan, self)._get_spacing()
+
     def _get_offsets(self):
         """
         Get ordered offsets for each point of the raster scan
