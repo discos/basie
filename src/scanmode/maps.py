@@ -5,6 +5,7 @@ from numpy import ceil, floor
 
 from basie import utils, frame
 from basie.valid_angles import VAngle
+from basie.errors import *
 
 from scanmode import ScanMode
 from ..frame import Coord
@@ -182,6 +183,7 @@ class RasterMapScan(MapScan):
         self.offset_interleave = offset
 
     def _get_spacing(self, receiver, frequency):
+        self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
             #we can exploit multifeed derotator optimization 
             logger.info("applying multifeed derotator optimization for map generation")
@@ -200,10 +202,11 @@ class RasterMapScan(MapScan):
             #this is necessary for tsys and offsets
             self.beamsize = receiver.feed_extent * 2
             if scans_per_interleave == 0:
-                logger.warning("Spacing is too high for this receiver")
-                scans_per_interleave = 1
-                self.spacing = 0
-            major_spacing = receiver.feed_extent * 2 #+ self.spacing
+                #logger.warning("Spacing is too high for this receiver")
+                raise ScanError("Spacing is too high for this receiver")
+                #scans_per_interleave = 1
+                #self.spacing = 0
+            major_spacing = receiver.feed_extent * 2
             self.dimension_x = 0
             self.offset_x = []
             self.dimension_y = 0

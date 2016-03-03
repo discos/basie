@@ -168,6 +168,8 @@ class Schedule(Persistent):
         for f in self.restFrequency:
             if not f == 0:
                 restFrequency = True
+        if self.ftrack and not restFrequency:
+            logger.warning("no rest frequency specified, ftrack will not be used")
         if restFrequency and self.ftrack:
             freqstring = ";".join(map(lambda(x):str(x.value),
                                       self.restFrequency))
@@ -204,8 +206,7 @@ class Schedule(Persistent):
                 _scan.backend = copy(_scan.backend)
                 _scan.backend.name += "CT"
             else:
-                data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
-            #TODO: add back scnlayout when passing to mbfits
+                data_writer = "MANAGEMENT/FitsZilla"
             #scdfile.write("%s:%s\t%s\n" %
             #              (_scan.backend.name, data_writer, scanlayout,))
             scdfile.write("%s:%s\n" %
@@ -213,11 +214,15 @@ class Schedule(Persistent):
             _used_backends.add(_scan.backend)
             #BEGIN SUBSCANS LOOP
             subscans_set = set() #all subscans in this scan
+            if (_scan.target.velocity.is_zero() and 
+                restFrequency and
+                self.ftrack):
+                logger.warning("using ftrack with zero velocity")
             for _subscan in _scan.subscans:
                 _subscan.SEQ_ID = subscan_number
                 #PRE SCAN procedures
                 if subscan_number == 1: 
-                    if self.ftrack:
+                    if restFrequency and self.ftrack:
                         if isinstance(_scan.backend, backend.XBackend):
                             #TODO: we need to test FTRACKALL before using it
                             #_subscan.pre_procedure += procedures.FTRACKALL
@@ -233,13 +238,6 @@ class Schedule(Persistent):
                         _subscan.pre_procedure += procedures.DEROTATORBSC
                     if(isinstance(_scan.scanmode, PointScan)):
                         _subscan.pre_procedure += procedures.ZEROOFF
-                #if isinstance(_subscan, OTFSubscan):
-                    #ADD WAIT post subscan proceudure
-                    #wait_time = ((_scan._scanmode.speed / 60.0) /
-                    #    self.radiotelescope.max_acc *
-                    #    self.radiotelescope.acc_scale_factor)
-                    #wait_time = utils.ceil_to_half(wait_time)
-                    #_subscan.add_post_procedure(procedures.WAIT(wait_time))
                 #ADD SUBSCAN PROCEDURES TO THE SET OF USED ONES
                 _used_procedures.add(_subscan.pre_procedure)
                 _used_procedures.add(_subscan.post_procedure)
