@@ -7,6 +7,7 @@ Release notes:
   - [x] **nop** instruction removed from roach backend configuration.
   - [x] added explicit **ftrack** parameter in configuration file.
   - [x] added **offset interleave** parameter in raster map scans.
+  - [x] Fixes algorithm for Raster Maps scans using multifeed receiver.
 
 **Note on ftrack**: in order to use ftrack procedures the user now must specify
 ```python
