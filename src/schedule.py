@@ -91,6 +91,10 @@ class Schedule(Persistent):
                 bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):
+        try:
+            _frame = _scantype.frame
+        except Exception, e:
+            _frame = _target.coord.frame
         if _scantype in self.scantypes:
             self.scans.append(
                 scan.Scan(_target,
@@ -105,8 +109,14 @@ class Schedule(Persistent):
         else:
             if((_scantype + "_lon" in self.scantypes) and 
                (_scantype + "_lat" in self.scantypes)):
+                try:
+                    _frame = self.scantypes[_scantype + "_lon"].frame
+                except:
+                    _frame = _target.coord.frame
+                _target_lon = copy(_target)
+                _target_lon.label += "_%s" % (_frame.lon_name,)
                 self.scans.append(
-                    scan.Scan(_target,
+                    scan.Scan(_target_lon,
                          self.scantypes[_scantype + "_lon"],
                          self.receiver,
                          self.restFrequency,
@@ -115,8 +125,10 @@ class Schedule(Persistent):
                          self.tsys,
                         )
                 )
+                _target_lat = copy(_target)
+                _target_lat.label += "_%s" % (_frame.lat_name,)
                 self.scans.append(
-                    scan.Scan(_target,
+                    scan.Scan(_target_lat,
                          self.scantypes[_scantype + "_lat"],
                          self.receiver,
                          self.restFrequency,
