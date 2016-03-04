@@ -98,8 +98,8 @@ class Schedule(Persistent):
                      self.receiver,
                      self.restFrequency,
                      self.backends[_backend],
-                     _target.repetitions or self.repetitions,
-                     _target.tsys or self.tsys,
+                     self.repetitions,
+                     self.tsys,
                     )
             )
         else:
@@ -111,8 +111,8 @@ class Schedule(Persistent):
                          self.receiver,
                          self.restFrequency,
                          self.backends[_backend],
-                         _target.repetitions or self.repetitions,
-                         _target.tsys or self.tsys,
+                         self.repetitions,
+                         self.tsys,
                         )
                 )
                 self.scans.append(
@@ -121,8 +121,8 @@ class Schedule(Persistent):
                          self.receiver,
                          self.restFrequency,
                          self.backends[_backend],
-                         _target.repetitions or self.repetitions,
-                         _target.tsys or self.tsys,
+                         self.repetitions,
+                         self.tsys,
                         )
                 )
             else:
@@ -218,8 +218,7 @@ class Schedule(Persistent):
                 restFrequency and
                 self.ftrack):
                 logger.warning("using ftrack with zero velocity")
-            for _subscan in _scan.subscans:
-                _subscan.SEQ_ID = subscan_number
+            for subscan_id, _subscan in enumerate(_scan.subscans):
                 #PRE SCAN procedures
                 if subscan_number == 1: 
                     if restFrequency and self.ftrack:
@@ -246,7 +245,7 @@ class Schedule(Persistent):
                 #WRITE SUBSCAN IN SCD FILE
                 scdfile.write("%d_%d\t%f\t%d\t%s\t%s\n" % (
                                                             scan_number,
-                                                            _subscan.SEQ_ID,
+                                                            subscan_number,
                                                             _subscan.duration,
                                                             _subscan.ID,
                                                             _subscan.pre_procedure.execute(),
