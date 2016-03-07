@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
       name = "basie",
-      version = "0.7.0-beta",
+      version = "0.6.3",
       description = "schedule creator for italian radiotelescopes",
       author = "Marco Bartolini, Simona Righini",
       author_email = "bartolini@ira.inaf.it",
