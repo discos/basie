@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+#coding=utf-8
+
+from basie import plot
+plot.cmd_line()
