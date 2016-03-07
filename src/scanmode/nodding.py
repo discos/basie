@@ -24,16 +24,16 @@ class NoddingScan(ScanMode):
         offset_b = _receiver.feed_offsets[self.feed_b]
         _subscans = []
         for element in self.sequence:
+            if element[1] == "a":
+                offset = offset_a
+            else:
+                offset = offset_b
+            ss = subscan.get_sidereal(_target,
+                                      offset,
+                                      self.duration,
+                                      is_cal=element[2])
+            st = subscan.get_tsys(_target,
+                                  offset)
             for repetitions in range(element[0]):
-                if element[1] == "a":
-                    offset = offset_a
-                else:
-                    offset = offset_b
-                ss = subscan.get_sidereal(_target,
-                                          offset,
-                                          self.duration,
-                                          is_cal=element[2])
-                st = subscan.get_tsys(_target,
-                                      offset)
                 _subscans.append((ss, st))
         return _subscans

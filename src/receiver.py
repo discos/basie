@@ -110,8 +110,8 @@ class Receiver(Persistent):
         if not freq:
             logger.warning("RECEIVER %s using default beamsize at min frequency" %
                            (self.name,))
-            freq = self.fmin.value
-        if((not self.fmin <= freq <= self.fmax) and (freq > 0)):
+            freq = self.fmin
+        if((not self.fmin <= freq <= self.fmax) and (freq > 0 * u.MHz)):
             logger.warning("RECEIVER %s beamsize at frequency %f out of range" %
                            (self.name, freq.value,))
         logger.debug("Getting beamsize\nfreq: %s\nt0: %s\nt1: %s" % \

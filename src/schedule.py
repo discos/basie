@@ -33,6 +33,8 @@ import utils
 from .errors import *
 import layout
 from . import VERSION, NURAGHE_TAG, ESCS_TAG
+import datetime 
+
 import scan
 import backend
 from .radiotelescopes import radiotelescopes
@@ -47,12 +49,10 @@ class Schedule(Persistent):
                  tsys = 1,
                  scheduleRuns = 1,
                  restFrequency = [0.0],
-                 scantypes = {},
-                 backends = {},
                  radiotelescope = "SRT", #should we change this?
                  receiver = "C", #should we change this?
                  outputFormat = "fits",
-                 targetsFile = "targets.txt",
+                 ftrack = False,
                  ):
         logger.debug("creating schedule")
         self.projectID = projectID
@@ -61,22 +61,25 @@ class Schedule(Persistent):
         self.repetitions = repetitions
         self.tsys = tsys
         self.runs = scheduleRuns
-        self.scantypes = scantypes
-        self.backends = backends
-        self.radiotelescope = radiotelescopes[radiotelescope.upper()]
-        logger.debug("GOT RADIOTELESCOPE: %s" % (self.radiotelescope,))
-        self.receiver = self.radiotelescope.receivers[receiver.upper()]
+        self.scantypes = {}
+        self.backends = {}
+        self.radiotelescope = radiotelescopes[radiotelescope]
+        if not receiver in self.radiotelescope.receivers.keys():
+            raise ScheduleError("receiver does not belong to telescope")
+        self.receiver = self.radiotelescope.receivers[receiver]
         self.base_dir = os.path.abspath('.') #default 
         self.scans = []
         self._configure_totalpower_sections()
         logger.info("Scheduling %s radiotelescope using receiver %s" %
                 (self.radiotelescope.name, self.receiver.name))
-        self.targetsFile = targetsFile
         self.outputFormat = outputFormat
         if isinstance(restFrequency, (list, tuple)):
             self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
         else:
             self.restFrequency = [float(restFrequency) * u.MHz]
+        self.ftrack = ftrack
+        self.creation_date = datetime.datetime.now()
+        self.last_modified = self.creation_date
 
     def _configure_totalpower_sections(self):
         for name, bck in self.backends.iteritems():
@@ -88,6 +91,10 @@ class Schedule(Persistent):
                 bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):
+        try:
+            _frame = _scantype.frame
+        except Exception, e:
+            _frame = _target.coord.frame
         if _scantype in self.scantypes:
             self.scans.append(
                 scan.Scan(_target,
@@ -95,62 +102,44 @@ class Schedule(Persistent):
                      self.receiver,
                      self.restFrequency,
                      self.backends[_backend],
-                     _target.repetitions or self.repetitions,
-                     _target.tsys or self.tsys,
+                     self.repetitions,
+                     self.tsys,
                     )
             )
         else:
             if((_scantype + "_lon" in self.scantypes) and 
                (_scantype + "_lat" in self.scantypes)):
+                try:
+                    _frame = self.scantypes[_scantype + "_lon"].frame
+                except:
+                    _frame = _target.coord.frame
+                _target_lon = copy(_target)
+                _target_lon.label += "_%s" % (_frame.lon_name,)
                 self.scans.append(
-                    scan.Scan(_target,
+                    scan.Scan(_target_lon,
                          self.scantypes[_scantype + "_lon"],
                          self.receiver,
                          self.restFrequency,
                          self.backends[_backend],
-                         _target.repetitions or self.repetitions,
-                         _target.tsys or self.tsys,
+                         self.repetitions,
+                         self.tsys,
                         )
                 )
+                _target_lat = copy(_target)
+                _target_lat.label += "_%s" % (_frame.lat_name,)
                 self.scans.append(
-                    scan.Scan(_target,
+                    scan.Scan(_target_lat,
                          self.scantypes[_scantype + "_lat"],
                          self.receiver,
                          self.restFrequency,
                          self.backends[_backend],
-                         _target.repetitions or self.repetitions,
-                         _target.tsys or self.tsys,
+                         self.repetitions,
+                         self.tsys,
                         )
                 )
             else:
                 raise ScheduleError("cannot find scantype %s" % (_scantype,))
-
-        #explode 'BOTH' scans into 2 separate scans
-        #for _scan_name, _scan_definition in self.scan_definitions.iteritems():
-        #   logger.debug("examinating %s || %s" % (_scan_name,
-        #                                          type(_scan_definition)))
-        #   if isinstance(_scan_definition, tuple): #only BOTH scans return a tuple
-        #       logger.info("exploding scan %s in 2 separate scans" % (_scan_name,))
-        #       self.scan_definitions.pop(_scan_name)
-        #       if ((_scan_name + "_lon" in self.scan_definitions) or 
-        #           (_scan_name + "_lat" in self.scan_definitions)):
-        #           raise ScheduleError("Cannot explode scan %s in separate subscans" % (_scan_name,))
-        #       self.scan_definitions[_scan_name + "_lon"] = _scan_definition[0]
-        #       self.scan_definitions[_scan_name + "_lat"] = _scan_definition[1]
-        #       #explode 'both' targets into 2 separate targets
-        #       while _scan_name in [_target_scan_name 
-        #                            for (_, _target_scan_name, _)
-        #                            in self.targets]:
-        #           index = [_tsn for (_, _tsn, _) in self.targets].index(_scan_name)
-        #           _target, _scan_name, _line = self.targets[index]
-        #           logger.info("exploding target %s in two separate targets" % (_target.label,))
-        #           self.targets[index] = (_target,
-        #                                  _scan_name + "_lat",
-        #                                  _line)
-        #           self.targets.insert(index, (_target, 
-        #                                       _scan_name + "_lon",
-        #                                       _line))
-
+            self.last_modified = datetime.datetime.now()
 
     def set_base_dir(self, base_path):
         """
@@ -191,7 +180,9 @@ class Schedule(Persistent):
         for f in self.restFrequency:
             if not f == 0:
                 restFrequency = True
-        if restFrequency:
+        if self.ftrack and not restFrequency:
+            logger.warning("no rest frequency specified, ftrack will not be used")
+        if restFrequency and self.ftrack:
             freqstring = ";".join(map(lambda(x):str(x.value),
                                       self.restFrequency))
             rst_procedure = procedures.Procedure("restFrequency", 0,
@@ -227,8 +218,7 @@ class Schedule(Persistent):
                 _scan.backend = copy(_scan.backend)
                 _scan.backend.name += "CT"
             else:
-                data_writer = "MANAGEMENT/FitsZilla" #TODO: read this from conf
-            #TODO: add back scnlayout when passing to mbfits
+                data_writer = "MANAGEMENT/FitsZilla"
             #scdfile.write("%s:%s\t%s\n" %
             #              (_scan.backend.name, data_writer, scanlayout,))
             scdfile.write("%s:%s\n" %
@@ -236,11 +226,14 @@ class Schedule(Persistent):
             _used_backends.add(_scan.backend)
             #BEGIN SUBSCANS LOOP
             subscans_set = set() #all subscans in this scan
-            for _subscan in _scan.subscans:
-                _subscan.SEQ_ID = subscan_number
+            if (_scan.target.velocity.is_zero() and 
+                restFrequency and
+                self.ftrack):
+                logger.warning("using ftrack with zero velocity")
+            for subscan_id, _subscan in enumerate(_scan.subscans):
                 #PRE SCAN procedures
                 if subscan_number == 1: 
-                    if not _scan.target.velocity.is_zero():
+                    if restFrequency and self.ftrack:
                         if isinstance(_scan.backend, backend.XBackend):
                             #TODO: we need to test FTRACKALL before using it
                             #_subscan.pre_procedure += procedures.FTRACKALL
@@ -256,13 +249,6 @@ class Schedule(Persistent):
                         _subscan.pre_procedure += procedures.DEROTATORBSC
                     if(isinstance(_scan.scanmode, PointScan)):
                         _subscan.pre_procedure += procedures.ZEROOFF
-                #if isinstance(_subscan, OTFSubscan):
-                    #ADD WAIT post subscan proceudure
-                    #wait_time = ((_scan._scanmode.speed / 60.0) /
-                    #    self.radiotelescope.max_acc *
-                    #    self.radiotelescope.acc_scale_factor)
-                    #wait_time = utils.ceil_to_half(wait_time)
-                    #_subscan.add_post_procedure(procedures.WAIT(wait_time))
                 #ADD SUBSCAN PROCEDURES TO THE SET OF USED ONES
                 _used_procedures.add(_subscan.pre_procedure)
                 _used_procedures.add(_subscan.post_procedure)
@@ -271,7 +257,7 @@ class Schedule(Persistent):
                 #WRITE SUBSCAN IN SCD FILE
                 scdfile.write("%d_%d\t%f\t%d\t%s\t%s\n" % (
                                                             scan_number,
-                                                            _subscan.SEQ_ID,
+                                                            subscan_number,
                                                             _subscan.duration,
                                                             _subscan.ID,
                                                             _subscan.pre_procedure.execute(),

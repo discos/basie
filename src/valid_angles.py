@@ -32,7 +32,7 @@ from astropy import units as u
 from astropy.coordinates import Angle
 
 
-ANGLE_DECIMALS = 3
+ANGLE_DECIMALS = 4
 """
 CONSTANT. Decimal angles digits used in string fomratting
 """

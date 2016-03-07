@@ -176,14 +176,3 @@ schedule.
     and modified from user template in step 1.
     if run with -f overrides eventual existing files.
 
-
-## BUILD DOCUMENTATION
-
-You can generate a local copy of the developer documentation using epydoc via
-
-```
-$make doc
-```
-
-You will find the doc under doc/html/ 
-

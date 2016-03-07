@@ -37,16 +37,16 @@ class TestAngles(unittest.TestCase):
 
     def test_fmt_dec(self):
         ang = VAngle(15.0)
-        self.assertEqual(ang.fmt_dec(), u"15.000d")
+        self.assertEqual(ang.fmt_dec(), u"15.0000d")
 
     def test_fmt_dms(self):
         ang = VAngle(15.0)
-        self.assertEqual(ang.fmt_dms(), u"15:00:00.000")
+        self.assertEqual(ang.fmt_dms(), u"15:00:00.0000")
 
     def test_fmt_hms(self):
         ang = VAngle(15.0)
         _str = ang.fmt_hms()
-        self.assertEqual(_str, u"01:00:00.000h")
+        self.assertEqual(_str, u"01:00:00.0000h")
         #self.assertEqual(_str[-1], u"h")
 
     def test_sum(self):

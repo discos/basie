@@ -332,3 +332,19 @@ def get_sid_tsys(_target,
     st = get_tsys(_target, _offsets)
     return ss, st
 
+def get_off_tsys(_target,
+                 offset,
+                 extremes,
+                 duration,
+                 beamsize):
+    extremes_offsets = utils.extrude_from_rectangle(offset.lon.deg, 
+                                                offset.lat.deg,
+                                                extremes, 
+                                                beamsize.deg * TSYS_SIGMA)
+    _offsets = Coord(offset.frame,
+                     VAngle(extremes_offsets[0]),
+                     VAngle(extremes_offsets[1]))
+    ss = get_sidereal(_target, _offsets, duration)
+    st = get_tsys(_target, _offsets)
+    return ss, st
+
