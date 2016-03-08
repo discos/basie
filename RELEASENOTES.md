@@ -1,5 +1,11 @@
 # RELEASE NOTES
 
+## v0.6.4
+
+Release notes:
+  - [x] Added warning message if target coordinate are specified in equatorial
+    frame without RA being specified in hours.
+
 ## v0.6.3
 
 Release notes:
