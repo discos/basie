@@ -31,7 +31,6 @@ logger = logging.getLogger(__name__)
 from astropy import units as u
 from astropy.coordinates import Angle
 
-
 ANGLE_DECIMALS = 4
 """
 CONSTANT. Decimal angles digits used in string fomratting
@@ -106,6 +105,10 @@ class VAngle(Angle):
             return self.fmt_dms()
         else:
             return self.fmt_dec()
+
+    def is_hour_angle(self):
+        return self.original_unit == u.hour
+
 
 ZERO_ANGLE = VAngle(0.0)
 """
