@@ -48,6 +48,10 @@ class Target(Persistent):
         self.label = label
         self.coord = coord
         self.velocity = velocity
+        if (self.coord.frame == fr.EQ and 
+            not self.coord.lon.is_hour_angle()):
+            logger.warning("Target %s specifies EQ frame but RA is not in hours" % (
+                            self.label,))
 
     def __str__(self):
         _lon, _lat = self.coord.fmt()
