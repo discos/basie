@@ -5,6 +5,12 @@
 Release notes:
   - [x] Added warning message if target coordinate are specified in equatorial
     frame without RA being specified in hours.
+  - [x] Added **SKYDIP** scan mode.
+
+**Note On Skydip**: **SKYDIP** scan mode can be used as any other scan mode
+and it presents the same set of options. The skydip will be executed with a fixed
+offset of 1.0 degrees in azimuth with respect to the specified source
+coordinates.
 
 ## v0.6.3
 

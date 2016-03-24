@@ -164,6 +164,32 @@ class OTFSubscan(Subscan):
                     )
                 )
 
+class SkydipSubscan(Subscan):
+    def __init__(self, _target, duration=30.0, 
+                 start_elevation = VAngle(88),
+                 stop_elevation = VAngle(15),
+                 offset = frame.Coord(frame.HOR, 
+                                      VAngle(1),
+                                      VAngle(0)),
+                 is_tsys=False, is_cal=False):
+        Subscan.__init__(self, _target, duration, is_tsys, is_cal)
+        self.typename = "SKYDIP"
+        self.offset = offset
+        self.start_elevation = start_elevation
+        self.stop_elevation = stop_elevation
+
+    def __str__(self):
+        return templates.skydip_subscan.substitute(
+            dict(ID = self.ID,
+                 target_subscan = self.target,
+                 start_elevation = self.start_elevation.fmt_dec(),
+                 stop_elevation = self.stop_elevation.fmt_dec(),
+                 duration = str(self.duration),
+                 offset_frame = self.offset.frame.offset_name,
+                 offset_lon = self.offset.lon.fmt(),
+                 offset_lat = self.offset.lat.fmt(),
+                ))
+
 class SiderealSubscan(Subscan):
     def __init__(self, _target, duration=0.0, is_tsys=False, is_cal=False):
         Subscan.__init__(self, _target, duration, is_tsys, is_cal)
@@ -188,6 +214,16 @@ class SiderealSubscan(Subscan):
                  vel = str(self.target.velocity),
             )
         )
+
+def get_skydip_tsys(target_id,_target, duration=30.0, 
+                    start_elevation = VAngle(88),
+                    stop_elevation = VAngle(15),
+                    offset = frame.Coord(frame.HOR, 
+                                         VAngle(1),
+                                         VAngle(0))):
+    ss = SkydipSubscan(target_id, duration, start_elevation, stop_elevation, offset)
+    st = get_tsys(_target, offset)
+    return ss, st
 
 def get_cen_otf(_target, 
                 duration, 

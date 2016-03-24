@@ -83,6 +83,20 @@ Used to convert an instance of L{subscan.OTFSubscan} into its representation
 in the .lis file
 """
 
+skydip_subscan = string.Template("${ID}\t" +
+                                 "SKYDIP\t" +
+                                 "${target_subscan}\t" +
+                                 "${start_elevation}\t" +
+                                 "${stop_elevation}\t" +
+                                 "${duration}\t" +
+                                 "${offset_frame}\t" +
+                                 "${offset_lon}\t" +
+                                 "${offset_lat}")
+"""
+Used to convert an instance of L{subscan.SkydipSubscan} into its representation
+in the .lis file
+"""
+
 def format_layout(name, conf):
     """
     Format a layout dictionary for writing to .dat file

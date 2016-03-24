@@ -15,6 +15,7 @@
 # vdef = [OP, RD, Z]
 
 Alpha   EqCross1_3  TP EQ  12:00:00h +45:00:00
+Alpha   DownSkydip  TP EQ  12:00:00h +45:00:00
 Alpha   EqCross1_3  TP EQ  180:00:00 +45:00:00
 Alpha   EqCross1_3  TP EQ  180.0d  +45.0d
 Beta    HorCross1_3 TP HOR 124.5d  38.2d
