@@ -34,6 +34,10 @@ class Scan(Persistent):
                 self.target.offset_coord.frame = scanmode.frame
             except: #scanmode does not define a frame
                 self.target.offset_coord.frame = self.target.coord.frame
+        if self.tsys >= 0 and not self.backend.can_tsys:
+            logger.warning("Tsys measurement is disabled on %s because\n\tbackend %s can not perform Tsys measurements" %
+                            (self.target.label, self.backend.backend_type))
+            self.tsys = -1
 
     @property
     def subscans(self):

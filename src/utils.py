@@ -66,6 +66,7 @@ def get_user_templates(dst, force=False):
                 logger.warning("Overriding file %s" % (dstfile,))
         if write:
             logger.info("write file: %s" % (dstfile,))
+            logger.debug("copying %s to %s" % (srcfile, dstfile))
             shutil.copyfile(srcfile, dstfile)
 
 def ceil_to_odd(dec):

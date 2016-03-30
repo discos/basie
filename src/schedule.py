@@ -69,7 +69,6 @@ class Schedule(Persistent):
         self.receiver = self.radiotelescope.receivers[receiver]
         self.base_dir = os.path.abspath('.') #default 
         self.scans = []
-        self._configure_totalpower_sections()
         logger.info("Scheduling %s radiotelescope using receiver %s" %
                 (self.radiotelescope.name, self.receiver.name))
         self.outputFormat = outputFormat
@@ -88,6 +87,10 @@ class Schedule(Persistent):
                    (self.receiver is radiotelescopes["SRT"].receivers["K"])):
                     logger.debug("adding empty sections to the backend")
                     bck._empty_sections = 12
+                if ((self.radiotelescope is radiotelescopes["MED"]) and
+                   (self.receiver is radiotelescopes["MED"].receivers["K"])):
+                    logger.debug("adding empty sections to the backend")
+                    bck._empty_sections = 2
                 bck.set_sections(self.receiver.nifs)
 
     def add_scan(self, _target, _scantype, _backend):
@@ -161,6 +164,9 @@ class Schedule(Persistent):
         """
         Method including the logics of schedule file creation.
         """
+        # we do this here as it is the only obvious point where everything is
+        # configured
+        self._configure_totalpower_sections()
         # GET OUTPUT FILE NAMES
         scdfilename = self._get_filename("scd")
         lisfilename = self._get_filename("lis")

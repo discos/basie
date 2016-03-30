@@ -110,6 +110,14 @@ def check_point_scan(value):
     speed = v.is_float(value[2])
     return PointScan(_frame, length, speed)
 
+def check_skydip_scan(value):
+    if not isinstance(value, list):
+        raise v.ValidateError("expected list, found  %s" % (value,))
+    start = angle_parser.check_angle(value[0])
+    stop = angle_parser.check_angle(value[1])
+    duration = v.is_integer(value[2], min=1)
+    return SkydipScan(start, stop, duration)
+
 def check_otf_map(value):
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
@@ -235,6 +243,8 @@ def check_scantype(value):
         return check_cross_scan(value[1:])
     elif scantype == "POINT":
         return check_point_scan(value[1:])
+    elif scantype == "SKYDIP":
+        return check_skydip_scan(value[1:])
     elif scantype == "OTFMAP":
         return check_otf_map(value[1:])
     elif scantype == "RASTERMAP":

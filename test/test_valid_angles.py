@@ -4,6 +4,8 @@ from basie.valid_angles import VAngle
 from basie import angle_parser
 from astropy import units as u
 
+from basie.angle_parser import check_angle
+
 
 class TestAngles(unittest.TestCase):
     def test_creation(self):
@@ -84,6 +86,13 @@ class TestAngles(unittest.TestCase):
         self.assertNotEqual(a.original_unit, e.original_unit)
         self.assertNotEqual(a.sexa, e.sexa)
 
+    def test_vangle_is_hour_angle(self):
+        a = check_angle("10:00:00h")
+        self.assertTrue(a.is_hour_angle())
+
+    def test_vangle_is_not_hour_angle(self):
+        a = check_angle("10:00:00")
+        self.assertFalse(a.is_hour_angle())
 
 
 if __name__ == "__main__":

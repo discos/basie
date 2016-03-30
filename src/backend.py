@@ -31,6 +31,7 @@ class Backend(Persistent):
         self.name = name
         self.backend_type = backend_type
         self.can_activate_switching_mark = False
+        self.can_tsys = True
 
     def _get_backend_instructions(self):
         raise NotImplementedError
@@ -47,6 +48,7 @@ class XBackend(Backend):
         Backend.__init__(self, name, "XBackends")
         self.configuration = configuration
         self.can_activate_switching_mark = False
+        self.can_tsys = False
 
     def _get_backend_instructions(self):
         res = "\tinitialize=%s\n" % (self.configuration,)
@@ -81,6 +83,7 @@ class TotalPowerBackend(Backend):
             logger.error(msg)
             raise ScheduleError(msg)
         for i in range(nifs):
+            logger.debug("set section %d: %f" % (i, float(bandwidth)))
             self.sections.append((i, float(bandwidth)))
 
     def _get_backend_instructions(self):
