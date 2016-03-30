@@ -231,7 +231,7 @@ def check_onoff(value):
     return OnOffScan(duration, offset_lon, offset_lat, offset_frame, sequence)
 
 def check_scantype(value):
-    logger.info("parsing scan line: %s" % (value,))
+    logger.debug("parsing scan line: %s" % (value,))
     if isinstance(value, list):
         #this is aginst a bug in the validate module
         #AKA a brutal workaround

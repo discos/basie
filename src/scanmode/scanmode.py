@@ -28,6 +28,8 @@ import logging
 logger = logging.getLogger(__name__)
 from persistent import Persistent
 
+from basie.errors import ScanError
+
 class ScanMode(Persistent):
     """
     Base class for all Scan types. Gives a unique ID to the scan and implements
@@ -63,8 +65,15 @@ class ScanMode(Persistent):
         @param _frequency: the selected frequency
         @raise ScanError: if frequency is not within receiver range
         """
-        logger.info("scheduling %s on target %s" % (self.name, _target.label))
-        self._do_scan(_target, _receiver, _frequency)
+        logger.debug("scheduling %s on target %s" % (self.name, _target.label))
+        try:
+            return self._do_scan(_target, _receiver, _frequency)
+        except Exception, e:
+            message = "Scan %s on target %s: %s" %\
+                    (self.name, 
+                     _target.label,
+                     e.message)
+            raise ScanError(message)
 
     def _do_scan(self, _target, _receiver, _frequency):
         """

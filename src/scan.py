@@ -35,7 +35,7 @@ class Scan(Persistent):
             except: #scanmode does not define a frame
                 self.target.offset_coord.frame = self.target.coord.frame
         if self.tsys >= 0 and not self.backend.can_tsys:
-            logger.warning("Tsys measurement is disabled on %s because\n\tbackend %s can not perform Tsys measurements" %
+            logger.warning("Tsys measurement is disabled for target %s because\n\tbackend %s cannot perform Tsys measurements" %
                             (self.target.label, self.backend.backend_type))
             self.tsys = -1
 
@@ -48,9 +48,9 @@ class Scan(Persistent):
         @type receiver: receiver.Receiver
         """
         subscans = []
-        base_subscans = self.scanmode._do_scan(self.target, 
-                                               self.receiver, 
-                                               self.frequency)
+        base_subscans = self.scanmode.do_scan(self.target, 
+                                              self.receiver, 
+                                              self.frequency)
         counter = 0
         for rep in xrange(self.repetitions):
             for sn, ss in enumerate(base_subscans):

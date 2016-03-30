@@ -249,8 +249,7 @@ class Coord(object):
         else: #self.frame == frame.HOR
             legal = False #cannot convert to celestial coordinates without date
         if not legal:
-            msg = "Cannot convert coordinates from %s to %s" % (self.frame.name, dest_frame.name,)
-            logger.error(msg)
+            msg = "inconsistent coordinate or offset frame pairing: %s and %s" % (self.frame.name, dest_frame.name,)
             raise CoordinateError(msg)
 
 NULL_COORD = Coord(NULL, ZERO_ANGLE, ZERO_ANGLE)
