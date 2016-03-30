@@ -73,7 +73,7 @@ def _parse_target_line(line):
         logger.warning("invalid target line: " + line)
         return None, None
     else:
-        logger.info("parsing target line: " + line)
+        logger.debug("parsing target line: " + line)
         target_args = matches.groupdict()
         option_string = target_args.pop('optionals')
         option_args = (_parse_options(option_string))
