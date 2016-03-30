@@ -69,7 +69,7 @@ class ScanMode(Persistent):
         try:
             return self._do_scan(_target, _receiver, _frequency)
         except Exception, e:
-            message = "Scan %s on target %s: %s" %\
+            message = "Scan %s on target %s\n\t%s" %\
                     (self.name, 
                      _target.label,
                      e.message)

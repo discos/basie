@@ -3,17 +3,17 @@
 ## v0.6.4
 
 Release notes:
-  - [x] Added warning message if target coordinate are specified in equatorial
-    frame without RA being specified in hours. Fixes #14.
+  - [x] Added warning message if target coordinates are specified in equatorial
+    frame including sexagesimal RA without 'h' suffix. Fixes #14.
   - [x] Added **SKYDIP** scan mode.
   - [x] Total Power backend configuration did not handle properly the enable
     string. Fixes #15.
-  - [x] Disable Tsys measurents on Xarcos backend. Fixes #16.
+  - [x] Disable Tsys measurements on Xarcos backend. Fixes #16.
+  - [x] Better error messages
 
 **Note On Skydip**: **SKYDIP** scan mode can be used as any other scan mode
 and it presents the same set of options. The skydip will be executed with a fixed
-offset of 1.0 degrees in azimuth with respect to the specified source
-coordinates.
+offset of 1.0 degrees in azimuth with respect to the specified target.
 
 ## v0.6.3
 
