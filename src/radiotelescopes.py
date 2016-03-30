@@ -37,8 +37,11 @@ MED.receivers = {
     'C' : Receiver('C', 4700.0, 5500.0, [[5000.0, 6000.0], [0.125, 0.1166667]], 1, 2),
     'CL': Receiver('CL', 4700.0, 5850.0, [[5000.0, 6000.0], [0.125, 0.1166667]], 1, 2),
     'X' : Receiver('X', 8180.0, 8980.0, [[8300.0], [0.08333333]], 1, 2),
-    'K' : Receiver('K', 18000.0, 26000.0, [[22000.0], [0.03]], 2, 2),
+    'K' : Receiver('K', 18000.0, 26000.0, [[22000.0], [0.03]], 1, 2),
+    'KM' : Receiver('K', 18000.0, 26000.0, [[22000.0], [0.03]], 2, 2),
 }
+MED.receivers["KM"].has_derotator = False
+MED.receivers["KM"].feed_extent = VAngle(0.037545204) #FIXME: wrong value
 
 
 NOTO = Radiotelescope("NOTO")

@@ -81,6 +81,7 @@ class TotalPowerBackend(Backend):
             logger.error(msg)
             raise ScheduleError(msg)
         for i in range(nifs):
+            logger.debug("set section %d: %f" % (i, float(bandwidth)))
             self.sections.append((i, float(bandwidth)))
 
     def _get_backend_instructions(self):
