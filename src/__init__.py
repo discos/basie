@@ -261,12 +261,13 @@ def cmd_line():
             logger.debug("parsed targets: %s" % (parsed_targets,))
             #prepare Schedule contructor arguments
             schedule_params = conf
-            radiotelescope = radiotelescopes[conf["radiotelescope"]]
+            radiotelescope_name = conf.pop("radiotelescope").upper()
+            radiotelescope = radiotelescopes[radiotelescope_name]
             try:
                 receiver = radiotelescope.receivers[conf["receiver"]]
             except:
                 raise ScheduleError("radiotelescope does not have specified receiver")
-            schedule_params.radiotelescope = radiotelescope
+            schedule_params["radiotelescope"] = radiotelescope_name
             schedule_params.receiver = receiver
             backends = schedule_params.pop("backends")
             scantypes = schedule_params.pop("scantypes")
