@@ -1,5 +1,10 @@
 # RELEASE NOTES
 
+## v0.6.5
+
+Release notes:
+  - [x] Changed order in derotator commands for fixed position. Fixes #19.
+  
 ## v0.6.4
 
 Release notes:
