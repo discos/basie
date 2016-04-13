@@ -228,9 +228,10 @@ def cmd_line():
         logging.basicConfig(format="%(levelname)s: %(message)s",
                             level=logging.INFO)
     logger = logging.getLogger("basie")
+    #if debugging show command line parameters
     logger.debug("Running with options:")
     for k,v in vars(ns).iteritems():
-        logger.info("\t%s:\t%s" % (k, str(v),))
+        logger.debug("\t%s:\t%s" % (k, str(v),))
 
     #imports are here as logging has already been configured
     import schedule, rich_validator, utils, target_parser, receiver
