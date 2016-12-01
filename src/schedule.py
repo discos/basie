@@ -32,7 +32,7 @@ import procedures
 import utils
 from .errors import *
 import layout
-from . import VERSION, NURAGHE_TAG, ESCS_TAG
+from . import VERSION, NURAGHE_TAG, ESCS_TAG, ESCS_NOTO_TAG
 import datetime 
 
 import scan
@@ -180,6 +180,7 @@ class Schedule(Persistent):
         scdfile.write("# Generated with basie version %s\n" % VERSION)
         scdfile.write("# compatible nuraghe version: %s\n" % NURAGHE_TAG)
         scdfile.write("# compatible escs version: %s\n" % ESCS_TAG)
+        scdfile.write("# compatible escs-noto version: %s\n" % ESCS_TAG)
         #WRITE SCD HEADER
         init_procedure = procedures.INIT
         restFrequency = False

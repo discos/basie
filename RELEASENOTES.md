@@ -1,5 +1,10 @@
 # RELEASE NOTES
 
+## v0.6.5
+
+Release notes:
+  - [x] Enabled schedule creation for Noto radio telescope
+
 ## v0.6.4
 
 Release notes:
