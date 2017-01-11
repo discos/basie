@@ -48,7 +48,10 @@ NOTO = Radiotelescope("NOTO")
 NOTO.max_acc = math.sqrt(0.4 ** 2 + 0.5 ** 2)
 NOTO.acc_scale_factor = 10
 NOTO.receivers = {
-                  #TODO: fill this table with noto info
+    'C' : Receiver('C', 4620.0, 5020.0, [[4620.0], [0.133]], 1, 2),
+    'M': Receiver('M', 4700.0, 5850.0, [[4700.0], [0.13]], 1, 2),
+    'K' : Receiver('K', 21500.0, 23000.0, [[23000.0], [0.028]], 1, 2),
+    'Q' : Receiver('Q', 38000.0, 43500.0, [[43500.0], [0.015]], 1, 2),
                  }
 
 

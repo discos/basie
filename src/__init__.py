@@ -189,7 +189,8 @@ You will find the doc under doc/html/
 
 VERSION = "0.6.5"
 NURAGHE_TAG = "nuraghe-0.6"
-ESCS_TAG = "escs-0.4"
+ESCS_TAG = "escs-0.6"
+ESCS_NOTO_TAG = "escs-noto-0.2"
 
 import logging
 

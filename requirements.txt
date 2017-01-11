@@ -1,7 +1,7 @@
 BTrees>=4.1.4
 argparse>=1.2.1
 numpy>=1.6.1
-astropy>=1.0.1
+astropy==1.1.2
 configobj
 validate
 persistent>=4.1.1
