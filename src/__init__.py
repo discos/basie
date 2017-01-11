@@ -178,7 +178,7 @@ $make doc
 
 You will find the doc under doc/html/ 
 
-@version: 0.6.4
+@version: 0.6.5
 @status: stable
 @authors: Marco Bartolini, Simona Righini
 @organization: INAF -IRA
@@ -229,9 +229,10 @@ def cmd_line():
         logging.basicConfig(format="%(levelname)s: %(message)s",
                             level=logging.INFO)
     logger = logging.getLogger("basie")
+    #if debugging show command line parameters
     logger.debug("Running with options:")
     for k,v in vars(ns).iteritems():
-        logger.info("\t%s:\t%s" % (k, str(v),))
+        logger.debug("\t%s:\t%s" % (k, str(v),))
 
     #imports are here as logging has already been configured
     import schedule, rich_validator, utils, target_parser, receiver
@@ -262,12 +263,13 @@ def cmd_line():
             logger.debug("parsed targets: %s" % (parsed_targets,))
             #prepare Schedule contructor arguments
             schedule_params = conf
-            radiotelescope = radiotelescopes[conf["radiotelescope"]]
+            radiotelescope_name = conf.pop("radiotelescope").upper()
+            radiotelescope = radiotelescopes[radiotelescope_name]
             try:
                 receiver = radiotelescope.receivers[conf["receiver"]]
             except:
                 raise ScheduleError("radiotelescope does not have specified receiver")
-            schedule_params.radiotelescope = radiotelescope
+            schedule_params["radiotelescope"] = radiotelescope_name
             schedule_params.receiver = receiver
             backends = schedule_params.pop("backends")
             scantypes = schedule_params.pop("scantypes")

@@ -3,6 +3,7 @@
 ## v0.6.5
 
 Release notes:
+  - [x] Changed order in derotator commands for fixed position. Fixes #19.
   - [x] Enabled schedule creation for Noto radio telescope
 
 ## v0.6.4
