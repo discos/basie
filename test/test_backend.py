@@ -1,6 +1,7 @@
 #coding=utf-8
 
 import unittest2 as unittest
+import copy
 from io import StringIO
 
 from basie.backend import *
@@ -38,4 +39,14 @@ class TestTotalPowerBackend(unittest.TestCase):
         enable_line = lines[-1].strip()
         self.assertTrue(enable_line.startswith("enable"))
 
-
+    def test_set_addition(self):
+        # https://github.com/discos/basie/issues/28
+        s = set()
+        s.add(self.backend)
+        backend_copy = copy.copy(self.backend)
+        backend_copy.name += 'CT'
+        backend_copy_2nd = copy.copy(self.backend)
+        backend_copy_2nd.name += 'CT'
+        s.add(backend_copy)
+        s.add(backend_copy_2nd)
+        self.assertEqual(len(s), 2)

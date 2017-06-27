@@ -42,6 +42,20 @@ class Backend(Persistent):
         res += "}\n"
         return res
 
+    def __eq__(self, other):
+        return self._get_hash_params() == other._get_hash_params()
+
+    def __hash__(self):
+        return hash(self._get_hash_params())
+
+    def _get_hash_params(self):
+        return (
+            self.name,
+            self.backend_type,
+            self.can_activate_switching_mark,
+            self.can_tsys,
+        )
+
 
 class XBackend(Backend):
     def __init__(self, name, configuration):
@@ -54,6 +68,16 @@ class XBackend(Backend):
         res = "\tinitialize=%s\n" % (self.configuration,)
         return res
 
+    def _get_hash_params(self):
+        params = (
+            self.configuration,
+            self.can_activate_switching_mark,
+            self.can_tsys,
+        ) 
+        return params + super(XBackend, self)._get_hash_params()
+
+
+
 class RoachBackend(Backend):
     def __init__(self, name, configuration):
         Backend.__init__(self, name, "Roach")
@@ -64,13 +88,20 @@ class RoachBackend(Backend):
         res = ""
         return res
 
+    def _get_hash_params(self):
+        params = (
+            self.configuration,
+            self.can_activate_switching_mark,
+        ) 
+        return params + super(RoachBackend, self)._get_hash_params()
+
 class TotalPowerBackend(Backend):
     def __init__(self, name, integration, samplingInterval, bandwidth):
         Backend.__init__(self, name, "TotalPower")
         self.integration = float(integration)
         self.samplingInterval = float(samplingInterval)
         self.sections = []
-        self.valid_filters = [300.0, 730.0, 1250.0, 2000.0]
+        self.valid_filters = (300.0, 730.0, 1250.0, 2000.0)
         self.can_activate_switching_mark = True
         self.bandwidth = float(bandwidth)
         self._empty_sections = 0
@@ -103,6 +134,18 @@ class TotalPowerBackend(Backend):
         res += "\tintegration=%d\n" % (self.integration,)
         res += enable_string
         return res
+
+    def _get_hash_params(self):
+        params = (
+            self.integration,
+            self.samplingInterval,
+            tuple(self.sections),
+            self.valid_filters,
+            self.can_activate_switching_mark,
+            self.bandwidth,
+            self._empty_sections,
+        ) 
+        return params + super(TotalPowerBackend, self)._get_hash_params()
 
 
 def BackendFactory(configuration_dict):
