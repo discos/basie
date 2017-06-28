@@ -3,7 +3,6 @@ argparse>=1.2.1
 numpy>=1.6.1
 astropy==1.1.2
 configobj
-validate
 persistent>=4.1.1
 pickleshare>=0.5
 transaction>=1.4.4
