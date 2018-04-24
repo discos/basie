@@ -144,6 +144,9 @@ class Coord(object):
         return ((self.lon.deg, self.lat.deg) <
                 (other.lon.deg, other.lat.deg))
     
+    def __neg__(self):
+          return  Coord(self.frame,-self.lon, -self.lat,self.epoch)
+    
     def __gt__(self, other):
         return not self.__lt__(other)
 

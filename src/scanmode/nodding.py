@@ -13,7 +13,6 @@ class NoddingScan(ScanMode):
         self.sequence = sequence
         self.unit_subscans = sum(el[0] for el in self.sequence)
         self.frame = frame.NULL
-
     def _do_scan(self, _target, _receiver, _frequency):
         if not _target.offset_coord.is_null():
             if not _target.offset_coord.frame == frame.HOR:
@@ -25,9 +24,10 @@ class NoddingScan(ScanMode):
         _subscans = []
         for element in self.sequence:
             if element[1] == "a":
-                offset = offset_a
+                offset = -offset_a #the sign must be opposite to the feed displacement  
             else:
-                offset = offset_b
+                offset = -offset_b #the sign must be opposite to the feed displacement
+            self.offset=offset
             ss = subscan.get_sidereal(_target,
                                       offset,
                                       self.duration,
