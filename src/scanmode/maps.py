@@ -238,7 +238,7 @@ class RasterMapScan(MapScan):
             self.dimension_x = len(self.offset_x)
             self.dimension_y = len(self.offset_y)
         else:
-            super(RasterMapScan, self)._get_spacing()
+            super(RasterMapScan, self)._get_spacing(receiver, frequency)
 
     def _get_offsets(self):
         """
