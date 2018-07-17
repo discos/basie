@@ -93,6 +93,17 @@ class Schedule(Persistent):
                     bck._empty_sections = 2
                 bck.set_sections(self.receiver.nifs)
 
+            if isinstance(bck, backend.RoachBackend):
+                    bck_conf=bck.configuration.upper()
+                    if  'SK03' in bck_conf  or 'SK06' in bck_conf or 'NODDING' in bck_conf:
+                        nbeam=2
+                    elif   'SK77' in bck_conf or 'MULTI' in bck_conf:
+                        nbeam=7
+                    else:
+                        nbeam=1 
+                    bck.set_sections(self.receiver.nifs*nbeam)
+                    logger.debug("setting RoachBackend sections")
+                    
     def add_scan(self, _target, _scantype, _backend):
         try:
             _frame = _scantype.frame

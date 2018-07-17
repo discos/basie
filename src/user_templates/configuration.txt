@@ -53,11 +53,30 @@ targetsFile = targets.txt
     type=XARCOS
     configuration = XC00
 
-[[ROACHRK00]]
-    type = ROACH
-    # one of RK00 RK77 RC00 RL00 RP00
-    configuration = RK00
+[[XK03]]
+    type=XARCOS
+    configuration = XK03
+    
+[[SardaraK00]]
+    type = Sardara
+    # one of SK00 SK03 SK06 SK77 SC00 SL00 SP00 SK00P
+    #        SK03S SK06S SK77S SC00S SL00S SP00S
+    # or one of the following 
+    #  GENERIC NODDING NODDINGSTOKES MULTIBEAM MULTIBEAMSTOKES 
+    # in the former the 'initilize=' is written into the .bck file
+    # in the latter the  'initialize=' is skipped'
+    #
+    configuration = SK00
+    # integration period in ms
+    integration = 20
+    # bandwidth in MHz, possible values are:
+    # 420,1500
+    bandwidth = 420
+    # frequency bins. Possible values are:
+    # 1024, 16384
+    frequencybins = 1024
 
+   
 [scantypes]
 
     #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
