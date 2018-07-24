@@ -11,7 +11,7 @@ class TestRoachBackend(unittest.TestCase):
     def setUp(self):
         self.name = "prova"
         self.configuration = "RCONFIG"
-        self.roach_backend = RoachBackend(self.name, self.configuration)
+        self.roach_backend = RoachBackend(self.name)
 
     def test_roach_backend_instructions(self):
         backend_instructions = ""
@@ -19,7 +19,7 @@ class TestRoachBackend(unittest.TestCase):
                          backend_instructions)
 
     def test_roach_backend_bck_file(self):
-        bck_file = "%s:BACKENDS/Roach{\n}\n" % (self.name,)
+        bck_file = "%s:BACKENDS/Sardara{\n}\n" % (self.name,)
         self.assertEqual(str(self.roach_backend),
                          bck_file)
 

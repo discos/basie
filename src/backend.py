@@ -65,7 +65,11 @@ class XBackend(Backend):
         self.can_tsys = False
 
     def _get_backend_instructions(self):
-        res = "\tinitialize=%s\n" % (self.configuration,)
+        if self.configuration.upper() !='SKIP':
+            
+            res = "\tinitialize=%s\n" % (self.configuration,)
+        else:
+            res = "" 
         return res
 
     def _get_hash_params(self):
@@ -79,9 +83,9 @@ class XBackend(Backend):
 
 
 class RoachBackend(Backend):
-    def __init__(self, name, configuration):
-        Backend.__init__(self, name, "Roach")
-        self.configuration = configuration
+    def __init__(self, name):
+        Backend.__init__(self, name, "Sardara")
+        #self.configuration = configuration
         self.can_activate_switching_mark = False
 
     def _get_backend_instructions(self):
@@ -90,7 +94,6 @@ class RoachBackend(Backend):
 
     def _get_hash_params(self):
         params = (
-            self.configuration,
             self.can_activate_switching_mark,
         ) 
         return params + super(RoachBackend, self)._get_hash_params()
@@ -156,7 +159,7 @@ def BackendFactory(configuration_dict):
         return TotalPowerBackend(**configuration_dict)
     elif _type == 'XARCOS':
         return XBackend(**configuration_dict)
-    elif _type == 'ROACH':
+    elif _type == 'SARDARA':
         return RoachBackend(**configuration_dict)
     else:
         raise ScheduleError("invalid Backend type: %s" % (_type,))
