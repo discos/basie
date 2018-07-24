@@ -23,6 +23,7 @@ Beta    HorPoint TP HOR 124.5d  38.2d
 Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  tsys=2  repetitions=4
 Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  offset_lon=-0.5d
 Delta   RAMAP1x1BL  TP EQ  12:00:00h +45:00:00
+Delta   RAMAP1x1BL  SardaraK00 EQ  12:00:00h +45:00:00
 Delta   DECMAP1x1BR TP EQ  12:00:00h +45:00:00
 Delta   EQMap1x1    TP EQ  12:00:00h +45:00:00
 Delta   EQMap1x1S    TP EQ  12:00:00h +45:00:00
@@ -32,4 +33,5 @@ Epsilon GLATMAP2x2TL TP GAL 275.0d -12.0d  tsys=10
 #Zeta    HorRasterTLS TP EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
 Zeta    OnOff TP EQ  12:00:00h +45:00:00
 Zeta    OnOff XK77 EQ  12:00:00h +45:00:00
-#Zeta    Nodding06 XC00 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
+Zeta    Nodding06 XK03 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
+#Zeta    Nodding06 SK03 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z

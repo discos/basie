@@ -19,7 +19,7 @@ class TestRoachBackend(unittest.TestCase):
                          backend_instructions)
 
     def test_roach_backend_bck_file(self):
-        bck_file = "%s:BACKENDS/Roach{\n}\n" % (self.name,)
+        bck_file = "%s:BACKENDS/Sardara{\n}\n" % (self.name,)
         self.assertEqual(str(self.roach_backend),
                          bck_file)
 

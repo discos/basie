@@ -65,7 +65,12 @@ class XBackend(Backend):
         self.can_tsys = False
 
     def _get_backend_instructions(self):
-        res = "\tinitialize=%s\n" % (self.configuration,)
+        if self.configuration.strip().upper() !='GENERIC':
+            
+            res = "\tinitialize=%s\n" % (self.configuration,)
+        else:
+            res = ""  
+        
         return res
 
     def _get_hash_params(self):
@@ -79,19 +84,74 @@ class XBackend(Backend):
 
 
 class RoachBackend(Backend):
-    def __init__(self, name, configuration):
-        Backend.__init__(self, name, "Roach")
+    def __init__(self, name, configuration,integration,bandwidth,frequencybins):
+        Backend.__init__(self, name, "Sardara")
         self.configuration = configuration
         self.can_activate_switching_mark = False
+        self.valid_filters = (420.0,1500.0)
+        self.valid_frequencybins=(1024,16384)
+        self.bandwidth=float(bandwidth)
+        self.frequencybins=float(frequencybins)
+        self.can_tsys = False
+        self.integration=float(integration)
+        self.sections = [] 
+    def set_sections(self,nifs,bandwidth=None):
 
+        if self.configuration[-1].upper()=='S' or self.configuration=='GENERICSTOKES' :
+            nifs /=2  
+     
+        if bandwidth is None:
+            bandwidth = self.bandwidth
+        if not bandwidth in self.valid_filters:
+            msg = "not a valid bandwidth: %f" % (bandwidth,)
+            logger.error(msg)
+            raise ScheduleError(msg)
+        for i in range(nifs):
+            logger.debug("set section %d: %f" % (i, float(bandwidth)))
+            self.sections.append((i, float(bandwidth)))
     def _get_backend_instructions(self):
-        res = ""
-        return res
+        '''
+        initialize=SK00
+        setSection=0,*,420,*,*,840,*
+        setSection=1,*,420,*,*,840,*
 
+        integration=100
+
+        setSection=0,*,420,*,*,840,*
+        setSection=1,*,420,*,*,840,*
+
+        
+        '''
+        
+        configuration_skip_kw=('GENERIC','GENERICSTOKES',
+                                'MULTIBEAM','MULTIBEAMSTOKES',
+                                'NODDING','NODDINGSTOKES')
+        if self.configuration.strip().upper() not in configuration_skip_kw:
+            
+            res = "\tinitialize=%s\n" % (self.configuration,)
+        else:
+            res =''
+        
+        for i, (_id, _bw) in enumerate(self.sections):
+                res += "\tsetSection=%d,*,%f,*,*,%f,%f\n" % (_id, _bw,
+                                                        _bw*2,self.frequencybins
+                                                          ,)
+        res += "\tintegration=%d\n" % (self.integration,)
+        
+        
+        return res        
+        
+    
+    
+    
     def _get_hash_params(self):
         params = (
             self.configuration,
             self.can_activate_switching_mark,
+            self.can_tsys,
+            self.integration,
+            self.frequencybins,
+            self.bandwidth,
         ) 
         return params + super(RoachBackend, self)._get_hash_params()
 
@@ -156,7 +216,7 @@ def BackendFactory(configuration_dict):
         return TotalPowerBackend(**configuration_dict)
     elif _type == 'XARCOS':
         return XBackend(**configuration_dict)
-    elif _type == 'ROACH':
+    elif _type == 'SARDARA':
         return RoachBackend(**configuration_dict)
     else:
         raise ScheduleError("invalid Backend type: %s" % (_type,))
