@@ -47,16 +47,18 @@ targetsFile = targets.txt
 [[XK77]]
     type = XARCOS
     # one of XK77 XK03 XK06 XK00 XC00
+    # if configuration = skip, the backend is not configured and the initialize must be done from operatorInput
+    # 
     configuration = XK77
 
 [[XC00]]
     type=XARCOS
-    configuration = XC00
+    configuration = skip
 
-[[ROACHRK00]]
-    type = ROACH
-    # one of RK00 RK77 RC00 RL00 RP00
-    configuration = RK00
+[[SARDARA]]
+    type = Sardara
+    # configuration must be done from operatorInput before starting the schedule
+    
 
 [scantypes]
 
