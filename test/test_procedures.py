@@ -1,6 +1,10 @@
 #coding=utf-8
 
-import unittest2 as unittest
+from builtins import str
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from basie.procedures import Procedure, PROC_PREFIX
 
@@ -41,7 +45,7 @@ class TestProcedures(unittest.TestCase):
         self.assertEqual(str(sum_procedure),
                          "%sSIMPLE_ONE_PARAM(1){\n\tnop\n\tparam=$1\n}\n" %
                          (PROC_PREFIX,))
- 
+
     def test_sum_simple_one_param_execution(self):
         # i want this to work eventually
         #sum_procedure = self.simple_procedure + \

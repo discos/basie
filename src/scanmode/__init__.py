@@ -1,9 +1,10 @@
-from scanmode import ScanMode
-from cross import CrossScan, PointScan
-from maps import MapScan, OTFMapScan, RasterMapScan
-from nodding import NoddingScan
-from onoff import OnOffScan
-from skydip import SkydipScan
+from __future__ import absolute_import
+from .scanmode import ScanMode
+from .cross import CrossScan, PointScan
+from .maps import MapScan, OTFMapScan, RasterMapScan
+from .nodding import NoddingScan
+from .onoff import OnOffScan
+from .skydip import SkydipScan
 
 START_POINTS = ('TL', 'TR', 'BL', 'BR')
 """

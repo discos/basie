@@ -18,12 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import absolute_import
+from builtins import range
 import logging
 logger=logging.getLogger(__name__)
 
 from persistent import Persistent
 
-from errors import *
+from .errors import *
 
 
 class Backend(Persistent):

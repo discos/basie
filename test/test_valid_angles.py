@@ -1,4 +1,7 @@
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from basie.valid_angles import VAngle
 from basie import angle_parser
@@ -18,7 +21,7 @@ class TestAngles(unittest.TestCase):
 
     def test_parsing_hour(self):
         ang = angle_parser.check_hms_angle("01:00:00.0h")
-        self.assertAlmostEqual(ang.deg, VAngle(15.0).deg) 
+        self.assertAlmostEqual(ang.deg, VAngle(15.0).deg)
 
     def test_parsing_dec(self):
         ang = angle_parser.check_dec_angle("15.0d")

@@ -1,6 +1,9 @@
 #coding=utf-8
 
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from basie import target_parser
 from basie import frame
@@ -18,7 +21,7 @@ class TestTarget(unittest.TestCase):
         self.assertEqual(_target.repetitions, 3)
         self.assertEqual(_target.tsys, 4)
         self.assertEqual(_target.offset_coord, frame.Coord(frame.EQ, 0.0, 0.3))
-    
+
     def test_parse_file(self):
         targets = target_parser.parse_file(TARGETS_PATH)
         self.assertNotEqual(targets, [])

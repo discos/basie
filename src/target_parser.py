@@ -1,16 +1,17 @@
 #coding=utf-8
 
+from __future__ import absolute_import
 import re
 import logging
 logger = logging.getLogger(__name__)
 
-import valid_angles
-from valid_angles import VAngle
-import angle_parser
-import rich_validator
-from target import ObservedTarget
-import frame
-from velocity import Velocity, ZERO_VELOCITY
+from . import valid_angles
+from .valid_angles import VAngle
+from . import angle_parser
+from . import rich_validator
+from .target import ObservedTarget
+from . import frame
+from .velocity import Velocity, ZERO_VELOCITY
 
 """
 string pattern identifying an option.

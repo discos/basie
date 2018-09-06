@@ -36,6 +36,8 @@ together with their associated Tsys sidereal subscan.
     - get_sid_couple_subscan
 """
 
+from past.builtins import cmp
+from builtins import str
 import logging
 logger = logging.getLogger(__name__)
 import copy

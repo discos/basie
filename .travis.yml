@@ -1,10 +1,12 @@
 language: python
 
 python:
+  - "3.5"
   - "2.7"
   - "2.6"
 
 install:
+  - travis_retry pip uninstall -y numpy
   - pip install -r requirements.txt
   - pip install -r requirements-test.txt
   - python setup.py install

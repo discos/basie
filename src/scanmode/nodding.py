@@ -1,5 +1,7 @@
+from __future__ import absolute_import
 
-from scanmode import ScanMode
+from builtins import range
+from .scanmode import ScanMode
 from . import subscan
 from .. import frame
 from ..errors import ScanError

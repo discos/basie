@@ -43,7 +43,7 @@ CONSTANT. separator used in angle hour and sexagesimal representation
 
 class VAngle(Angle):
     def __new__(cls, angle, unit=u.deg, wrap_angle=360 * u.deg, **kwargs):
-        self = super(VAngle, cls).__new__(cls, angle, unit=unit, **kwargs)
+        self = Angle.__new__(cls, angle, unit=unit, **kwargs)
         self.original_unit = unit
         if unit == u.hour or isinstance(angle, tuple):
             self.sexa = True
@@ -52,10 +52,10 @@ class VAngle(Angle):
         return self
 
     def __init__(self, *args, **kwargs):
-        super(VAngle, self).__init__(*args, **kwargs)
+        Angle.__init__(*args, **kwargs)
 
     def __array_finalize__(self, obj):
-        super(VAngle, self).__array_finalize__(obj)
+        Angle.__array_finalize__(self, obj)
         if obj is None:return
         self.original_unit = getattr(obj, "original_unit", None)
         self.sexa = getattr(obj, "sexa", None)
@@ -83,7 +83,7 @@ class VAngle(Angle):
         """
         Return the sexagesimal string representation of the angle in hours
         """
-        _a_str = self.to_string(unit=u.hour, sep=SEXA_SEPARATOR, pad=True, 
+        _a_str = self.to_string(unit=u.hour, sep=SEXA_SEPARATOR, pad=True,
                               precision=ANGLE_DECIMALS)
         return _a_str + "h"
 

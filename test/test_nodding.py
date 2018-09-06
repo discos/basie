@@ -1,6 +1,9 @@
 #coding=utf-8
 
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from basie.frame import EQ, HOR
 from astropy.units import MHz
@@ -28,5 +31,4 @@ class TestNoddingScan(unittest.TestCase):
    def test_nodding(self):
       self._nodding._do_scan(self.TARGET,self._recv,20.000)
       self.assertEqual(self._nodding.offset,-self._offset)
-    
-    
+

@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+from builtins import range
 from basie.valid_angles import VAngle
 from basie.errors import ScheduleError
 
-from scanmode import ScanMode
+from .scanmode import ScanMode
 from ..frame import NULL, Coord
-import subscan
+from . import subscan
 
 class OnOffScan(ScanMode):
     def __init__(self, duration, offset_lon, offset_lat, offset_frame, sequence):

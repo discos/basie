@@ -24,22 +24,25 @@ arguments from configuration file.
 In particular it adds new possible instances to be used in the .ini schemas
 files.
 """
+from __future__ import absolute_import
 
+from builtins import str
 import logging
 logger = logging.getLogger(__name__)
 
 import os
 import re
 import datetime
-import configobj
-import validate as v
+# import configobj
+from .configobj import validate as v
+from .configobj import configobj
 
-import angle_parser
-import frame
-from scanmode import *
-import utils
-import velocity
-from backend import BackendFactory
+from . import angle_parser
+from . import frame
+from .scanmode import *
+from . import utils
+from . import velocity
+from .backend import BackendFactory
 
 valid_list_element = re.compile("\[.+\]|[^\s,]+")
 """
@@ -121,7 +124,7 @@ def check_skydip_scan(value):
 def check_otf_map(value):
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
-    _frame = check_frame(value[0]) 
+    _frame = check_frame(value[0])
     scan_axis = value[1].upper()
     logger.debug("scan axis: %s" % (scan_axis,))
     if not scan_axis in frame.axes:
@@ -151,7 +154,7 @@ def check_otf_map(value):
 def check_raster_map(value):
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
-    _frame = check_frame(value[0]) 
+    _frame = check_frame(value[0])
     scan_axis = value[1].upper()
     if not scan_axis in frame.axes:
         raise v.ValidateError("not a valid axis: %s" % (scan_axis,))
@@ -224,7 +227,7 @@ def check_onoff(value):
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
     duration = v.is_float(value[0], min=0)
-    offset_frame = check_frame(value[1]) 
+    offset_frame = check_frame(value[1])
     offset_lon = angle_parser.check_angle(value[2])
     offset_lat = angle_parser.check_angle(value[3])
     sequence = check_onoff_sequence(value[4][1:-1]) #strip [ and ]
@@ -236,7 +239,9 @@ def check_scantype(value):
         #this is aginst a bug in the validate module
         #AKA a brutal workaround
         value = ' '.join(value)
+
     value = string2list(value)
+
     logger.debug("got value: %s" % (value,))
     scantype = value[0].upper()
     if scantype == "CROSS":
@@ -310,15 +315,15 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
         for _, var, ex in flat_errs:
             logger.error("%s : %s\n" % (var, str(ex)))
         raise v.ValidateError("Could not validate %s vs %s" % (filename, specfilename))
-    for k,v in conf["backends"].iteritems():
+    for k,v in conf["backends"].items():
         v["name"] = k
         conf["backends"][k] = BackendFactory(v)
-    for k,v in conf["scantypes"].iteritems():
+    for k,v in conf["scantypes"].items():
         if isinstance(v, tuple):
             logger.info(("exploding scanmode {0} in 2 separate scans: {0}_lon" + \
                         " and {0}_lat").format(k,))
             conf["scantypes"].pop(k)
-            if ((k + "_lon" in conf["scantypes"]) or 
+            if ((k + "_lon" in conf["scantypes"]) or
                 (k + "_lat" in conf["scantypes"])):
                raise ScheduleError("Cannot explode scan %s in separate subscans" % (k,))
             conf["scantypes"][k + "_lon"] = v[0]

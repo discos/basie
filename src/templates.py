@@ -23,6 +23,7 @@ Module containing templates (as defined in standard string module) used to trans
 representation used in the schedule files by ACS
 """
 
+from builtins import str
 import string
 import logging
 logger = logging.getLogger(__name__)
@@ -109,7 +110,7 @@ def format_layout(name, conf):
     subscans = conf.pop("subscans", [])
     logger.debug("got subscans info %s" % (str(subscans),))
     #TODO: add subscans info in dat file
-    for k, v in conf.iteritems():
+    for k, v in conf.items():
         res += "\t%s=%s\n" % (str(k), str(v),)
     res += "}\n\n"
     return res
