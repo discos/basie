@@ -44,7 +44,7 @@ class MapScan(ScanMode):
     def _get_spacing(self, receiver, frequency):
         self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
-            #we can exploit multifeed derotator optimization 
+            #we can exploit multifeed derotator optimization
             logger.info("applying multifeed derotator optimization for map generation")
             if not isinstance(self.spacing, VAngle):
                 approx_spacing = self.beamsize / self.spacing
@@ -69,7 +69,7 @@ class MapScan(ScanMode):
             self.dimension_x = 0
             self.offset_x = []
             while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
-                for i in range(scans_per_interleave):
+                for i in range(int(scans_per_interleave)):
                     self.offset_x.append(_offset_x + i * self.spacing)
                 _offset_x = _offset_x + major_spacing
             self.dimension_x = len(self.offset_x)
@@ -77,7 +77,7 @@ class MapScan(ScanMode):
             self.dimension_y = 0
             self.offset_y = []
             while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
-                for i in range(scans_per_interleave):
+                for i in range(int(scans_per_interleave)):
                     self.offset_y.append(_offset_y + i * self.spacing)
                 _offset_y = _offset_y + major_spacing
             self.dimension_y = len(self.offset_y)
@@ -91,22 +91,22 @@ class MapScan(ScanMode):
             logger.debug("Scan {0:d} dim_x {1:f} dim_y {2:f}".format(self.ID, self.dimension_x,
                                                self.dimension_x))
             self.offset_x = [i * self.spacing
-                             for i in range(int(-1 * (self.dimension_x // 2)), 
+                             for i in range(int(-1 * (self.dimension_x // 2)),
                                             int((self.dimension_x // 2) + 1))]
             self.offset_y = [i * self.spacing
-                             for i in range(int(-1 * (self.dimension_y // 2)), 
+                             for i in range(int(-1 * (self.dimension_y // 2)),
                                             int((self.dimension_y // 2) + 1))]
 
 
 class OTFMapScan(MapScan):
-    def __init__(self, frame, start_point, scan_axis, 
+    def __init__(self, frame, start_point, scan_axis,
                  length_x, length_y, spacing, speed):
         MapScan.__init__(self, frame, start_point,
                          scan_axis, length_x, length_y, spacing)
         self.speed = speed
         self.duration_x = length_x.deg / speed * 60
         self.duration_y = length_y.deg / speed * 60
-    
+
     def _do_scan(self, _target, _receiver, _frequency):
         self._get_spacing(_receiver, _frequency)
         if self.scan_axis == "LON":
@@ -177,7 +177,7 @@ class OTFMapScan(MapScan):
         return _subscans
 
 class RasterMapScan(MapScan):
-    def __init__(self, frame, start_point, scan_axis, 
+    def __init__(self, frame, start_point, scan_axis,
                  length_x, length_y, spacing, duration, offset=0):
         MapScan.__init__(self, frame, start_point, scan_axis,
                   length_x, length_y, spacing)
@@ -187,7 +187,7 @@ class RasterMapScan(MapScan):
     def _get_spacing(self, receiver, frequency):
         self.beamsize = VAngle(receiver.get_beamsize(max(frequency)))
         if receiver.is_multifeed() and receiver.has_derotator:
-            #we can exploit multifeed derotator optimization 
+            #we can exploit multifeed derotator optimization
             logger.info("applying multifeed derotator optimization for map generation")
             if not isinstance(self.spacing, VAngle):
                 approx_spacing = self.beamsize / self.spacing
@@ -220,7 +220,7 @@ class RasterMapScan(MapScan):
                     _offset_x = _offset_x + self.spacing
                 _offset_y = (-1 * (self.length_y / 2)) + receiver.feed_extent
                 while _offset_y <= (self.length_y / 2 + receiver.feed_extent):
-                    for i in range(scans_per_interleave):
+                    for i in range(int(scans_per_interleave)):
                         self.offset_y.append(_offset_y)
                         _offset_y = _offset_y + self.spacing
                         #self.offset_y.append(_offset_y + i * self.spacing)
@@ -228,7 +228,7 @@ class RasterMapScan(MapScan):
             else: #self.scan_axis == "LAT"
                 _offset_x = (-1 * (self.length_x / 2)) + receiver.feed_extent
                 while _offset_x <= (self.length_x / 2 + receiver.feed_extent):
-                    for i in range(scans_per_interleave):
+                    for i in range(int(scans_per_interleave)):
                         self.offset_x.append(_offset_x)
                         _offset_x = _offset_x + self.spacing
                         #self.offset_x.append(_offset_x + i * self.spacing)
@@ -296,7 +296,7 @@ class RasterMapScan(MapScan):
         for i, (offset_lon, offset_lat) in enumerate(self._offsets):
             logger.debug("OFFSETS: %f %f" % (offset_lon.deg, offset_lat.deg))
             _offset = Coord(self.frame, offset_lon, offset_lat)
-            _subscans.append(subscan.get_sid_tsys(_target, 
+            _subscans.append(subscan.get_sid_tsys(_target,
                                                   _offset,
                                                   self.extremes,
                                                   self.duration,
