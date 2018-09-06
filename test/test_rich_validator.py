@@ -1,6 +1,9 @@
 #coding=utf-8
 
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 import basie.rich_validator as rv
 from basie import frame

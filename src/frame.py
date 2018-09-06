@@ -31,6 +31,7 @@ exported constants:
     - axes
 """
 
+from builtins import object
 import logging
 logger = logging.getLogger(__name__)
 import copy

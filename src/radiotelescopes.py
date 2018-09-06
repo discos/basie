@@ -9,6 +9,7 @@ Each radiotelescope is represented a dictionary containing:
     - acc_scale_factor: scale factor used to overstimate maximum acceleration
     - receivers: receivers as defined in L{receiver} module
 """
+from __future__ import absolute_import
 
 __all__ = ["MED", "SRT", "NOTO", "radiotelescopes"]
 
@@ -16,8 +17,8 @@ import math
 from persistent import Persistent
 from astropy import units as u
 
-from receiver import Receiver
-from valid_angles import VAngle
+from .receiver import Receiver
+from .valid_angles import VAngle
 
 class Radiotelescope(Persistent):
     def __init__(self, name=""):

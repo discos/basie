@@ -1,12 +1,14 @@
 #coding=utf-8
+from __future__ import absolute_import
+from builtins import str
 import re
 import logging
 logger = logging.getLogger(__name__)
-import validate
+from astropy.extern.configobj import validate
 
 from astropy import units as u
 
-from valid_angles import VAngle
+from .valid_angles import VAngle
 
 dec_angle_pattern = "^[+-]?\d+(.\d+)?d$"
 dec_angle_re = re.compile(dec_angle_pattern)

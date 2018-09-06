@@ -1,12 +1,14 @@
+from __future__ import absolute_import
 #coding utf-8
 
+from builtins import range
 import logging
 logger = logging.getLogger(__name__)
 
 from persistent import Persistent
 from astropy import units as u
 
-import frame
+from . import frame
 import copy
 
 class Scan(Persistent):
@@ -52,7 +54,7 @@ class Scan(Persistent):
                                               self.receiver, 
                                               self.frequency)
         counter = 0
-        for rep in xrange(self.repetitions):
+        for rep in range(self.repetitions):
             for sn, ss in enumerate(base_subscans):
                 #logger.debug("REP: %d SUBSCAN: %d" % (rep, sn))
                 #subscan_number = rep * self.scanmode.unit_subscans + sn

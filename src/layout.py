@@ -18,11 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import absolute_import
 __all__ = ['COMMON_CONSTANTS', 'CROSS_CONSTANTS', 'get_wcs_params',
             'get_layout_params']
 
-import frame
-import scanmode
+from . import frame
+from . import scanmode
 
 COMMON_CONSTANTS = dict(
                        WOBUSED = 0,

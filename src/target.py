@@ -24,16 +24,17 @@ exposed classes:
     - Target 
     - ObservedTarget
 """
+from __future__ import absolute_import
 
 import logging
 logger = logging.getLogger(__name__)
 
 from persistent import Persistent
 
-from valid_angles import VAngle
+from .valid_angles import VAngle
 from . import frame as fr
-from velocity import ZERO_VELOCITY
-from errors import *
+from .velocity import ZERO_VELOCITY
+from .errors import *
 
 class Target(Persistent):
     def __init__(self, label, coord, velocity = ZERO_VELOCITY):

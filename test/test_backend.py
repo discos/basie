@@ -1,6 +1,10 @@
 #coding=utf-8
 
-import unittest2 as unittest
+from builtins import str
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 import copy
 from io import StringIO
 
@@ -15,7 +19,7 @@ class TestRoachBackend(unittest.TestCase):
 
     def test_roach_backend_instructions(self):
         backend_instructions = ""
-        self.assertEqual(self.roach_backend._get_backend_instructions(), 
+        self.assertEqual(self.roach_backend._get_backend_instructions(),
                          backend_instructions)
 
     def test_roach_backend_bck_file(self):
@@ -34,7 +38,7 @@ class TestTotalPowerBackend(unittest.TestCase):
 
     def test_total_power_set_sections_enable(self):
         self.backend.set_sections(2)
-        instructions = StringIO(unicode(self.backend._get_backend_instructions()))
+        instructions = StringIO(str(self.backend._get_backend_instructions()))
         lines = instructions.readlines()
         enable_line = lines[-1].strip()
         self.assertTrue(enable_line.startswith("enable"))

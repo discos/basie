@@ -50,6 +50,8 @@ class ScanMode(Persistent):
         return self.ID < other.ID
 
     def __eq__(self, other):
+        if not hasattr(other, 'ID'):
+            return False
         return self.ID == other.ID
 
     def __str__(self):
@@ -68,9 +70,9 @@ class ScanMode(Persistent):
         logger.debug("scheduling %s on target %s" % (self.name, _target.label))
         try:
             return self._do_scan(_target, _receiver, _frequency)
-        except Exception, e:
+        except Exception as e:
             message = "Scan %s on target %s\n\t%s" %\
-                    (self.name, 
+                    (self.name,
                      _target.label,
                      e.message)
             raise ScanError(message)

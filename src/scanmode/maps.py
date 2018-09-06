@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from builtins import range
 import logging
 logger = logging.getLogger(__name__)
 import itertools
@@ -7,9 +9,9 @@ from basie import utils, frame
 from basie.valid_angles import VAngle
 from basie.errors import *
 
-from scanmode import ScanMode
+from .scanmode import ScanMode
 from ..frame import Coord
-import subscan
+from . import subscan
 
 class MapScan(ScanMode):
     """
@@ -130,7 +132,7 @@ class OTFMapScan(MapScan):
                     _directions = ("INC", "DEC")
                 else:
                     _directions = ("DEC", "INC")
-            for _offset, _direction in itertools.izip(_offsets,
+            for _offset, _direction in zip(_offsets,
                                                       itertools.cycle(_directions)):
                 logger.debug("OTF: %d offset %s direction %s" % (self.ID,
                                                                  _offset,
@@ -159,7 +161,7 @@ class OTFMapScan(MapScan):
                 _directions = ("INC", "DEC")
             else:
                 _directions = ("DEC", "INC")
-            for _offset, _direction in itertools.izip(_offsets,
+            for _offset, _direction in zip(_offsets,
                                                       itertools.cycle(_directions)):
                 logger.debug("OTF: %d offset %s direction %s" % (self.ID,
                                                                  _offset,

@@ -18,6 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import absolute_import
+from builtins import str
 __all__ = ['Schedule']
 
 import logging
@@ -27,18 +29,18 @@ from copy import copy
 from astropy import units as u
 from persistent import Persistent
 
-import templates
-import procedures
-import utils
+from . import templates
+from . import procedures
+from . import utils
 from .errors import *
-import layout
+from . import layout
 from . import VERSION, NURAGHE_TAG, ESCS_TAG, ESCS_NOTO_TAG
 import datetime 
 
-import scan
-import backend
+from . import scan
+from . import backend
 from .radiotelescopes import radiotelescopes
-from scanmode import OnOffScan, NoddingScan, MapScan, PointScan
+from .scanmode import OnOffScan, NoddingScan, MapScan, PointScan
 
 class Schedule(Persistent):
     def __init__(self,
@@ -64,7 +66,7 @@ class Schedule(Persistent):
         self.scantypes = {}
         self.backends = {}
         self.radiotelescope = radiotelescopes[radiotelescope]
-        if not receiver in self.radiotelescope.receivers.keys():
+        if not receiver in list(self.radiotelescope.receivers.keys()):
             raise ScheduleError("receiver does not belong to telescope")
         self.receiver = self.radiotelescope.receivers[receiver]
         self.base_dir = os.path.abspath('.') #default 
@@ -73,7 +75,7 @@ class Schedule(Persistent):
                 (self.radiotelescope.name, self.receiver.name))
         self.outputFormat = outputFormat
         if isinstance(restFrequency, (list, tuple)):
-            self.restFrequency = map(lambda(x):float(x) * u.MHz, restFrequency)
+            self.restFrequency = [float(x) * u.MHz for x in restFrequency]
         else:
             self.restFrequency = [float(restFrequency) * u.MHz]
         self.ftrack = ftrack
@@ -81,7 +83,7 @@ class Schedule(Persistent):
         self.last_modified = self.creation_date
 
     def _configure_totalpower_sections(self):
-        for name, bck in self.backends.iteritems():
+        for name, bck in self.backends.items():
             if isinstance(bck, backend.TotalPowerBackend):
                 if ((self.radiotelescope is radiotelescopes["SRT"]) and
                    (self.receiver is radiotelescopes["SRT"].receivers["K"])):
@@ -96,7 +98,7 @@ class Schedule(Persistent):
     def add_scan(self, _target, _scantype, _backend):
         try:
             _frame = _scantype.frame
-        except Exception, e:
+        except Exception as e:
             _frame = _target.coord.frame
         if _scantype in self.scantypes:
             self.scans.append(
@@ -190,8 +192,7 @@ class Schedule(Persistent):
         if self.ftrack and not restFrequency:
             logger.warning("no rest frequency specified, ftrack will not be used")
         if restFrequency and self.ftrack:
-            freqstring = ";".join(map(lambda(x):str(x.value),
-                                      self.restFrequency))
+            freqstring = ";".join([str(x.value) for x in self.restFrequency])
             rst_procedure = procedures.Procedure("restFrequency", 0,
                     "\trestFrequency=%s\n" % freqstring, True)
             init_procedure = init_procedure + rst_procedure

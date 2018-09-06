@@ -18,11 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import re
 import copy
 import functools
 
-from errors import *
+from .errors import *
 
 TSYS_WAIT_TIME = 2
 """

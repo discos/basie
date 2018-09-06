@@ -186,7 +186,10 @@ You will find the doc under doc/html/
 @license: gpl v3.0
 @contact: bartolini@ira.inaf.it
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
+from builtins import str
 VERSION = "0.6.5"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
@@ -220,7 +223,7 @@ def cmd_line():
     #parsing command line arguments
     ns = parser.parse_args()
     if ns.show_version:
-        print "basie version: %s" % (VERSION,)
+        print("basie version: %s" % (VERSION,))
         sys.exit()
     #setting logger level and format
     if ns.debug:
@@ -231,12 +234,12 @@ def cmd_line():
     logger = logging.getLogger("basie")
     #if debugging show command line parameters
     logger.debug("Running with options:")
-    for k,v in vars(ns).iteritems():
+    for k,v in vars(ns).items():
         logger.debug("\t%s:\t%s" % (k, str(v),))
 
     #imports are here as logging has already been configured
-    import schedule, rich_validator, utils, target_parser, receiver
-    from radiotelescopes import radiotelescopes
+    from . import schedule, rich_validator, utils, target_parser, receiver
+    from .radiotelescopes import radiotelescopes
 
     try:
         if ns.get_templates:
@@ -282,7 +285,7 @@ def cmd_line():
             _schedule.set_base_dir(dst_directory)
             _schedule._write_schedule_files()
         logger.info('closing gently')
-    except Exception, e:
+    except Exception as e:
         logger.info("exiting with error")
         logger.error(str(e))
         if ns.debug:

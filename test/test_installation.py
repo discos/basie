@@ -1,6 +1,9 @@
 #coding=utf-8
 
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 import basie
 
 class TestInstallation(unittest.TestCase):
@@ -10,5 +13,6 @@ class TestInstallation(unittest.TestCase):
     def test_astropy_version(self):
         import astropy
         av = astropy.__version__.split('.')
-        self.assertEqual(av[0], '1')
+        assert int(av[0]) >= 1
+        # self.assertEqual(av[0], '1')
         #self.assertEqual(av[1], '0')

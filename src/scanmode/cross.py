@@ -1,8 +1,9 @@
+from __future__ import absolute_import
 import logging
 logger = logging.getLogger(__name__)
 
-from scanmode import ScanMode
-import subscan
+from .scanmode import ScanMode
+from . import subscan
 from .. import procedures
 from basie.valid_angles import VAngle
 

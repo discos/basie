@@ -18,6 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import absolute_import
+from builtins import range
 import logging
 logger = logging.getLogger(__name__)
 
@@ -25,10 +27,10 @@ from numpy import interp
 from astropy import units as u 
 from persistent import Persistent
 
-from valid_angles import VAngle
-from errors import *
+from .valid_angles import VAngle
+from .errors import *
 
-from frame import Coord, HOR
+from .frame import Coord, HOR
 
 class Receiver(Persistent):
     """
