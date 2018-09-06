@@ -3,9 +3,9 @@ argparse>=1.2.1
 numpy==1.6.1; python_version == '2.6'
 astropy==1.1.2; python_version == '2.6'
 persistent==4.1.1; python_version == '2.6'
-numpy>=1.6.1
-astropy>=1.1.2
-persistent>=4.1.1
+numpy>=1.6.1; python_version > '2.6'
+astropy>=1.1.2; python_version > '2.6'
+persistent>=4.1.1; python_version > '2.6'
 pickleshare>=0.5
 transaction>=1.4.4
 zc.lockfile>=1.1.0
