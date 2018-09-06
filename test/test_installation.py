@@ -8,7 +8,7 @@ import basie
 
 class TestInstallation(unittest.TestCase):
     def test_version(self):
-        self.assertEqual(basie.VERSION, "0.6.5")
+        self.assertEqual(basie.VERSION, "0.7b1")
 
     def test_astropy_version(self):
         import astropy
