@@ -34,8 +34,8 @@ import os
 import re
 import datetime
 # import configobj
-from astropy.extern.configobj import validate as v
-from astropy.extern.configobj import configobj
+from .configobj import validate as v
+from .configobj import configobj
 
 from . import angle_parser
 from . import frame
@@ -309,7 +309,7 @@ rich_validator = v.Validator(valid_types)
 
 def validate(filename, specfilename):#, error_stream=sys.stderr):
     conf = configobj.ConfigObj(filename, configspec=specfilename)
-    res = conf.validate(rich_validator, preserve_errors=False)
+    res = conf.validate(rich_validator, preserve_errors=True)
     if not res:
         flat_errs = configobj.flatten_errors(conf, res)
         for _, var, ex in flat_errs:

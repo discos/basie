@@ -4,7 +4,7 @@ from builtins import str
 import re
 import logging
 logger = logging.getLogger(__name__)
-from astropy.extern.configobj import validate
+from .configobj import validate
 
 from astropy import units as u
 

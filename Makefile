@@ -1,12 +1,12 @@
 .PHONY: test
-SOURCES=setup.py scripts src/*.py src/user_templates/* src/schemas/* src/scanmode/*.py
+SOURCES=setup.py scripts src/*.py src/user_templates/* src/schemas/* src/scanmode/*.py src/configobj/*.py
 TESTS=test/*.py
 PYTHON=python
 EPYDOC=epydoc
 #INSTALL=easy_install
 INSTALL=pip install
 
-all: dep install 
+all: dep install
 
 dep:
 	$(INSTALL) -r requirements.txt
