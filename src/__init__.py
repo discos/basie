@@ -42,9 +42,9 @@ C:\your path\> easy_install
 This will tell you if easy_install is installed on your Windows PC
 If not just donwload and install python-setuptools package from
 https://pypi.python.org/pypi/setuptools , go to the bottom of the page
-and grab the .exe related to your python version. 
+and grab the .exe related to your python version.
 If you're unsure which python version you are running from a command
-prompt execute 
+prompt execute
 
 ```
 C:\your path\> python --version
@@ -52,7 +52,7 @@ C:\your path\> python --version
 
 #### DISTUTILS ON LINUX
 
-On linux you should find setuptools prepackaged on most modern distros. 
+On linux you should find setuptools prepackaged on most modern distros.
 
 On debian-based distros:
 
@@ -67,9 +67,9 @@ root@yourpc$ yum install python-setuptools
 ```
 
 Once easy_install is installed, instructions are the same for every
-OS, so just follow the steps from command prompt or user shell. 
+OS, so just follow the steps from command prompt or user shell.
 
-If possible we will use 'pip', a more friendly python package manager. 
+If possible we will use 'pip', a more friendly python package manager.
 Install it with:
 
 ```
@@ -83,7 +83,7 @@ or via distutils.
 
 Required packages are listed in "requirements.txt" file fourinished along with
 these sources
-You can install every dependecy via (note that you may need to be root): 
+You can install every dependecy via (note that you may need to be root):
 
 ```
 $ make dep
@@ -120,7 +120,7 @@ $ pip install configobj validate astropy ZODB ...
 From the package directory just run
 
 ```
-$ python setup.py install 
+$ python setup.py install
 ```
 
 or
@@ -141,14 +141,14 @@ $ make clean
 Once installed, the package comes with an executable called 'basie'
 
 ```
-$ basie --help 
+$ basie --help
 ```
 
 The schedulecreator takes in input a configuration file formatted according to a
 specific syntax and generates 4 files used by antenna control system as the
 schedule.
 
-1. Fetch a precompiled configuration template 
+1. Fetch a precompiled configuration template
     ```
     $ basie [-f] -t <destination_directory>
     ```
@@ -162,7 +162,7 @@ schedule.
     $ basie [-f] -s <input_configuration_file_path> <destination_directory>
     ```
     Generates the schedule files into the destination directory, creating the
-    folder if necessary. 
+    folder if necessary.
     <input_configuration_file_path> is the path to a valid configuration file as copied
     and modified from user template in step 1.
     if run with -f overrides eventual existing files.
@@ -176,7 +176,7 @@ You can generate a local copy of the developer documentation using epydoc via
 $make doc
 ```
 
-You will find the doc under doc/html/ 
+You will find the doc under doc/html/
 
 @version: 0.6.5
 @status: stable
@@ -190,7 +190,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 from builtins import str
-VERSION = "0.6.5"
+VERSION = "0.7b1"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
 ESCS_NOTO_TAG = "escs-noto-0.2"
