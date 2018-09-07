@@ -44,7 +44,6 @@ def dms_to_angle(dms):
     Get the angle from a tuple of numbers or strings giving its sexagesimal
     representation in degrees
     @param dms: (degrees, minutes, seconds)
-    @param dms: (degrees, minutes, seconds)
     """
     sign = 1
     angle_string = dms[0]
@@ -127,14 +126,12 @@ def check_angle(value):
         try:
             a = check_dms_angle(value)
             logger.debug("got dms angle %s" % (a.fmt(),))
-        except Exception as e:
-            print(e)
+        except:
             try:
                 a = check_hms_angle(value)
                 logger.debug("got hms angle %s" % (a.fmt(),))
             except:
                 raise
-    print(a)
     return a
 
 validate_options = {
