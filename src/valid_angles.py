@@ -91,7 +91,8 @@ class VAngle(Angle):
         """
         Return the sexagesimal string representation of the angle
         """
-        _a_str = self.to_string(unit=u.deg, sep=SEXA_SEPARATOR, precision=ANGLE_DECIMALS)
+        _a_str = self.to_string(unit=u.deg, sep=SEXA_SEPARATOR, precision=ANGLE_DECIMALS,
+                                pad=True)
         return _a_str
 
     def fmt(self):

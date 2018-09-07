@@ -45,14 +45,20 @@ def dms_to_angle(dms):
     representation in degrees
     @param dms: (degrees, minutes, seconds)
     """
-    angle_deg = int(dms[0])
+    sign = 1
+    angle_string = dms[0]
+    if angle_string.startswith('-'):
+        sign = -1
+        angle_string = angle_string[1:]
+    angle_deg = int(angle_string)
     angle_min = int(dms[1])
     angle_sec = float(dms[2])
+
     if not 0 <= angle_min < 60:
         raise VdtAngleError("not a valid value for minutes: " + str(angle_min))
     if not 0 <= angle_sec < 60:
         raise VdtAngleError("not a valid value for seconds: " + str(angle_sec))
-    return VAngle((angle_deg, angle_min, angle_sec), unit=u.deg)
+    return sign * VAngle((angle_deg, angle_min, angle_sec), unit=u.deg)
 
 def hms_to_angle(hms):
     """

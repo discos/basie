@@ -39,10 +39,18 @@ class TestAngles(unittest.TestCase):
         self.assertEqual(ang.radian, dec.radian)
         self.assertEqual(ang.radian, dms.radian)
         self.assertEqual(ang.radian, hms.radian)
+        dms_neg = angle_parser.check_angle("-15:00:00.0")
+        self.assertEqual(ang.radian, -dms_neg.radian)
+        dms_neg_zero = angle_parser.check_angle("-00:00:03.0")
+        assert(dms_neg_zero.radian < 0)
 
     def test_fmt_dec(self):
         ang = VAngle(15.0)
         self.assertEqual(ang.fmt_dec(), u"15.0000d")
+
+    def test_fmt_dec_neg(self):
+        ang = VAngle(-15.0)
+        self.assertEqual(ang.fmt_dec(), u"-15.0000d")
 
     def test_fmt_dms(self):
         ang = VAngle(15.0)

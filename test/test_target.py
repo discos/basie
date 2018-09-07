@@ -29,11 +29,24 @@ class TestTarget(unittest.TestCase):
         self.assertEqual(t_zero.label, "Alpha")
         self.assertEqual(scan_zero, "EqCross1_3")
         self.assertEqual(t_zero.coord.lon.fmt(), "12:00:00.0000h")
-        t_gamma, _, _, _= targets[6]
+        t_gamma, _, _, _= targets[8]
         self.assertEqual(t_gamma.tsys, 2)
         self.assertEqual(t_gamma.repetitions, 4)
-        t_offset, _, _, _ = targets[7]
+        t_offset, _, _, _ = targets[9]
         self.assertEqual(t_offset.offset_coord.lon, VAngle(-0.5))
+
+    def test_parse_file_negative_coord(self):
+        targets = target_parser.parse_file(TARGETS_PATH)
+        self.assertNotEqual(targets, [])
+        t_zero, scan_zero, _, _ = targets[2]
+        self.assertEqual(t_zero.label, "Alpha")
+        self.assertEqual(scan_zero, "DownSkydip")
+        self.assertEqual(t_zero.coord.lon.fmt(), "00:03:00.0000h")
+        self.assertEqual(t_zero.coord.lat.fmt(), "-00:00:03.0000")
+        t_zero, scan_zero, _, _ = targets[3]
+        self.assertEqual(t_zero.coord.lon.fmt(), "00:00:02.0000h")
+        self.assertEqual(t_zero.coord.lat.fmt(), "-00:03:00.0000")
+
 
 if __name__ == "__main__":
     unittest.main()
