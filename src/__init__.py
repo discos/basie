@@ -190,7 +190,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 
 from builtins import str
-VERSION = "0.1dev"
+VERSION = "1.0dev"
 NURAGHE_TAG = "nuraghe-0.6"
 ESCS_TAG = "escs-0.6"
 ESCS_NOTO_TAG = "escs-noto-0.2"
