@@ -178,22 +178,23 @@ $make doc
 
 You will find the doc under doc/html/
 
-@version: 0.6.5
+@version: 1.0dev
 @status: stable
 @authors: Marco Bartolini, Simona Righini
 @organization: INAF -IRA
 @copyright: INAF - IRA (c) 2016
 @license: gpl v3.0
-@contact: bartolini@ira.inaf.it
+@contact: sergio.poppi@inaf.it
 """
 from __future__ import print_function
 from __future__ import absolute_import
 
 from builtins import str
 VERSION = "1.0dev"
-NURAGHE_TAG = "nuraghe-0.6"
-ESCS_TAG = "escs-0.6"
-ESCS_NOTO_TAG = "escs-noto-0.2"
+DISCOS_TAG = "discos1.0"
+#NURAGHE_TAG = "discos1.0"
+#ESCS_TAG = "discos1.0"
+#ESCS_NOTO_TAG = "discos1.0"
 
 import logging
 

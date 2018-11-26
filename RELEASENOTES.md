@@ -1,5 +1,9 @@
 # RELEASE NOTES
 
+## v1.0dev First public release
+
+Released with discos1.0
+
 ## v0.6.5
 
 Release notes:
