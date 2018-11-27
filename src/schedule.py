@@ -34,7 +34,7 @@ from . import procedures
 from . import utils
 from .errors import *
 from . import layout
-from . import VERSION, NURAGHE_TAG, ESCS_TAG, ESCS_NOTO_TAG
+from . import VERSION, DISCOS_TAG
 import datetime 
 
 from . import scan
@@ -180,9 +180,9 @@ class Schedule(Persistent):
         #datfile = open(datfilename, "wt")
         #WRITE VERSION INFO IN SCD COMMENT
         scdfile.write("# Generated with basie version %s\n" % VERSION)
-        scdfile.write("# compatible nuraghe version: %s\n" % NURAGHE_TAG)
-        scdfile.write("# compatible escs version: %s\n" % ESCS_TAG)
-        scdfile.write("# compatible escs-noto version: %s\n" % ESCS_TAG)
+        scdfile.write("# Compatible with control software version: %s\n" % DISCOS_TAG)
+        #scdfile.write("# compatible escs version: %s\n" % ESCS_TAG)
+        #scdfile.write("# compatible escs-noto version: %s\n" % ESCS_TAG)
         #WRITE SCD HEADER
         init_procedure = procedures.INIT
         restFrequency = False
