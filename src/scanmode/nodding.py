@@ -7,7 +7,7 @@ from .. import frame
 from ..errors import ScanError
 
 class NoddingScan(ScanMode):
-    def __init__(self, feeds, duration, sequence):
+    def __init__(self, feeds, duration, sequence, derotator_angle = None):
         ScanMode.__init__(self)
         self.feed_a = feeds[0]
         self.feed_b = feeds[1]
@@ -15,6 +15,7 @@ class NoddingScan(ScanMode):
         self.sequence = sequence
         self.unit_subscans = sum(el[0] for el in self.sequence)
         self.frame = frame.NULL
+        self.derotator_angle = derotator_angle
     def _do_scan(self, _target, _receiver, _frequency):
         if not _target.offset_coord.is_null():
             if not _target.offset_coord.frame == frame.HOR:

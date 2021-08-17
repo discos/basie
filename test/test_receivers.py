@@ -1,11 +1,8 @@
 #coding=utf-8
 
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
+import unittest
 
-from basie.radiotelescopes import SRT
+from basie.radiotelescopes import *
 from basie.valid_angles import VAngle
 
 class TestReceiver(unittest.TestCase):
@@ -17,9 +14,11 @@ class TestReceiver(unittest.TestCase):
         self.assertTrue(beamsize >= VAngle(0))
 
     def test_valid_pairs(self):
-        #self.assertTrue(False)
+        print(self.receiver.get_valid_pairs())
+        #self.assertTrue(self.receiver.is_valid_pair((1,5),"90"))
 
 
 
 if __name__ == "__main__":
     unittest.main()
+

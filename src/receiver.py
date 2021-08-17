@@ -112,14 +112,24 @@ class Receiver(Persistent):
         
         self.feeds_valid_pairs = pairs_table
 
+    def get_valid_pairs(self):
+        return self.feeds_valid_pair
+
 
     def is_valid_pair(self, pair, derotator):
         """
         This function checks if a pair is valid w.r.t derotator angle.
         @param pair. A tuple containing a feed pair (3,2)
-        @param derotator. A VAngle instance containing the derotator angle
+        @param derotator. A String containing the derotator angle
         """
-        pass
+        try:
+            p = self.feeds_valid_pairs['derotator'.strip()]
+            if p.sort() == pair.sort():
+                return True
+            return False
+        except:
+            return False
+
 
     def get_feed_offset(self, feed_number, derotator_angle):
         if self.nfeed < 2:
