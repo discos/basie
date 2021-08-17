@@ -24,7 +24,7 @@ from __future__ import absolute_import
 from builtins import range
 import logging
 logger = logging.getLogger(__name__)
-
+import math
 from numpy import interp
 from astropy import units as u 
 from persistent import Persistent
@@ -137,7 +137,8 @@ class Receiver(Persistent):
             return False
 
 
-    def get_feed_offset(self, feed_number, derotator_angle):
+    def get_feed_offset(self, feed_number, derotator_angle, frame=HOR):
+        
         if self.nfeed < 2:
             raise ReceiverError("Cannot get offset for single feed recevier.")
 
@@ -147,8 +148,13 @@ class Receiver(Persistent):
 
         #Getting the feed and the derotator angle
         try:
+            derotator_angle = float(derotator_angle)
+            coord = self.feed_offsets[feed_number]
+            #COS(-1*I10*PI.GRECO()/180)-D33*SEN(-1*I10*PI.GRECO()/180)
+            return Coord(frame, 
+            coord.lon*math.cos(-derotator_angle*math.pi/180) - coord.lat*math.sin(-derotator_angle*math.pi/180), 
+            coord.lon*math.sin(-derotator_angle*math.pi/180) + coord.lat*math.cos(-derotator_angle*math.pi/180))
 
-            pass
         except:
             raise ReceiverError("Invalid configuration or invalid derotator angle provided.")
         pass    
