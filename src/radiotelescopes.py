@@ -118,7 +118,7 @@ SRT.receivers["KM"].set_feed_offsets(6, (VAngle(0.00066710365, u.rad),
 """
 MLA: Adding data for supporting multi-feed nodding mode.
 """
-print('Adding data to SRT KM feed')
+
 SRT.receivers["KM"].set_valid_pairs(
     {
         '0': [(0,3),(0,6),(1,2),(3,6),(4,5)],

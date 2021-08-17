@@ -123,11 +123,17 @@ class Receiver(Persistent):
         @param derotator. A String containing the derotator angle
         """
         try:
-            p = self.feeds_valid_pairs['derotator'.strip()]
-            if p.sort() == pair.sort():
-                return True
+            p = self.feeds_valid_pairs[derotator.strip()]
+            for vp in p:
+                if sorted(list(vp)) == sorted(list(pair)):
+                    return True
+
+            #Exiting for means no equal pairs found
+
             return False
-        except:
+
+        except Exception as e:
+            print('Error :' + str(e))
             return False
 
 

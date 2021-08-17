@@ -14,8 +14,10 @@ class TestReceiver(unittest.TestCase):
         self.assertTrue(beamsize >= VAngle(0))
 
     def test_valid_pairs(self):
-        print(self.receiver.get_valid_pairs())
-        #self.assertTrue(self.receiver.is_valid_pair((1,5),"90"))
+        self.assertTrue(self.receiver.is_valid_pair((1,5),"90"))
+        self.assertTrue(self.receiver.is_valid_pair((5,1),"90"))
+        self.assertFalse(self.receiver.is_valid_pair((1,3),"90"))
+        self.assertFalse(self.receiver.is_valid_pair((3,1),"90"))
 
 
 
