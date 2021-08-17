@@ -2,7 +2,7 @@
 
 import unittest
 
-from basie.radiotelescopes import *
+from basie.radiotelescopes import SRT
 from basie.valid_angles import VAngle
 
 class TestReceiver(unittest.TestCase):

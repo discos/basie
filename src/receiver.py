@@ -113,7 +113,7 @@ class Receiver(Persistent):
         self.feeds_valid_pairs = pairs_table
 
     def get_valid_pairs(self):
-        return self.feeds_valid_pair
+        return self.feeds_valid_pairs
 
 
     def is_valid_pair(self, pair, derotator):
