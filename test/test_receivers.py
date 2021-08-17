@@ -15,3 +15,11 @@ class TestReceiver(unittest.TestCase):
     def test_get_beamsize(self):
         beamsize = VAngle(self.receiver.beamsize)
         self.assertTrue(beamsize >= VAngle(0))
+
+    def test_valid_pairs(self):
+        #self.assertTrue(False)
+
+
+
+if __name__ == "__main__":
+    unittest.main()

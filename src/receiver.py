@@ -69,6 +69,7 @@ class Receiver(Persistent):
         self.has_derotator = has_derotator
         self.feed_extent = 0
         self.interleave = 0
+        self.feeds_valid_pairs = None
         if len(self.feed_offsets) < self.nfeed:
             logger.debug("adding default offset (0.0, 0.0) to receiver %s" %
                            (self.name,))
@@ -94,6 +95,47 @@ class Receiver(Persistent):
         self.feed_offsets[feed_number] = Coord(frame,
                                                VAngle(offsets[0]),
                                                VAngle(offsets[1]))
+    #   Methods for Nodding mode 
+    def set_valid_pairs(self, pairs_table):
+        """
+        Set the valid pairs for each derotator position.
+        The valid data structure is:
+        {
+            '0':[(0,3), (0,6),(1,2)...]
+        }
+        @param pair_tables: Data structure containing the valid pairs for each derotator angle {
+            '0':[(0,3), (0,6),(1,2)...]
+        }
+        """
+        if self.nfeed < 2:
+            raise ReceiverError("Cannot define valid pairs for nodding with single feed.")
+        
+        self.feeds_valid_pairs = pairs_table
+
+
+    def is_valid_pair(self, pair, derotator):
+        """
+        This function checks if a pair is valid w.r.t derotator angle.
+        @param pair. A tuple containing a feed pair (3,2)
+        @param derotator. A VAngle instance containing the derotator angle
+        """
+        pass
+
+    def get_feed_offset(self, feed_number, derotator_angle):
+        if self.nfeed < 2:
+            raise ReceiverError("Cannot get offset for single feed recevier.")
+
+        if self.feeds_valid_pairs is None:
+            raise ReceiverError("Feed table not properly setted. None is found.")
+
+
+        #Getting the feed and the derotator angle
+        try:
+
+            pass
+        except:
+            raise ReceiverError("Invalid configuration or invalid derotator angle provided.")
+        pass    
 
     @property
     def beamsize(self):
