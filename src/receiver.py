@@ -150,7 +150,6 @@ class Receiver(Persistent):
         try:
             derotator_angle = float(derotator_angle)
             coord = self.feed_offsets[feed_number]
-            #COS(-1*I10*PI.GRECO()/180)-D33*SEN(-1*I10*PI.GRECO()/180)
             return Coord(frame, 
             coord.lon*math.cos(-derotator_angle*math.pi/180) - coord.lat*math.sin(-derotator_angle*math.pi/180), 
             coord.lon*math.sin(-derotator_angle*math.pi/180) + coord.lat*math.cos(-derotator_angle*math.pi/180))

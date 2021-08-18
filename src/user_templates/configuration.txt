@@ -9,7 +9,7 @@ radiotelescope = SRT
 # P, L, C, K, KM
 # for NOTO receivers can be:
 # C, M, K, Q
-receiver = K
+receiver = KM
 # default repetitions value for each scan
 repetitions = 1
 # default tsys value for each scan
@@ -20,7 +20,7 @@ tsys = 0
 #ftrack = True
 
 # File name of the target specs in this same directory
-targetsFile = targets.txt
+targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/basie/src/user_templates/targets.txt
 
 [backends]
 # Here we configure which backend we are using in this schedule.

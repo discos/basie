@@ -22,8 +22,11 @@ class NoddingScan(ScanMode):
                 raise ScanError("cannot perform nodding on target with offsets")
         if not _receiver.is_multifeed():
             raise ScanError("cannot execute nodding scan with single feed receiver")
+
+        #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
         offset_a = _receiver.feed_offsets[self.feed_a]
         offset_b = _receiver.feed_offsets[self.feed_b]
+        #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
         _subscans = []
         for element in self.sequence:
             if element[1] == "a":

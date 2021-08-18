@@ -195,12 +195,14 @@ def check_nodding_sequence(value):
     return nodding_elements
 
 def check_nodding(value):
+    #MLA: Put here another instruction to parse the derotator angle (if setted by the user)
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
     feed_a = v.is_integer(value[0], min=0)
     feed_b = v.is_integer(value[1], min=0)
     duration = v.is_float(value[2], min=0)
     sequence = check_nodding_sequence(value[3][1:-1]) #strip [ and ]
+    #MLA: return should be return NoddingScan((feed_a, feed_b), duration, sequence, derotator_angle) - (if setted by the user)
     return NoddingScan((feed_a, feed_b), duration, sequence)
 
 def check_onoff_sequence(value):
