@@ -173,6 +173,8 @@ def check_raster_map(value):
     return RasterMapScan(_frame, start_point, scan_axis, length_x, length_y,
                        spacing, duration, offset)
 
+
+
 def check_nodding_sequence(value):
     if not isinstance(value, list):
         value = string2list(value.lower())

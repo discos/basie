@@ -6,7 +6,7 @@ try:
 except ImportError:
     import unittest
 
-from basie.procedures import Procedure, PROC_PREFIX
+from basie.procedures import Procedure, PROC_PREFIX, FTRACKALL
 
 class TestProcedures(unittest.TestCase):
     def setUp(self):
@@ -57,5 +57,14 @@ class TestProcedures(unittest.TestCase):
                          (PROC_PREFIX,))
         self.assertEqual(sum_procedure.execute(),
                          "%sSIMPLE_ONE_PARAM=test" % (PROC_PREFIX,))
+    #MLA add test derotator
 
 
+
+if __name__ == '__main__':
+    DEROTATOR = Procedure("DEROTATOR", 1, "\tderotatorSetConfiguration=$1\n", True)
+    print(str(DEROTATOR.execute(5)))
+    s = FTRACKALL + DEROTATOR
+
+    print(str(s.execute(5)))
+    print(str(s))

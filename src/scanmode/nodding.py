@@ -24,6 +24,7 @@ class NoddingScan(ScanMode):
             raise ScanError("cannot execute nodding scan with single feed receiver")
 
         #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
+        print('Feed_a ' + str(self.feed_a) + ' Feed_b' + str(self.feed_b))
         offset_a = _receiver.feed_offsets[self.feed_a]
         offset_b = _receiver.feed_offsets[self.feed_b]
         #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
