@@ -21,7 +21,8 @@ class TestReceiver(unittest.TestCase):
         self.assertFalse(self.receiver.is_valid_pair((3,1)))
        
        
-        print(self.receiver.get_feed_offset(4,(0,5)))
+        print(self.receiver.get_feed_offset(3,(3,5)))
+        print(self.receiver.getDerotatorProcedure((3,5)))
 
 
 

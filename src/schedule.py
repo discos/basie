@@ -252,6 +252,7 @@ class Schedule(Persistent):
                          isinstance(_scan.scanmode, NoddingScan)) and
                          _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORFIXED
+                        
                     if (isinstance(_scan.scanmode, MapScan) and
                          _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORBSC

@@ -33,6 +33,7 @@ from .valid_angles import VAngle
 from .errors import *
 
 from .frame import Coord, HOR
+from .procedures import *
 
 class Receiver(Persistent):
     """
@@ -148,7 +149,8 @@ class Receiver(Persistent):
         if self.feeds_valid_pairs is None:
             raise ReceiverError("Feed table not properly setted. None is found.")
 
-
+        if feed_number not in feed_pair:
+            raise ReceiverError("Data mismatch between pair and feed")
         #Getting the feed and the derotator angle
 
 
@@ -214,3 +216,23 @@ class Receiver(Persistent):
         """
         return self.nfeed > 1
 
+    def getDerotatorProcedure(self,feed_pair):
+
+        #Getting the derotator angle and put it in the procedure
+        valid_pair = False
+        try:
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(feed_pair)):
+                        derotator_angle = p
+                        valid_pair = True
+
+        except Exception as e:
+            raise ReceiverError('Error while getting derotator angle')
+
+        if valid_pair == False:
+            raise ReceiverError('Error while getting derotator angle')
+        return Procedure("DEROTATORFIXED", 0, "\tderotatorSetConfiguration=FIXED\n\tderotatorSetPosition=%sd\n"%str(float(derotator_angle)), True)
+        
