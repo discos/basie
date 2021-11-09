@@ -116,17 +116,19 @@ class Receiver(Persistent):
         return self.feeds_valid_pairs
 
 
-    def is_valid_pair(self, pair, derotator):
+    def is_valid_pair(self, pair):
         """
         This function checks if a pair is valid w.r.t derotator angle.
         @param pair. A tuple containing a feed pair (3,2)
         @param derotator. A String containing the derotator angle
         """
         try:
-            p = self.feeds_valid_pairs[derotator.strip()]
-            for vp in p:
-                if sorted(list(vp)) == sorted(list(pair)):
-                    return True
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(pair)):
+                        return True
 
             #Exiting for means no equal pairs found
 
@@ -137,8 +139,9 @@ class Receiver(Persistent):
             return False
 
 
-    def get_feed_offset(self, feed_number, derotator_angle, frame=HOR):
-        
+    def get_feed_offset(self, feed_number, feed_pair, frame=HOR):
+        derotator_angle = 0.0
+        valid_pair = False
         if self.nfeed < 2:
             raise ReceiverError("Cannot get offset for single feed recevier.")
 
@@ -147,6 +150,24 @@ class Receiver(Persistent):
 
 
         #Getting the feed and the derotator angle
+
+
+        try:
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(feed_pair)):
+                        derotator_angle = p
+                        valid_pair = True
+
+        except Exception as e:
+            print('Error :' + str(e))
+            return False
+
+        if valid_pair == False:
+            raise ReceiverError('Invalid configuration of the feeds pair')
+        print('Derotator: ' + str(derotator_angle))
         try:
             derotator_angle = float(derotator_angle)
             coord = self.feed_offsets[feed_number]
