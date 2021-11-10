@@ -234,5 +234,6 @@ class Receiver(Persistent):
 
         if valid_pair == False:
             raise ReceiverError('Error while getting derotator angle')
-        return Procedure("DEROTATORFIXED", 0, "\tderotatorSetConfiguration=FIXED\n\tderotatorSetPosition=%sd\n"%str(float(derotator_angle)), True)
+        #cambia il nome!!! Perchè potrebbe aver bisogno di avere la stessa proc con stesso nome
+        return Procedure("DEROTATORFIXED_%s"%str(float(derotator_angle)).replace('.',''), 0, "\tderotatorSetConfiguration=FIXED\n\tderotatorSetPosition=%sd\n"%str(float(derotator_angle)), True)
         

@@ -25,8 +25,16 @@ class NoddingScan(ScanMode):
 
         #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
         print('Feed_a ' + str(self.feed_a) + ' Feed_b' + str(self.feed_b))
-        offset_a = _receiver.feed_offsets[self.feed_a]
-        offset_b = _receiver.feed_offsets[self.feed_b]
+
+        
+        #offset_a = _receiver.feed_offsets[self.feed_a]
+        #offset_b = _receiver.feed_offsets[self.feed_b]
+        
+        offset_a = _receiver.get_feed_offset(self.feed_a,(self.feed_a,self.feed_b))
+        offset_b = _receiver.get_feed_offset(self.feed_b,(self.feed_a,self.feed_b))
+        print(offset_a)
+        print(offset_b)
+        
         #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
         _subscans = []
         for element in self.sequence:
@@ -44,3 +52,6 @@ class NoddingScan(ScanMode):
             for repetitions in range(element[0]):
                 _subscans.append((ss, st))
         return _subscans
+    def _getProcedure(self,receiver, feed_pair):
+        return receiver.getDerotatorProcedure(feed_pair)
+        pass

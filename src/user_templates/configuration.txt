@@ -97,5 +97,5 @@ targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/b
      AlwaysOn = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
 
     #NODDINGNAME = NODDING FEED_A FEED_B DURATION [<N>a,<N>b,<N>a_cal,<N>b_cal]
-     Nodding06 = NODDING 0 6 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding06 = NODDING 2 5 10.0 [2a,2a_cal,2b,2b_cal]
 
