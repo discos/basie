@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-c","/Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/basie/src/user_templates/configuration.txt", "../outputdir"]
+            "args": ["-c","/Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/basie/src/user_templates/configuration_SR.txt", "../outputdir"]
         }
     ]
 }
