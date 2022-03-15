@@ -53,6 +53,7 @@ targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/b
     # bandwidth in MHz, possible values are:
     # 300, 730, 1250, 2000
     bandwidth = 1250
+    feeds = 0;3;8;10
 
 [[XK77]]
     type = XARCOS
@@ -60,6 +61,7 @@ targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/b
     # if configuration = skip, the backend is not configured and the initialize must be done from operatorInput
     # 
     configuration = XK77
+    feeds = 0;7
 
 [[XC00]]
     type=XARCOS

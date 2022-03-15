@@ -320,8 +320,10 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
             logger.error("%s : %s\n" % (var, str(ex)))
         raise v.ValidateError("Could not validate %s vs %s" % (filename, specfilename))
     for k,v in conf["backends"].items():
+        print('validating ' + str(k) + str(v))
         v["name"] = k
         conf["backends"][k] = BackendFactory(v)
+    print('backend validated')
     for k,v in conf["scantypes"].items():
         if isinstance(v, tuple):
             logger.info(("exploding scanmode {0} in 2 separate scans: {0}_lon" + \

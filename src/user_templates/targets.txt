@@ -1,4 +1,5 @@
-Alpha   Nodding13 XK77 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
-Beta    Nodding25 XK77 EQ  13:00:00h +65:00:00 rvel=3.5 vref=GALCEN vdef=Z
-Gamma   Nodding36 XK77 EQ  120.0d 50.0d rvel=4.5 vref=GALCEN vdef=Z
+#Alpha   Nodding13 XK77 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
+#Beta    Nodding25 XK77 EQ  13:00:00h +65:00:00 rvel=3.5 vref=GALCEN vdef=Z
+#Gamma   Nodding36 XK77 EQ  120.0d 50.0d rvel=4.5 vref=GALCEN vdef=Z
 Delta    EqCross1_3 TP40_1250 EQ 150.0d 30.0d repetitions=2
+Gamma   Nodding36  XK77 EQ  120.0d 50.0d rvel=4.5 vref=GALCEN vdef=Z
