@@ -1,5 +1,5 @@
-projectID = ProjectName
-observer = YourName
+projectID = Maintenance
+observer = Maintenance
 scheduleLabel = TestSched
 # SRT, MED or NOTO 
 radiotelescope = SRT
