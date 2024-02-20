@@ -53,7 +53,7 @@ targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/b
     # bandwidth in MHz, possible values are:
     # 300, 730, 1250, 2000
     bandwidth = 1250
-    feeds = 0;3;8;10
+    feeds = 3;6
 
 [[XK77]]
     type = XARCOS
@@ -70,6 +70,7 @@ targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/b
 [[SARDARA]]
     type = Sardara
     # configuration must be done from operatorInput before starting the schedule
+    feeds = 0;7
     
 
 [scantypes]

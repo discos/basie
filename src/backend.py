@@ -88,13 +88,16 @@ class XBackend(Backend):
 
 
 class RoachBackend(Backend):
-    def __init__(self, name):
+    def __init__(self, name,feeds=None):
         Backend.__init__(self, name, "Sardara")
         #self.configuration = configuration
         self.can_activate_switching_mark = False
+        self.feeds = feeds
 
     def _get_backend_instructions(self):
         res = ""
+        if self.feeds:
+            res = res + "feeds=" + self.feeds
         return res
 
     def _get_hash_params(self):

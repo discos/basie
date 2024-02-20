@@ -2,4 +2,4 @@
 #Beta    Nodding25 XK77 EQ  13:00:00h +65:00:00 rvel=3.5 vref=GALCEN vdef=Z
 #Gamma   Nodding13 XK77 EQ  120.0d 50.0d rvel=4.5 vref=GALCEN vdef=Z
 #Delta    Nodding36 TP40_1250 EQ 150.0d 30.0d repetitions=2
-Gamma   Nodding36  TP40_1250 EQ  0.0d 75.0d rvel=4.5 vref=GALCEN vdef=Z
+Gamma   Nodding36  SARDARA EQ  0.0d 75.0d rvel=4.5 vref=GALCEN vdef=Z
