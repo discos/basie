@@ -1,5 +1,1 @@
-#!/usr/bin/env python
-#coding=utf-8
-
-import basie
-basie.cmd_line()
+../src

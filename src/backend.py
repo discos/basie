@@ -60,16 +60,19 @@ class Backend(Persistent):
 
 
 class XBackend(Backend):
-    def __init__(self, name, configuration):
+    def __init__(self, name, configuration,feeds=None):
         Backend.__init__(self, name, "XBackends")
         self.configuration = configuration
         self.can_activate_switching_mark = False
         self.can_tsys = False
+        self.feeds = feeds
 
     def _get_backend_instructions(self):
         if self.configuration.upper() !='SKIP':
             
             res = "\tinitialize=%s\n" % (self.configuration,)
+            if self.feeds is not None:
+                res = res + "\tenable=%s\n" % (self.feeds,)
         else:
             res = "" 
         return res
@@ -85,13 +88,16 @@ class XBackend(Backend):
 
 
 class RoachBackend(Backend):
-    def __init__(self, name):
+    def __init__(self, name,feeds=None):
         Backend.__init__(self, name, "Sardara")
         #self.configuration = configuration
         self.can_activate_switching_mark = False
+        self.feeds = feeds
 
     def _get_backend_instructions(self):
         res = ""
+        if self.feeds:
+            res = res + "feeds=" + self.feeds
         return res
 
     def _get_hash_params(self):
@@ -101,8 +107,10 @@ class RoachBackend(Backend):
         return params + super(RoachBackend, self)._get_hash_params()
 
 class TotalPowerBackend(Backend):
-    def __init__(self, name, integration, samplingInterval, bandwidth):
+    def __init__(self, name, integration, samplingInterval, bandwidth, feeds=None):
+        print('In init')
         Backend.__init__(self, name, "TotalPower")
+        print('In init 1')
         self.integration = float(integration)
         self.samplingInterval = float(samplingInterval)
         self.sections = []
@@ -110,7 +118,10 @@ class TotalPowerBackend(Backend):
         self.can_activate_switching_mark = True
         self.bandwidth = float(bandwidth)
         self._empty_sections = 0
-
+        #MLA , prima era = ''
+        self.feeds = feeds
+        print('In init2')
+        #MLA
     def set_sections(self, nifs, bandwidth=None):
         if bandwidth is None:
             bandwidth = self.bandwidth
@@ -122,19 +133,24 @@ class TotalPowerBackend(Backend):
             logger.debug("set section %d: %f" % (i, float(bandwidth)))
             self.sections.append((i, float(bandwidth)))
 
-    def _get_backend_instructions(self):
+    def _get_backend_instructions(self, receiver=None):
         res = ""
-        enable_string = "\tenable="
+        print(self.sections)
+        enable_string = "\tEnable="
         for i, (_id, _bw) in enumerate(self.sections):
             res += "\tsetSection=%d,*,%f,*,*,%f,*\n" % (_id, _bw,
                                                         (1.0 /
                                                         (self.samplingInterval
                                                             * 1000.0)),)
-            if i > 0:
-                enable_string += ";"
-            enable_string += "1"
-        for i in range(self._empty_sections):
-            enable_string += ";0"
+            #if i > 0:
+            #    enable_string += ";"
+            #enable_string += "1"
+
+        #for i in range(self._empty_sections):
+        #    enable_string += ";0"
+        enable_string = ""
+        if self.feeds is not None:
+            enable_string = "\tenable=%s\n" % (self.feeds,)
         enable_string += "\n"
         res += "\tintegration=%d\n" % (self.integration,)
         res += enable_string
@@ -148,6 +164,7 @@ class TotalPowerBackend(Backend):
             self.valid_filters,
             self.can_activate_switching_mark,
             self.bandwidth,
+            self.feeds,
             self._empty_sections,
         ) 
         return params + super(TotalPowerBackend, self)._get_hash_params()
@@ -157,6 +174,7 @@ def BackendFactory(configuration_dict):
     if not "type" in configuration_dict:
         raise ScheduleError("missing Backend type")
     _type = configuration_dict.pop('type').upper()
+    print('Configurazione:+'+str(configuration_dict))
     if _type == 'TOTALPOWER':
         return TotalPowerBackend(**configuration_dict)
     elif _type == 'XARCOS':

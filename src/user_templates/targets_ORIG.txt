@@ -1,0 +1,2 @@
+Zeta    Nodding06 XC00 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
+Zeta    OnOff TP EQ  12:00:00h +45:00:00

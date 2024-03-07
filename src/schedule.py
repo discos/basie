@@ -240,6 +240,8 @@ class Schedule(Persistent):
                 logger.warning("using ftrack with zero velocity")
             for subscan_id, _subscan in enumerate(_scan.subscans):
                 #PRE SCAN procedures
+                print('Receiver:' + str(_scan.receiver.name))
+
                 if subscan_number == 1: 
                     if restFrequency and self.ftrack:
                         if isinstance(_scan.backend, backend.XBackend):
@@ -248,10 +250,12 @@ class Schedule(Persistent):
                             _subscan.pre_procedure += procedures.FTRACKLO
                         else:
                             _subscan.pre_procedure += procedures.FTRACKLO
-                    if ((isinstance(_scan.scanmode, OnOffScan) or
-                         isinstance(_scan.scanmode, NoddingScan)) and
-                         _scan.receiver.has_derotator):
+                    if (isinstance(_scan.scanmode, OnOffScan) and _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORFIXED
+
+                    if (isinstance(_scan.scanmode, NoddingScan) and _scan.receiver.has_derotator):
+                        _subscan.pre_procedure += _scan.scanmode._getProcedure(_scan.receiver,(_scan.scanmode.feed_a, _scan.scanmode.feed_b))
+                        
                     if (isinstance(_scan.scanmode, MapScan) and
                          _scan.receiver.has_derotator):
                         _subscan.pre_procedure += procedures.DEROTATORBSC

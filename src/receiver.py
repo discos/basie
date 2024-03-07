@@ -18,11 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+#   Starting editing from MLA
+
 from __future__ import absolute_import
 from builtins import range
 import logging
 logger = logging.getLogger(__name__)
-
+import math
 from numpy import interp
 from astropy import units as u 
 from persistent import Persistent
@@ -31,6 +33,7 @@ from .valid_angles import VAngle
 from .errors import *
 
 from .frame import Coord, HOR
+from .procedures import *
 
 class Receiver(Persistent):
     """
@@ -67,6 +70,7 @@ class Receiver(Persistent):
         self.has_derotator = has_derotator
         self.feed_extent = 0
         self.interleave = 0
+        self.feeds_valid_pairs = None
         if len(self.feed_offsets) < self.nfeed:
             logger.debug("adding default offset (0.0, 0.0) to receiver %s" %
                            (self.name,))
@@ -92,6 +96,90 @@ class Receiver(Persistent):
         self.feed_offsets[feed_number] = Coord(frame,
                                                VAngle(offsets[0]),
                                                VAngle(offsets[1]))
+    #   Methods for Nodding mode 
+    def set_valid_pairs(self, pairs_table):
+        """
+        Set the valid pairs for each derotator position.
+        The valid data structure is:
+        {
+            '0':[(0,3), (0,6),(1,2)...]
+        }
+        @param pair_tables: Data structure containing the valid pairs for each derotator angle {
+            '0':[(0,3), (0,6),(1,2)...]
+        }
+        """
+        if self.nfeed < 2:
+            raise ReceiverError("Cannot define valid pairs for nodding with single feed.")
+        
+        self.feeds_valid_pairs = pairs_table
+
+    def get_valid_pairs(self):
+        return self.feeds_valid_pairs
+
+
+    def is_valid_pair(self, pair):
+        """
+        This function checks if a pair is valid w.r.t derotator angle.
+        @param pair. A tuple containing a feed pair (3,2)
+        @param derotator. A String containing the derotator angle
+        """
+        try:
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(pair)):
+                        return True
+
+            #Exiting for means no equal pairs found
+
+            return False
+
+        except Exception as e:
+            print('Error :' + str(e))
+            return False
+
+
+    def get_feed_offset(self, feed_number, feed_pair, frame=HOR):
+        derotator_angle = 0.0
+        valid_pair = False
+        if self.nfeed < 2:
+            raise ReceiverError("Cannot get offset for single feed recevier.")
+
+        if self.feeds_valid_pairs is None:
+            raise ReceiverError("Feed table not properly setted. None is found.")
+
+        if feed_number not in feed_pair:
+            raise ReceiverError("Data mismatch between pair and feed")
+        #Getting the feed and the derotator angle
+
+
+        try:
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(feed_pair)):
+                        derotator_angle = p
+                        valid_pair = True
+
+        except Exception as e:
+            print('Error :' + str(e))
+            return False
+
+        if valid_pair == False:
+            raise ReceiverError('Invalid configuration of the feeds pair')
+        print('Derotator: ' + str(derotator_angle))
+        try:
+            derotator_angle = float(derotator_angle)
+            coord = self.feed_offsets[feed_number]
+            return Coord(frame, 
+            coord.lon*math.cos(-derotator_angle*math.pi/180) - coord.lat*math.sin(-derotator_angle*math.pi/180), 
+            coord.lon*math.sin(-derotator_angle*math.pi/180) + coord.lat*math.cos(-derotator_angle*math.pi/180))
+
+        except:
+            raise ReceiverError("Invalid configuration or invalid derotator angle provided.")
+        pass    
 
     @property
     def beamsize(self):
@@ -128,3 +216,24 @@ class Receiver(Persistent):
         """
         return self.nfeed > 1
 
+    def getDerotatorProcedure(self,feed_pair):
+
+        #Getting the derotator angle and put it in the procedure
+        valid_pair = False
+        try:
+           # p = self.feeds_valid_pairs[derotator.strip()]
+            for p in self.feeds_valid_pairs:
+                #print(p)
+                for vp in self.feeds_valid_pairs[p]:
+                    if sorted(list(vp)) == (list(feed_pair)):
+                        derotator_angle = p
+                        valid_pair = True
+
+        except Exception as e:
+            raise ReceiverError('Error while getting derotator angle')
+
+        if valid_pair == False:
+            raise ReceiverError('Error while getting derotator angle')
+        #cambia il nome!!! Perchè potrebbe aver bisogno di avere la stessa proc con stesso nome
+        return Procedure("DEROTATORFIXED_%s"%str(float(derotator_angle)).replace('.',''), 0, "\tderotatorSetConfiguration=FIXED\n\tderotatorSetPosition=%sd\n"%str(float(derotator_angle)), True)
+        
