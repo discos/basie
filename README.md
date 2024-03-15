@@ -19,9 +19,10 @@ You can
 
 ## INSTALLATION INSTRUCTIONS
 
-Basie (previously called ScheduleCreator) depends on Astropy and can thus run on
-python >= 2.6.5  If you have multiple 2.x python version, please make sure to use the same one for install basie and its deps.
-The package is not tested on any python 3.x version.
+Basie  can  run on
+python <= 3.8  
+
+
 Before installing the package make sure you download and extract the package
 archive at
 http://github.com/discos/basie/
@@ -32,6 +33,15 @@ Installation instructions can be reduced to:
 $ make dep
 $ make install
 ```
+
+Alternatively: 
+
+```
+$ pip install -r requirements.txt
+$ python setup.py install 
+```
+
+
 
 Note that you may need to have root privileges for installing python packages.
 If you wanna know more or you experience some issue, please go on reading.
@@ -87,11 +97,7 @@ $ easy_install pip
 
 ### INSTALL PACKAGE DEPENDENCIES
 
-The package depends on other python packages which can be installed manually
-or via distutils.
 
-Required packages are listed in "requirements.txt" file fourinished along with
-these sources
 You can install every dependecy via (note that you may need to be root): 
 
 ```
@@ -101,27 +107,6 @@ Or simply:
 
 ```
 $ pip install -r requirements.txt
-```
-
-Or you can download and install individual packages from
-pypi at https://pypi.python.org/pypi or using the package manager of your OS.
-
-If you don't have access to make command (i.e. on Windows) you can also install
-dependencies using pip from the command line for each individual package:
-
-```
-$ pip install configobj
-$ pip install validate
-$ pip install astropy
-$ pip install zodbpickle
-$ pip install ZODB
-...
-```
-
-or every package at once:
-
-```
-$ pip install configobj validate astropy ZODB ...
 ```
 
 ### INSTALL
