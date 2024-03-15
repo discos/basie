@@ -17,5 +17,5 @@ setup(
                      "basie.configobj": "src/configobj"},
       package_data = {"basie" : ["schemas/*.ini",
                                  "user_templates/*.txt"]},
-      scripts = ["scripts/basie"],
+      scripts = ["scripts/runbasie"],
      )
