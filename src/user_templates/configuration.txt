@@ -20,7 +20,7 @@ tsys = 0
 #ftrack = True
 
 # File name of the target specs in this same directory
-targetsFile = /Users/mlandoni/Filesystem/Universita/PhD/Merate/SRT/Basie/devel/basie/src/user_templates/targets.txt
+targetsFile =  targets.txt
 
 [backends]
 # Here we configure which backend we are using in this schedule.
