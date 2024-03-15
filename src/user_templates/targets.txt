@@ -1,5 +1,37 @@
-#Alpha   Nodding13 XK77 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z
-#Beta    Nodding25 XK77 EQ  13:00:00h +65:00:00 rvel=3.5 vref=GALCEN vdef=Z
-#Gamma   Nodding13 XK77 EQ  120.0d 50.0d rvel=4.5 vref=GALCEN vdef=Z
-#Delta    Nodding36 TP40_1250 EQ 150.0d 30.0d repetitions=2
-Gamma   Nodding36  SARDARA EQ  0.0d 75.0d rvel=4.5 vref=GALCEN vdef=Z
+# Comment lines to exclude them from the schedule computation
+#
+# Mandatory params:
+# LABEL SCANTYPE BACKEND TARGET_FRAME LONGITUDE LATITUDE
+# where:
+# SCANTYPE is defined in configuration file
+# BACKEND is defined in configuration file
+# TARGET_FRAME = [EQ, GAL, HOR]
+#
+# Optional params:
+# [tsys, repetitions, offset_lon, offset_lat, offset_frame, vref, vdef,
+# rvel]
+# where:
+# vref = [BARY, LSRK, LSRD, GALCEN, TOPCEN]
+# vdef = [OP, RD, Z]
+
+Alpha   EqCross1_3  TP EQ  12:00:00h +45:00:00
+Alpha   DownSkydip  TP EQ  12:00:00h +45:00:00
+Alpha   DownSkydip  TP EQ  00:03:00h -00:00:03
+Alpha   DownSkydip  TP EQ  00:00:02h -00:03:00
+Alpha   EqCross1_3  TP EQ  180:00:00 +45:00:00
+Alpha   EqCross1_3  TP EQ  180.0d  +45.0d
+Beta    HorCross1_3 TP HOR 124.5d  38.2d
+Beta    HorPoint TP HOR 124.5d  38.2d
+Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  tsys=2  repetitions=4
+Gamma   EqCross1_5  TP EQ  13:45:12.3h +34:56:43.0  offset_lon=-0.5d
+Delta   RAMAP1x1BL  TP EQ  12:00:00h +45:00:00
+Delta   DECMAP1x1BR TP EQ  12:00:00h +45:00:00
+Delta   EQMap1x1    TP EQ  12:00:00h +45:00:00
+Delta   EQMap1x1S    TP EQ  12:00:00h +45:00:00
+Epsilon GLONMAP2x2TL TP GAL 275.0d -12.0d  tsys=10
+Epsilon GLATMAP2x2TL TP GAL 275.0d -12.0d  tsys=10
+#Zeta    HorRasterTL TP EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
+#Zeta    HorRasterTLS TP EQ  12:00:00h +45:00:00  offset_lon=0.1d offset_frame=EQ
+Zeta    OnOff TP EQ  12:00:00h +45:00:00
+Zeta    OnOff XK77 EQ  12:00:00h +45:00:00
+#Zeta    Nodding06 XC00 EQ  12:00:00h +45:00:00 rvel=2.5 vref=GALCEN vdef=Z

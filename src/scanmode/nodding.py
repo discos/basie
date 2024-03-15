@@ -7,7 +7,7 @@ from .. import frame
 from ..errors import ScanError
 
 class NoddingScan(ScanMode):
-    def __init__(self, feeds, duration, sequence, derotator_angle = None):
+    def __init__(self, feeds, duration, sequence):
         ScanMode.__init__(self)
         self.feed_a = feeds[0]
         self.feed_b = feeds[1]
@@ -15,27 +15,14 @@ class NoddingScan(ScanMode):
         self.sequence = sequence
         self.unit_subscans = sum(el[0] for el in self.sequence)
         self.frame = frame.NULL
-        self.derotator_angle = derotator_angle
     def _do_scan(self, _target, _receiver, _frequency):
         if not _target.offset_coord.is_null():
             if not _target.offset_coord.frame == frame.HOR:
                 raise ScanError("cannot perform nodding on target with offsets")
         if not _receiver.is_multifeed():
             raise ScanError("cannot execute nodding scan with single feed receiver")
-
-        #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
-        print('Feed_a ' + str(self.feed_a) + ' Feed_b' + str(self.feed_b))
-
-        
-        #offset_a = _receiver.feed_offsets[self.feed_a]
-        #offset_b = _receiver.feed_offsets[self.feed_b]
-        
-        offset_a = _receiver.get_feed_offset(self.feed_a,(self.feed_a,self.feed_b))
-        offset_b = _receiver.get_feed_offset(self.feed_b,(self.feed_a,self.feed_b))
-        print(offset_a)
-        print(offset_b)
-        
-        #MLA: Here you should get the derotator angle and check that the pair is valid!!!!!
+        offset_a = _receiver.feed_offsets[self.feed_a]
+        offset_b = _receiver.feed_offsets[self.feed_b]
         _subscans = []
         for element in self.sequence:
             if element[1] == "a":
@@ -52,6 +39,3 @@ class NoddingScan(ScanMode):
             for repetitions in range(element[0]):
                 _subscans.append((ss, st))
         return _subscans
-    def _getProcedure(self,receiver, feed_pair):
-        return receiver.getDerotatorProcedure(feed_pair)
-        pass

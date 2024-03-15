@@ -173,8 +173,6 @@ def check_raster_map(value):
     return RasterMapScan(_frame, start_point, scan_axis, length_x, length_y,
                        spacing, duration, offset)
 
-
-
 def check_nodding_sequence(value):
     if not isinstance(value, list):
         value = string2list(value.lower())
@@ -197,14 +195,12 @@ def check_nodding_sequence(value):
     return nodding_elements
 
 def check_nodding(value):
-    #MLA: Put here another instruction to parse the derotator angle (if setted by the user)
     if not isinstance(value, list):
         raise v.ValidateError("expected list, found  %s" % (value,))
     feed_a = v.is_integer(value[0], min=0)
     feed_b = v.is_integer(value[1], min=0)
     duration = v.is_float(value[2], min=0)
     sequence = check_nodding_sequence(value[3][1:-1]) #strip [ and ]
-    #MLA: return should be return NoddingScan((feed_a, feed_b), duration, sequence, derotator_angle) - (if setted by the user)
     return NoddingScan((feed_a, feed_b), duration, sequence)
 
 def check_onoff_sequence(value):
@@ -320,10 +316,8 @@ def validate(filename, specfilename):#, error_stream=sys.stderr):
             logger.error("%s : %s\n" % (var, str(ex)))
         raise v.ValidateError("Could not validate %s vs %s" % (filename, specfilename))
     for k,v in conf["backends"].items():
-        print('validating ' + str(k) + str(v))
         v["name"] = k
         conf["backends"][k] = BackendFactory(v)
-    print('backend validated')
     for k,v in conf["scantypes"].items():
         if isinstance(v, tuple):
             logger.info(("exploding scanmode {0} in 2 separate scans: {0}_lon" + \
