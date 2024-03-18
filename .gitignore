@@ -71,3 +71,4 @@ target/
 
 # others
 .shell_history
+version.py
