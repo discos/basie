@@ -17,7 +17,7 @@ class TestSchedule(unittest.TestCase):
     def setUp(self):
         shutil.rmtree(BASE_PATH, True) #ignores errors
         os.makedirs(BASE_PATH)
-        self.conf = validate_configuration(os.path.join(TEMPLATE_PATH, "configuration.txt"))
+        self.conf = validate_configuration(os.path.join(TEMPLATE_PATH, "configuration_SR.txt"))
 
         targetsFile = os.path.join(TEMPLATE_PATH, self.conf.pop('targetsFile'))
         parsed_targets = target_parser.parse_file(targetsFile)
