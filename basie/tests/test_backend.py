@@ -41,6 +41,7 @@ class TestTotalPowerBackend(unittest.TestCase):
         instructions = StringIO(str(self.backend._get_backend_instructions()))
         lines = instructions.readlines()
         enable_line = lines[-1].strip()
+        print(lines)
         self.assertTrue(enable_line.startswith("enable"))
 
     def test_set_addition(self):
