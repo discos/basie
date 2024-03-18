@@ -10,7 +10,9 @@ from basie.valid_angles import VAngle
 from basie import frame
 from basie import scan
 
-CONF_PATH = "basie/user_templates/configuration.txt"
+curdir = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_PATH = os.path.join(curdir, "..", "user_templates")
+CONF_PATH = os.path.join(TEMPLATE_PATH, "configuration.txt")
 
 class TestValidator(unittest.TestCase):
     def test_string2list(self):

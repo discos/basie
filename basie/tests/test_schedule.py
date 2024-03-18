@@ -10,13 +10,16 @@ from basie.rich_validator import validate_configuration
 from basie import target_parser
 
 BASE_PATH = ".basie_test"
+curdir = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_PATH = os.path.join(curdir, "..", "user_templates")
 
 class TestSchedule(unittest.TestCase):
     def setUp(self):
         shutil.rmtree(BASE_PATH, True) #ignores errors
         os.makedirs(BASE_PATH)
-        self.conf = validate_configuration("basie/user_templates/configuration.txt")
-        targetsFile = os.path.join("basie/user_templates", self.conf.pop('targetsFile'))
+        self.conf = validate_configuration(os.path.join(TEMPLATE_PATH, "configuration.txt"))
+
+        targetsFile = os.path.join(TEMPLATE_PATH, self.conf.pop('targetsFile'))
         parsed_targets = target_parser.parse_file(targetsFile)
         backends = self.conf.pop("backends")
         scantypes = self.conf.pop("scantypes")

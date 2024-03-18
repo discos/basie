@@ -9,8 +9,8 @@ include setup.cfg
 graft basie
 
 recursive-include basie * *.ini *.txt
-recursive-include schemas *.ini *.txt
-recursive-include user_templates *.ini *.txt
+recursive-include basie/schemas *.ini *.txt
+recursive-include basie/user_templates *.ini *.txt
 
 recursive-include docs *
 recursive-include examples *
