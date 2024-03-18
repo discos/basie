@@ -27,7 +27,7 @@ If you only want to run part of the test suite, you can also use pytest
 directly with::
 
     pip install -e .[test]
-    pytest
+    pytest basie/tests
 
 For more information, see:
 
