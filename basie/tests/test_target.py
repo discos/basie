@@ -13,7 +13,7 @@ from basie.valid_angles import VAngle
 LINE = "3C386 otfmap1 TP EQ 10.0d 1:00:00.0h repetitions=3 tsys=4 offset_lon=0.0d offset_lat=0.3d offset_frame=eq"
 # TARGETS_PATH = "basie/user_templates/targets.txt"
 curdir = os.path.abspath(os.path.dirname(__file__))
-TARGETS_PATH = os.path.join(curdir, "..", "user_templates", "targets.txt")
+TARGETS_PATH = os.path.join(curdir, "..", "user_templates", "test_targets.txt")
 
 class TestTarget(unittest.TestCase):
     def test_parse_line(self):
@@ -29,6 +29,7 @@ class TestTarget(unittest.TestCase):
         targets = target_parser.parse_file(TARGETS_PATH)
         self.assertNotEqual(targets, [])
         t_zero, scan_zero, _, _ = targets[0]
+        print(targets[0])
         self.assertEqual(t_zero.label, "Alpha")
         self.assertEqual(scan_zero, "EqCross1_3")
         self.assertEqual(t_zero.coord.lon.fmt(), "12:00:00.0000h")
