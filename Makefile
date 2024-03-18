@@ -12,7 +12,7 @@ dep:
 	$(INSTALL) -r requirements.txt
 
 install: $(SOURCES)
-	$(PYTHON) setup.py install
+	$(INSTALL) .
 
 doc: doc/epydoc.conf $(SOURCES)
 	cd doc; $(EPYDOC) --conf=epydoc.conf

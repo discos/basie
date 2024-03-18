@@ -120,7 +120,7 @@ $ pip install configobj validate astropy ZODB ...
 From the package directory just run
 
 ```
-$ python setup.py install
+$ pip install .
 ```
 
 or
