@@ -69,12 +69,12 @@ class XBackend(Backend):
 
     def _get_backend_instructions(self):
         if self.configuration.upper() !='SKIP':
-            
+
             res = "\tinitialize=%s\n" % (self.configuration,)
             if self.feeds is not None:
                 res = res + "\tenable=%s\n" % (self.feeds,)
         else:
-            res = "" 
+            res = ""
         return res
 
     def _get_hash_params(self):
@@ -82,7 +82,7 @@ class XBackend(Backend):
             self.configuration,
             self.can_activate_switching_mark,
             self.can_tsys,
-        ) 
+        )
         return params + super(XBackend, self)._get_hash_params()
 
 
@@ -103,7 +103,7 @@ class RoachBackend(Backend):
     def _get_hash_params(self):
         params = (
             self.can_activate_switching_mark,
-        ) 
+        )
         return params + super(RoachBackend, self)._get_hash_params()
 
 class TotalPowerBackend(Backend):
@@ -166,7 +166,7 @@ class TotalPowerBackend(Backend):
             self.bandwidth,
             self.feeds,
             self._empty_sections,
-        ) 
+        )
         return params + super(TotalPowerBackend, self)._get_hash_params()
 
 
