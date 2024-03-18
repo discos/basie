@@ -108,9 +108,7 @@ class RoachBackend(Backend):
 
 class TotalPowerBackend(Backend):
     def __init__(self, name, integration, samplingInterval, bandwidth, feeds=None):
-        print('In init')
         Backend.__init__(self, name, "TotalPower")
-        print('In init 1')
         self.integration = float(integration)
         self.samplingInterval = float(samplingInterval)
         self.sections = []
@@ -120,7 +118,6 @@ class TotalPowerBackend(Backend):
         self._empty_sections = 0
         #MLA , prima era = ''
         self.feeds = feeds
-        print('In init2')
         #MLA
     def set_sections(self, nifs, bandwidth=None):
         if bandwidth is None:

@@ -29,7 +29,6 @@ class TestTarget(unittest.TestCase):
         targets = target_parser.parse_file(TARGETS_PATH)
         self.assertNotEqual(targets, [])
         t_zero, scan_zero, _, _ = targets[0]
-        print(targets[0])
         self.assertEqual(t_zero.label, "Alpha")
         self.assertEqual(scan_zero, "EqCross1_3")
         self.assertEqual(t_zero.coord.lon.fmt(), "12:00:00.0000h")
