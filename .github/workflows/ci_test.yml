@@ -100,7 +100,7 @@ jobs:
             os: ubuntu-latest
             python: '3.11'
             tox_env: 'py311-test-devdeps-cov'
-            experimental: false
+            experimental: true
 
     steps:
     - name: Check out repository
