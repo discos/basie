@@ -132,19 +132,13 @@ class TotalPowerBackend(Backend):
 
     def _get_backend_instructions(self, receiver=None):
         res = ""
-        print(self.sections)
-        enable_string = "\tEnable="
+
         for i, (_id, _bw) in enumerate(self.sections):
             res += "\tsetSection=%d,*,%f,*,*,%f,*\n" % (_id, _bw,
                                                         (1.0 /
                                                         (self.samplingInterval
                                                             * 1000.0)),)
-            #if i > 0:
-            #    enable_string += ";"
-            #enable_string += "1"
 
-        #for i in range(self._empty_sections):
-        #    enable_string += ";0"
         enable_string = ""
         if self.feeds is not None:
             enable_string = "\tenable=%s\n" % (self.feeds,)
