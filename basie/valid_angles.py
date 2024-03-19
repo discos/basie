@@ -50,7 +50,7 @@ class VAngle(Angle):
             final_angle = 0.
             for i, a in enumerate(angle[:3]):
                 final_angle += a * 60**(-i)
-
+            angle = final_angle
             was_tuple = True
         self = Angle.__new__(cls, angle, unit=unit, **kwargs)
         self.original_unit = unit
