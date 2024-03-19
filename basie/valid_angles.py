@@ -43,9 +43,18 @@ CONSTANT. separator used in angle hour and sexagesimal representation
 
 class VAngle(Angle):
     def __new__(cls, angle, unit=u.deg, wrap_angle=360 * u.deg, **kwargs):
+        was_tuple=False
+        if isinstance(angle, tuple) and unit in (u.deg, u.hour):
+            # The tuple of values does not work with astropy Angle, due to
+            # its ambiguous behavior when the degree value is 0.
+            final_angle = 0.
+            for i, a in enumerate(angle[:3]):
+                final_angle += a * 60**(-i)
+            angle = final_angle
+            was_tuple = True
         self = Angle.__new__(cls, angle, unit=unit, **kwargs)
         self.original_unit = unit
-        if unit == u.hour or isinstance(angle, tuple):
+        if unit == u.hour or isinstance(angle, tuple) or was_tuple:
             self.sexa = True
         else:
             self.sexa = False

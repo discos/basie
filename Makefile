@@ -1,5 +1,5 @@
 .PHONY: test
-SOURCES=setup.py scripts src/*.py src/user_templates/* src/schemas/* src/scanmode/*.py src/configobj/*.py
+SOURCES=setup.py scripts basie/*.py basie/user_templates/* basie/schemas/* basie/scanmode/*.py basie/configobj/*.py
 TESTS=test/*.py
 PYTHON=python
 EPYDOC=epydoc
@@ -12,13 +12,13 @@ dep:
 	$(INSTALL) -r requirements.txt
 
 install: $(SOURCES)
-	$(PYTHON) setup.py install
+	$(INSTALL) .
 
 doc: doc/epydoc.conf $(SOURCES)
 	cd doc; $(EPYDOC) --conf=epydoc.conf
 
 clean:
-	rm -rf build src/*.pyc test/*.pyc doc/html/*
+	rm -rf build basie/*.pyc test/*.pyc doc/html/*
 
 test:
 	python -m unittest discover -v test/

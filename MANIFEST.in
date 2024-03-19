@@ -1,0 +1,26 @@
+include pyproject.toml
+include LICENSE.rst
+include README.rst
+# include CHANGES.rst
+# include pip-requirements*
+include CITATION
+
+include setup.cfg
+graft basie
+
+recursive-include basie * *.ini *.txt
+recursive-include basie/schemas *.ini *.txt
+recursive-include basie/user_templates *.ini *.txt
+
+recursive-include docs *
+recursive-include examples *
+recursive-include licenses *
+recursive-include cextern *
+recursive-include scripts *
+recursive-include static *
+
+prune docs/_build
+prune build
+
+global-exclude *.pyc *.o
+global-exclude __pycache__

@@ -1,5 +1,6 @@
 #coding=utf-8
 
+import os
 try:
     import unittest2 as unittest
 except ImportError:
@@ -10,7 +11,9 @@ from basie import frame
 from basie.valid_angles import VAngle
 
 LINE = "3C386 otfmap1 TP EQ 10.0d 1:00:00.0h repetitions=3 tsys=4 offset_lon=0.0d offset_lat=0.3d offset_frame=eq"
-TARGETS_PATH = "src/user_templates/targets.txt"
+# TARGETS_PATH = "basie/user_templates/targets.txt"
+curdir = os.path.abspath(os.path.dirname(__file__))
+TARGETS_PATH = os.path.join(curdir, "..", "user_templates", "test_targets.txt")
 
 class TestTarget(unittest.TestCase):
     def test_parse_line(self):

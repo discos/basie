@@ -69,12 +69,12 @@ class XBackend(Backend):
 
     def _get_backend_instructions(self):
         if self.configuration.upper() !='SKIP':
-            
+
             res = "\tinitialize=%s\n" % (self.configuration,)
             if self.feeds is not None:
                 res = res + "\tenable=%s\n" % (self.feeds,)
         else:
-            res = "" 
+            res = ""
         return res
 
     def _get_hash_params(self):
@@ -82,7 +82,7 @@ class XBackend(Backend):
             self.configuration,
             self.can_activate_switching_mark,
             self.can_tsys,
-        ) 
+        )
         return params + super(XBackend, self)._get_hash_params()
 
 
@@ -103,14 +103,12 @@ class RoachBackend(Backend):
     def _get_hash_params(self):
         params = (
             self.can_activate_switching_mark,
-        ) 
+        )
         return params + super(RoachBackend, self)._get_hash_params()
 
 class TotalPowerBackend(Backend):
     def __init__(self, name, integration, samplingInterval, bandwidth, feeds=None):
-        print('In init')
         Backend.__init__(self, name, "TotalPower")
-        print('In init 1')
         self.integration = float(integration)
         self.samplingInterval = float(samplingInterval)
         self.sections = []
@@ -120,7 +118,6 @@ class TotalPowerBackend(Backend):
         self._empty_sections = 0
         #MLA , prima era = ''
         self.feeds = feeds
-        print('In init2')
         #MLA
     def set_sections(self, nifs, bandwidth=None):
         if bandwidth is None:
@@ -135,19 +132,13 @@ class TotalPowerBackend(Backend):
 
     def _get_backend_instructions(self, receiver=None):
         res = ""
-        print(self.sections)
-        enable_string = "\tEnable="
+
         for i, (_id, _bw) in enumerate(self.sections):
             res += "\tsetSection=%d,*,%f,*,*,%f,*\n" % (_id, _bw,
                                                         (1.0 /
                                                         (self.samplingInterval
                                                             * 1000.0)),)
-            #if i > 0:
-            #    enable_string += ";"
-            #enable_string += "1"
 
-        #for i in range(self._empty_sections):
-        #    enable_string += ";0"
         enable_string = ""
         if self.feeds is not None:
             enable_string = "\tenable=%s\n" % (self.feeds,)
@@ -166,7 +157,7 @@ class TotalPowerBackend(Backend):
             self.bandwidth,
             self.feeds,
             self._empty_sections,
-        ) 
+        )
         return params + super(TotalPowerBackend, self)._get_hash_params()
 
 

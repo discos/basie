@@ -1,6 +1,6 @@
 ##coding=utf-8
 
-"""
+r"""
 # Basie
 
 [![astropy](http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat)](http://www.astropy.org/)
@@ -120,7 +120,7 @@ $ pip install configobj validate astropy ZODB ...
 From the package directory just run
 
 ```
-$ python setup.py install
+$ pip install .
 ```
 
 or
@@ -195,7 +195,13 @@ DISCOS_TAG = "discos1.0"
 #NURAGHE_TAG = "discos1.0"
 #ESCS_TAG = "discos1.0"
 #ESCS_NOTO_TAG = "discos1.0"
+from ._astropy_init import *
 
+# ----------------------------------------------------------------------------
+
+# For egg_info test builds to pass, put package imports here.
+if not _ASTROPY_SETUP_:
+    from . import *
 import logging
 
 def cmd_line():

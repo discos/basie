@@ -5,7 +5,6 @@ astropy
 persistent
 numpy
 astropy
-persistent
 pickleshare
 transaction
 zc.lockfile

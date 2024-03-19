@@ -26,7 +26,7 @@ import logging
 logger = logging.getLogger(__name__)
 import math
 from numpy import interp
-from astropy import units as u 
+from astropy import units as u
 from persistent import Persistent
 
 from .valid_angles import VAngle
@@ -39,8 +39,8 @@ class Receiver(Persistent):
     """
     represents a receiver and its characteristics
     """
-    def __init__(self, name, fmin, fmax, 
-                 beamsizetable=[[0.0],[0.0]], 
+    def __init__(self, name, fmin, fmax,
+                 beamsizetable=[[0.0],[0.0]],
                  nfeed=1,
                  npols=2, #polarizations per feed
                  feed_offsets = [Coord(HOR, VAngle(0.0), VAngle(0.0))],
@@ -57,7 +57,7 @@ class Receiver(Persistent):
         @type beamsizetable: L{utils.KVTable}
         @param feed_offsets: a list of offsets [(olon, olat)] of each feed
         in relation to central feed. 0 place should always be [(0.0, 0.0)]
-        @type feed_offsets: [(angles.Angle, angles.Angle) ... ] 
+        @type feed_offsets: [(angles.Angle, angles.Angle) ... ]
         @param has_derotator: True if the receiver can derotate
         """
         self.name = name
@@ -96,7 +96,7 @@ class Receiver(Persistent):
         self.feed_offsets[feed_number] = Coord(frame,
                                                VAngle(offsets[0]),
                                                VAngle(offsets[1]))
-    #   Methods for Nodding mode 
+    #   Methods for Nodding mode
     def set_valid_pairs(self, pairs_table):
         """
         Set the valid pairs for each derotator position.
@@ -110,7 +110,7 @@ class Receiver(Persistent):
         """
         if self.nfeed < 2:
             raise ReceiverError("Cannot define valid pairs for nodding with single feed.")
-        
+
         self.feeds_valid_pairs = pairs_table
 
     def get_valid_pairs(self):
@@ -173,13 +173,13 @@ class Receiver(Persistent):
         try:
             derotator_angle = float(derotator_angle)
             coord = self.feed_offsets[feed_number]
-            return Coord(frame, 
-            coord.lon*math.cos(-derotator_angle*math.pi/180) - coord.lat*math.sin(-derotator_angle*math.pi/180), 
+            return Coord(frame,
+            coord.lon*math.cos(-derotator_angle*math.pi/180) - coord.lat*math.sin(-derotator_angle*math.pi/180),
             coord.lon*math.sin(-derotator_angle*math.pi/180) + coord.lat*math.cos(-derotator_angle*math.pi/180))
 
         except:
             raise ReceiverError("Invalid configuration or invalid derotator angle provided.")
-        pass    
+        pass
 
     @property
     def beamsize(self):
@@ -190,14 +190,14 @@ class Receiver(Persistent):
 
     def get_beamsize(self, freq=None):
         """
-        Get the beamsize for this receiver at a given frequency. 
+        Get the beamsize for this receiver at a given frequency.
         Read from beamsize_table the nearest frequency value.
         If freq is None defauls to self.fmin
         @param freq: frequency (MHz)
         @type freq: Quantity
         @return: beamsize at given frequency
         """
-        if not freq:
+        if freq is None:
             logger.warning("RECEIVER %s using default beamsize at min frequency" %
                            (self.name,))
             freq = self.fmin
@@ -236,4 +236,3 @@ class Receiver(Persistent):
             raise ReceiverError('Error while getting derotator angle')
         #cambia il nome!!! Perchè potrebbe aver bisogno di avere la stessa proc con stesso nome
         return Procedure("DEROTATORFIXED_%s"%str(float(derotator_angle)).replace('.',''), 0, "\tderotatorSetConfiguration=FIXED\n\tderotatorSetPosition=%sd\n"%str(float(derotator_angle)), True)
-        

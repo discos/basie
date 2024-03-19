@@ -1,0 +1,116 @@
+projectID = Maintenance
+observer = Maintenance
+scheduleLabel = TestSched
+# SRT, MED or NOTO 
+radiotelescope = SRT
+# for Medicina receivers can be:
+# C, CL, X, K, KM
+# for SRT receivers can be:
+# P, L, C, K, KM
+# for NOTO receivers can be:
+# C, M, K, Q
+receiver = KM
+# default repetitions value for each scan
+repetitions = 1
+# default tsys value for each scan
+tsys = 0
+#optional restFrequency in Mhz, can be a list 
+#restFrequency = 22345.18,22410.10
+#restFrequency = 22000
+#ftrack = True
+
+# File name of the target specs in this same directory
+targetsFile = targets.txt
+
+[backends]
+# Here we configure which backend we are using in this schedule.
+[[TP]]
+    type = TOTALPOWER
+    # integration period in ms
+    integration = 10
+    # sampling interval in ms
+    samplingInterval = 10.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 300
+
+[[TP20_730]]
+    type = TOTALPOWER
+    # integration period in ms
+    integration = 20
+    # sampling interval in ms
+    samplingInterval = 20.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 730
+
+[[TP40_1250]]
+    type = TOTALPOWER
+    # integration period in ms
+    integration = 40
+    # sampling interval in ms
+    samplingInterval = 40.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 1250
+    feeds = 3;6
+
+[[XK77]]
+    type = XARCOS
+    # one of XK77 XK03 XK06 XK00 XC00
+    # if configuration = skip, the backend is not configured and the initialize must be done from operatorInput
+    # 
+    configuration = XK77
+    feeds = 0;7
+
+[[XC00]]
+    type=XARCOS
+    configuration = skip
+
+[[SARDARA]]
+    type = Sardara
+    # configuration must be done from operatorInput before starting the schedule
+    feeds = 0;7
+    
+
+[scantypes]
+
+    #CROSSSCANNAME = CROSS FRAME LENGTH SPEED
+     EqCross1_3 = CROSS EQ 0.4d 3.0
+     EqCross1_5 = CROSS EQ 0.4d 5.0    
+     HorCross1_3 = CROSS HOR 0.4d 3.0
+
+    #POINTSCANNAME = POINT FRAME LENGTH SPEED
+     HorPoint = POINT HOR 0.4d 3.0
+
+    #SKYDIPSCANNAME = START STOP DURATION
+     DownSkydip = SKYDIP 87.0d 15.0d 290
+
+    #OTFMAPNAME = OTFMAP FRAME AXIS START LENGTH_X LENGTH_Y SPEED SEPARATION
+     ELMAP1x1TL = OTFMAP HOR EL TL 0.4d 0.4d 5.0 0.05d
+     AZMAP1x1TR = OTFMAP HOR AZ TR 0.4d 0.4d 5.0 0.05d
+     RAMAP1x1BL = OTFMAP EQ RA BL 0.4d 0.4d 5.0 0.05d
+     DECMAP1x1BR = OTFMAP EQ DEC BR 0.4d 0.4d 5.0 0.05d
+     GLONMAP2x2TL = OTFMAP GAL LON TL 0.4d 0.4d 10.0 0.05d
+     GLATMAP2x2TL = OTFMAP GAL LAT TL 0.4d 0.4d 10.0 0.05d
+     EQMap1x1 = OTFMAP EQ BOTH TL 0.4d 0.4d 5.0 00:03:00
+
+    #OTFMAPNAME = OTFMAP FRAME AXIS START LENGTH_X LENGTH_Y SPEED SCANS_PER_BEAM
+     EQMap1x1S = OTFMAP EQ BOTH TL 0.4d 0.4d 5.0 3
+
+    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION SEPARATION OFFSET_INTERLEAVE
+     HorRasterTL = RASTERMAP HOR LON TL 0.4d 0.4d 10.0 0.05d 0
+     HorRasterTROff = RASTERMAP HOR LAT TR 0.4d 0.4d 5.0 0.05d 1
+
+    #RASTERMAPNAME = RASTERMAP FRAME AXIS START LENGTH_X LENGTH_Y DURATION SCANS_PER_BEAM OFFSET_INTERLEAVE
+     HorRasterTRS = RASTERMAP HOR LAT TR 0.4d 0.4d 5.0 3 0
+
+    #ONOFFNAME = ONOFF DURATION OFF_FRAME LON_OFF LAT_OFF [<N>on,<N>off,<N>on_cal,<N>off_cal .. ]
+     OnOff = ONOFF 4.0 EQ 1.0d 1.0d [4on,4off,2off_cal]
+     AlwaysOn = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
+
+    #NODDINGNAME = NODDING FEED_A FEED_B DURATION [<N>a,<N>b,<N>a_cal,<N>b_cal]
+     Nodding13 = NODDING 1 3 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding25 = NODDING 2 5 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding36 = NODDING 3 6 10.0 [2a,2a_cal,2b,2b_cal]
+
