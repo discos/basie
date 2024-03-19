@@ -68,12 +68,6 @@ jobs:
             tox_env: 'py38-test-oldestdeps-cov'
             experimental: false
 
-          - name: Linux, Py3.10 with coverage
-            os: ubuntu-latest
-            python: '3.10'
-            tox_env: 'py310-test-cov'
-            experimental: false
-
           # Basic tests on alternative operating systems.
           - name: Windows, Py3.11 with coverage
             os: windows-latest
@@ -93,16 +87,8 @@ jobs:
             tox_env: 'py311-test'
             experimental: false
 
-          # Test with all optional dependencies installed.
-          - name: Linux, Py3.11 all dependencies and coverage
-            os: ubuntu-latest
-            python: '3.11'
-            tox_env: 'py311-test-alldeps-cov'
-            use_remote_data: true
-            experimental: false
-
           # Test 3.12 with basic optional dependencies installed.
-          - name: Linux, Py3.12 basic dependencies and coverage
+          - name: Linux, Py3.12 and coverage
             os: ubuntu-latest
             python: '3.12'
             tox_env: 'py312-test-cov'
