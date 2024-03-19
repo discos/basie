@@ -47,7 +47,10 @@ class VAngle(Angle):
         if isinstance(angle, tuple) and unit in (u.deg, u.hour):
             # The tuple of values does not work with astropy Angle, due to
             # its ambiguous behavior when the degree value is 0.
-            angle = angle[0] + angle[1] / 60 + angle[2] / 3600
+            final_angle = 0.
+            for i, a in enumerate(angle[:3]):
+                final_angle += a * 60**(-i)
+
             was_tuple = True
         self = Angle.__new__(cls, angle, unit=unit, **kwargs)
         self.original_unit = unit
