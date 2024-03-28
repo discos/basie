@@ -20,7 +20,7 @@ You can
 ## INSTALLATION INSTRUCTIONS
 
 Basie  can  run on
-python <= 3.8
+python <= 3.11
 
 
 Before installing the package make sure you download and extract the package
