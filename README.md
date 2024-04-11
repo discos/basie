@@ -19,9 +19,38 @@ You can
 
 ## INSTALLATION INSTRUCTIONS
 
-Basie  can  run on
-python <= 3.11
+### Preliminary information
+Basie  can  run on python >= 3.8
 
+We *strongly* recommend to install `basie` in a virtual environment, using [`conda`](https://www.anaconda.com/download/),
+[`venv`](https://docs.python.org/3/library/venv.html), or equivalent systems. This will avoid conflicts with system libraries or
+Python versions installed as part of other packages (e.g. CASA, see below in the Known Issues).
+
+#### Venv
+To create a virtual environment using `venv`, you can follow these steps:
+
+1. Open your terminal or command prompt.
+
+2. Navigate to the directory where you want to create your virtual environment. This could be the root directory of your project or any other location of your choice.
+
+3. Run the following command to create a new virtual environment:
+    ```$ python3 -m venv myenv```
+
+   Here, `myenv` is the name you choose for your virtual environment, and `python3` is the executable of the chosen (we recommend recent) Python version. You can replace it with any name you prefer.
+
+4. Once the command completes, a new directory named myenv (or the name you chose) will be created in your current directory. This directory will contain all the necessary files and folders for your virtual environment.
+
+5. Activate the virtual environment by running the appropriate command based on your operating system, typically `source /path/to/myenv/bin/activate`
+
+#### Conda
+If you installed `anaconda` or `miniconda`, the process will be as simple as
+
+```
+$ conda create -n my_fancy_environment python=3.11
+$ conda activate my_fancy_environment
+```
+
+### Installing basie
 
 Before installing the package make sure you download and extract the package
 archive at
@@ -30,98 +59,24 @@ http://github.com/discos/basie/
 Installation instructions can be reduced to:
 
 ```
-$ pip install -r requirements.txt
 $ pip install .
 ```
 
+Note that, in some systems, you may need to have root privileges for installing python packages.
+If you want to know more or you experience some issue, please go on reading.
 
-
-Note that you may need to have root privileges for installing python packages.
-If you wanna know more or you experience some issue, please go on reading.
-
-### EASY_INSTALL AND PIP
-
-We suggest to install dependencies via distutils.
-
-#### DISTUTILS ON WINDOWS
-
-From a command prompt try to execute the command
+You can remove the downloaded package or clean build products via:
 
 ```
-C:\your path\> easy_install
+$ pip uninstall basie
 ```
 
-This will tell you if easy_install is installed on your Windows PC
-If not just donwload and install python-setuptools package from
-https://pypi.python.org/pypi/setuptools , go to the bottom of the page
-and grab the .exe related to your python version.
-If you're unsure which python version you are running from a command
-prompt execute
+## KNOWN ISSUES
 
-```
-C:\your path\> python --version
-```
+1. `NRAO CASA` is known to install its own version of Python and `pip`. We recommend installing CASA in its own `venv` or `conda` virtual environment to avoid conflicts.
+In principle, it should be possible to install `basie` with `CASA`'s `pip`.
 
-#### DISTUTILS ON LINUX
-
-On linux you should find setuptools prepackaged on most modern distros.
-
-On debian-based distros:
-
-```bash
-you@yourpc$ sudo apt-get install python-setuptools
-```
-
-On RH based distros:
-
-```
-root@yourpc$ yum install python-setuptools
-```
-
-Once easy_install is installed, instructions are the same for every
-OS, so just follow the steps from command prompt or user shell.
-
-If possible we will use 'pip', a more friendly python package manager.
-Install it with:
-
-```
-$ easy_install pip
-```
-
-### INSTALL PACKAGE DEPENDENCIES
-
-
-You can install every dependecy via (note that you may need to be root):
-
-```
-$ make dep
-```
-Or simply:
-
-```
-$ pip install -r requirements.txt
-```
-
-### INSTALL
-
-From the package directory just run
-
-```
-$ pip install .
-```
-
-or
-
-```
-$ make install
-```
-
-to install the package in the current python environment.
-Now you can remove the downloaded package or clean build products via:
-
-```
-$ make clean
-```
+If you find an issue, please report it through [our Github Issue tracker](https://github.com/discos/basie/issues)
 
 ## USAGE
 
