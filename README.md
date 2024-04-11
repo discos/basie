@@ -22,7 +22,7 @@ You can
 ### Preliminary information
 Basie  can  run on python >= 3.8
 
-We *strongly* recommend to install `basie` in a virtual environment, using [`conda`](https://www.anaconda.com/download/),
+We **strongly** recommend installing `basie` in a virtual environment, using [`conda`](https://www.anaconda.com/download/),
 [`venv`](https://docs.python.org/3/library/venv.html), or equivalent systems. This will avoid conflicts with system libraries or
 Python versions installed as part of other packages (e.g. CASA, see below in the Known Issues).
 
@@ -40,10 +40,12 @@ To create a virtual environment using `venv`, you can follow these steps:
 
 4. Once the command completes, a new directory named myenv (or the name you chose) will be created in your current directory. This directory will contain all the necessary files and folders for your virtual environment.
 
-5. Activate the virtual environment by running the appropriate command based on your operating system, typically `source /path/to/myenv/bin/activate`
+5. Activate the virtual environment by running the appropriate command based on your operating system, typically
+
+```$ source /path/to/myenv/bin/activate```
 
 #### Conda
-If you installed `anaconda` or `miniconda`, the process will be as simple as
+If you installed `anaconda` or `miniconda`, the process will be as simple as clicking a few buttons in the Anaconda GUI, or, from a shell,
 
 ```
 $ conda create -n my_fancy_environment python=3.11
@@ -65,7 +67,7 @@ $ pip install .
 Note that, in some systems, you may need to have root privileges for installing python packages.
 If you want to know more or you experience some issue, please go on reading.
 
-You can remove the downloaded package or clean build products via:
+You can remove basie via:
 
 ```
 $ pip uninstall basie
