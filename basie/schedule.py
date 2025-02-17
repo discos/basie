@@ -55,6 +55,8 @@ class Schedule(Persistent):
                  receiver = "C", #should we change this?
                  outputFormat = "fits",
                  ftrack = False,
+                 minElevation = -1,
+                 maxElevation = -1,
                  ):
         logger.debug("creating schedule")
         self.projectID = projectID
@@ -65,6 +67,8 @@ class Schedule(Persistent):
         self.runs = scheduleRuns
         self.scantypes = {}
         self.backends = {}
+        self.minElevation = float(minElevation)
+        self.maxElevation = float(maxElevation)
         self.radiotelescope = radiotelescopes[radiotelescope]
         if not receiver in list(self.radiotelescope.receivers.keys()):
             raise ScheduleError("receiver does not belong to telescope")
@@ -196,15 +200,21 @@ class Schedule(Persistent):
             rst_procedure = procedures.Procedure("restFrequency", 0,
                     "\trestFrequency=%s\n" % freqstring, True)
             init_procedure = init_procedure + rst_procedure
-        scdfile.write(templates.scd_header.substitute(
-                              dict(
-                                projectID = self.projectID,
-                                observer = self.observer,
-                                lisfilename = os.path.basename(lisfilename),
-                                cfgfilename = os.path.basename(cfgfilename),
-                                bckfilename = os.path.basename(bckfilename),
-                                initproc = init_procedure.execute(),
-                                  )))
+        scdfile.write(templates.scd_header.substitute(dict(
+            projectID = self.projectID,
+            observer = self.observer,
+            lisfilename = os.path.basename(lisfilename),
+            cfgfilename = os.path.basename(cfgfilename),
+            bckfilename = os.path.basename(bckfilename),
+            initproc = init_procedure.execute(),
+            minElevation = self.minElevation,
+            maxElevation = self.maxElevation,
+        )))
+        if self.minElevation != -1 or self.maxElevation != -1:
+            scdfile.write(templates.elevation_limits.substitute(dict(
+                minElevation = self.minElevation,
+                maxElevation = self.maxElevation,
+            )))
 
         #WRITE SCAN AND SUBSCANS INFORMATIONS SEQUENTIALLY
         scan_number = 1
