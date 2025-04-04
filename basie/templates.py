@@ -28,18 +28,19 @@ import string
 import logging
 logger = logging.getLogger(__name__)
 
-scd_header = string.Template("PROJECT:\t${projectID}\n" +
-                             "OBSERVER:\t${observer}\n" +
-                             "SCANLIST:\t${lisfilename}\n" +
-                             "PROCEDURELIST:\t${cfgfilename}\n" +
-                             "BACKENDLIST:\t${bckfilename}\n" +
-                             "MODE:\tSEQ\n" +
-                             "SCANTAG:\t1\n" +
-                             "INITPROC:\t${initproc}\n")
+scd_header = string.Template("PROJECT:\t\t${projectID}\n" +
+                             "OBSERVER:\t\t${observer}\n" +
+                             "SCANLIST:\t\t${lisfilename}\n" +
+                             "PROCEDURELIST:\t\t${cfgfilename}\n" +
+                             "BACKENDLIST:\t\t${bckfilename}\n" +
+                             "MODE:\t\t\tSEQ\n" +
+                             "SCANTAG:\t\t1\n" +
+                             "INITPROC:\t\t${initproc}\n")
 """
 Used to convert a L{schedule.Schedule} instance into its representation in the .scd
 file header
 """
+elevation_limits = string.Template("ELEVATIONLIMITS:\t${minElevation}\t${maxElevation}\n")
 
 scd_scanlayout = string.Template("SCANLAYOUT:\t${datfilename}\n")
 

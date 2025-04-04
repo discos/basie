@@ -18,6 +18,10 @@ tsys = 0
 #restFrequency = 22345.18,22410.10
 #restFrequency = 22000
 #ftrack = True
+#optional minElevation in degrees
+#minElevation = 6
+#optional maxElevation in degrees
+#maxElevation = 87
 
 # File name of the target specs in this same directory
 targetsFile =  targets.txt
