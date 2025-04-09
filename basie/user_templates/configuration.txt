@@ -4,7 +4,7 @@ scheduleLabel = TestSched
 # SRT, MED or NOTO 
 radiotelescope = SRT
 # for Medicina receivers can be:
-# C, CL, X, K, KM
+# CL, C, X, K, KM
 # for SRT receivers can be:
 # P, L, CL, C, K, KM
 # for NOTO receivers can be:
@@ -24,7 +24,7 @@ tsys = 0
 #maxElevation = 87
 
 # File name of the target specs in this same directory
-targetsFile =  targets.txt
+targetsFile = targets.txt
 
 [backends]
 # Here we configure which backend we are using in this schedule.
@@ -48,12 +48,24 @@ targetsFile =  targets.txt
     # 300, 730, 1250, 2000
     bandwidth = 730
 
+[[TP40_1250]]
+    type = TOTALPOWER
+    # integration period in ms
+    integration = 40
+    # sampling interval in ms
+    samplingInterval = 40.0
+    # bandwidth in MHz, possible values are:
+    # 300, 730, 1250, 2000
+    bandwidth = 1250
+    feeds = 3;6
+
 [[XK77]]
     type = XARCOS
     # one of XK77 XK03 XK06 XK00 XC00
     # if configuration = skip, the backend is not configured and the initialize must be done from operatorInput
     # 
     configuration = XK77
+    feeds = 0;7
 
 [[XC00]]
     type=XARCOS
@@ -62,6 +74,7 @@ targetsFile =  targets.txt
 [[SARDARA]]
     type = Sardara
     # configuration must be done from operatorInput before starting the schedule
+    feeds = 0;7
     
 
 [scantypes]
@@ -101,5 +114,7 @@ targetsFile =  targets.txt
      AlwaysOn = ONOFF 10.0 EQ 0.0d 0.0d [4on,4on_cal]
 
     #NODDINGNAME = NODDING FEED_A FEED_B DURATION [<N>a,<N>b,<N>a_cal,<N>b_cal]
-     Nodding06 = NODDING 2 5 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding01 = NODDING 0 1 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding04 = NODDING 0 4 10.0 [2a,2a_cal,2b,2b_cal]
+     Nodding14 = NODDING 1 4 10.0 [2a,2a_cal,2b,2b_cal]
 

@@ -106,18 +106,18 @@ configuration
 """
 SRT.receivers["KM"].set_feed_offsets(0, (VAngle(0, u.rad), 
                                          VAngle(0, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(1, (VAngle(0.00033355202, u.rad),
-                                         VAngle(-0.00057772859, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(2, (VAngle(-0.00033355205, u.rad),
-                                         VAngle(-0.00057772859, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(3, (VAngle(-0.00066710365, u.rad),
-                                         VAngle(0, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(4, (VAngle(-0.00033355205, u.rad),
-                                         VAngle(0.00057772859, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(5, (VAngle(0.00033355205, u.rad),
-                                         VAngle(0.00057772859, u.rad)))
-SRT.receivers["KM"].set_feed_offsets(6, (VAngle(0.00066710365, u.rad),
+SRT.receivers["KM"].set_feed_offsets(1, (VAngle(-0.00066710365, u.rad),
                                          VAngle(0.0, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(2, (VAngle(-0.00033355205, u.rad),
+                                         VAngle(0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(3, (VAngle(0.00033355205, u.rad),
+                                         VAngle(0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(4, (VAngle(0.00066710365, u.rad),
+                                         VAngle(0.0, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(5, (VAngle(0.00033355205, u.rad),
+                                         VAngle(-0.00057772859, u.rad)))
+SRT.receivers["KM"].set_feed_offsets(6, (VAngle(-0.00033355205, u.rad),
+                                         VAngle(-0.00057772859, u.rad)))
 
 """
 MLA: Adding data for supporting multi-feed nodding mode.
@@ -125,12 +125,12 @@ MLA: Adding data for supporting multi-feed nodding mode.
 
 SRT.receivers["KM"].set_valid_pairs(
     {
-        '0': [(0,3),(0,6),(1,2),(3,6),(4,5)],
-        '30':[(3,5), (2,6)],
-        '60':[(0,2),(0,5),(1,6),(2,5),(3,4)],
-        '90':[(1,5),(2,4)],
-        '-30':[(1,3),(4,6)],
-        '-60':[(0,1),(0,4),(1,4),(2,3),(5,6)]
+        '0': [(0,1),(0,4),(1,4),(2,3),(5,6)],
+        '30':[(1,3), (4,6)],
+        '60':[(0,3),(0,6),(1,2),(3,6),(4,5)],
+        '90':[(2,6),(3,5)],
+        '-30':[(1,5),(2,4)],
+        '-60':[(0,2),(0,5),(1,6),(2,5),(3,4)]
 
     }
 )
